@@ -17,28 +17,28 @@ class NewsController extends Controller
     {
         if ($request->ajax()) {
             $data = News::with(['category', 'user'])->latest()->get();
-            
+
             return Datatables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('category_name', function($row){
-                        return $row->category ? $row->category->name : '-';
-                    })
-                    ->addColumn('author_name', function($row){
-                        return $row->user ? $row->user->name : 'Admin';
-                    })
-                    ->addColumn('status_badge', function($row){
-                        if ($row->status == 'publish') {
-                            return '<span class="badge bg-success">Publish</span>';
-                        }
-                        return '<span class="badge bg-warning text-dark">Draft</span>';
-                    })
-                    ->addColumn('action', function($row){
-                        $btn = '<button data-id="'.$row->id.'" class="btn btn-warning btn-sm editNews text-white">Ubah</button> ';
-                        $btn .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-sm deleteNews">Hapus</button>';
-                        return $btn;
-                    })
-                    ->rawColumns(['status_badge', 'action']) 
-                    ->make(true);
+                ->addIndexColumn()
+                ->addColumn('category_name', function ($row) {
+                    return $row->category ? $row->category->name : '-';
+                })
+                ->addColumn('author_name', function ($row) {
+                    return $row->user ? $row->user->name : 'Admin';
+                })
+                ->addColumn('status_badge', function ($row) {
+                    if ($row->status == 'publish') {
+                        return '<span class="badge bg-success">Publish</span>';
+                    }
+                    return '<span class="badge bg-warning text-dark">Draft</span>';
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<button data-id="' . $row->id . '" class="btn btn-warning btn-sm editNews text-white">Ubah</button> ';
+                    $btn .= '<button data-id="' . $row->id . '" class="btn btn-danger btn-sm deleteNews">Hapus</button>';
+                    return $btn;
+                })
+                ->rawColumns(['status_badge', 'action'])
+                ->make(true);
         }
 
         return view('news.index');
@@ -112,7 +112,7 @@ class NewsController extends Controller
         }
 
         $news = News::find($id);
-        
+
         // Penanganan upload ulang Gambar
         $imagePath = $news->image;
         if ($request->hasFile('image')) {
@@ -145,20 +145,53 @@ class NewsController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Berita berhasil diperbarui!']);
     }
 
+    public function frontendIndex(Request $request)
+    {
+        $query = News::with(['category', 'user'])
+            ->where('status', 'publish')
+            ->latest('published_at');
+
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $news = $query->paginate(6)->withQueryString();
+
+        return view('frontend.berita.index', compact('news'));
+    }
+
+    public function frontendShow($slug)
+    {
+        $news = News::with(['category', 'user'])
+            ->where('slug', $slug)
+            ->where('status', 'publish')
+            ->firstOrFail();
+
+        $latestNews = News::with(['category', 'user'])
+            ->where('status', 'publish')
+            ->where('id', '!=', $news->id)
+            ->latest('published_at')
+            ->take(3)
+            ->get();
+
+        return view('frontend.berita.detail', compact('news', 'latestNews'));
+    }
+
+
     public function destroy($id)
     {
         $news = News::find($id);
-        
+
         // Hapus file gambar dari storage jika ada
         if ($news->image && Storage::disk('public')->exists($news->image)) {
             Storage::disk('public')->delete($news->image);
         }
-        
+
         // Hapus file PDF dari storage jika ada
         if ($news->pdf_file && Storage::disk('public')->exists($news->pdf_file)) {
             Storage::disk('public')->delete($news->pdf_file);
         }
-        
+
         $news->delete();
 
         return response()->json(['status' => 'success', 'message' => 'Berita berhasil dihapus!']);
