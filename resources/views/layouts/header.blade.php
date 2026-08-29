@@ -33,14 +33,19 @@
                                 <img src="{{ asset('assets/images/users/avatar-1.jpg') }}" alt="" class="thumb-md rounded-circle">
                             </div>
                             <div class="flex-grow-1 ms-2 text-truncate align-self-center">
-                                <h6 class="my-0 fw-medium text-dark fs-13">Super Admin</h6>
+                                <h6 class="my-0 fw-medium text-dark fs-13">{{ auth()->check() ? auth()->user()->name : 'Super Admin' }}</h6>
                                 <small class="text-muted mb-0">SiFit Administrator</small>
                             </div>
                         </div>
                         <div class="dropdown-divider mt-0"></div>
                         <a class="dropdown-item" href="#"><i class="las la-user fs-18 me-1 align-text-bottom"></i> Profile</a>
                         <div class="dropdown-divider mb-0"></div>
-                        <a class="dropdown-item text-danger" href="#"><i class="las la-power-off fs-18 me-1 align-text-bottom"></i> Logout</a>
+                        <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
+                            @csrf
+                            <button type="submit" class="dropdown-item text-danger border-0 bg-transparent w-100 text-start">
+                                <i class="las la-power-off fs-18 me-1 align-text-bottom"></i> Logout
+                            </button>
+                        </form>
                     </div>
                 </li>
             </ul>
