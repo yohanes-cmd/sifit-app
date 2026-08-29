@@ -4,14 +4,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController; 
 use App\Http\Controllers\RoleController; 
 use App\Http\Controllers\UserController; 
-// Tambahkan ini:
 use App\Http\Controllers\CategoryController; 
 use App\Http\Controllers\OpdController;
 use App\Http\Controllers\NewsController;
 
+// --- INI YANG KITA UBAH ---
 Route::get('/', function () {
-    return redirect('/dashboard');
+    return redirect('/home');
 });
+// --------------------------
 
 Route::get('/dashboard', function () {
     return view('dashboard.index');
@@ -22,14 +23,11 @@ Route::resource('roles', RoleController::class);
 Route::resource('users', UserController::class);
 
 // Manajemen E-Commerce
-Route::resource('categories', CategoryController::class); // <--- Rute Kategori Baru
+Route::resource('categories', CategoryController::class);
 Route::resource('products', ProductController::class);
 
-// ... (route lainnya)
 Route::resource('opds', OpdController::class);
-
 Route::resource('news', NewsController::class);
-
 
 // Frontend
 Route::get('/home', function () {
@@ -66,15 +64,8 @@ Route::get('/about/faq', function () {
 
 Route::get('/about/galeri', function () {
     $galeri = collect();
-
     return view('frontend.about.galeri', compact('galeri'));
 })->name('frontend.about.galeri');
-
-// Route::get('/about/galeri', function () {
-//     $galeri = \App\Models\GaleriAlbum::latest('id_album')->get();
-
-//     return view('frontend.about.galeri', compact('galeri'));
-// })->name('frontend.about.galeri');
 
 Route::get('/berita', [NewsController::class, 'frontendIndex'])
     ->name('frontend.berita');
@@ -95,6 +86,6 @@ Route::get('/obat/informasi', function () {
 Route::get('/obat/{slug}', [ProductController::class, 'frontendShow'])
     ->name('frontend.obat.detail');
 
-    Route::get('/kontak', function () {
+Route::get('/kontak', function () {
     return view('frontend.contact.index');
 })->name('frontend.contact');

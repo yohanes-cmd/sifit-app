@@ -4,24 +4,27 @@
     <div class="brand">
         <a href="{{ url('/') }}" class="logo">
             <span>
-                <img src="{{ asset('assets/images/logo-sm.png') }}" alt="logo-small" class="logo-sm">
+                <img src="{{ asset('assets/images/logo-riau.png') }}" alt="logo-small" class="logo-sm" style="height: 34px;">
             </span>
             <span class="">
-                <img src="{{ asset('assets/images/logo-light.png') }}" alt="logo-large" class="logo-lg logo-light">
-                <img src="{{ asset('assets/images/logo-dark.png') }}" alt="logo-large" class="logo-lg logo-dark">
+                <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="logo-large" class="logo-lg logo-light" style="height: 42px;">
+                <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="logo-large" class="logo-lg logo-dark" style="height: 42px;">
             </span>
         </a>
     </div>
     <!--end brand-->
+    
     <!--start startbar-menu-->
     <div class="startbar-menu" >
         <div class="startbar-collapse" id="startbarCollapse" data-simplebar>
             <div class="d-flex align-items-start flex-column w-100">
                 <!-- Navigation -->
                 <ul class="navbar-nav mb-auto w-100">
+                    
                     <li class="menu-label mt-2">
                         <span>Main Menu</span>
                     </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/') }}"> 
                             <i class="iconoir-report-columns menu-icon"></i>                                       
@@ -34,39 +37,39 @@
                     </li>
 
                     <!-- Menu Dropdown Berita & Informasi -->
-<li class="nav-item">
-    <a class="nav-link" href="#sidebarNews" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarNews">
-        <i class="ti-files menu-icon"></i>
-        <span>Berita & Informasi</span>
-    </a>
-    <div class="collapse" id="sidebarNews">
-        <ul class="nav flex-column sub-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('news.index') }}">Daftar Berita</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('categories.index') }}">Kategori Berita</a>
-            </li>
-        </ul>
-    </div>
-</li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#sidebarNews" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarNews">
+                            <i class="ti-files menu-icon"></i>
+                            <span>Berita & Informasi</span>
+                        </a>
+                        <div class="collapse" id="sidebarNews">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('news.index') }}">Daftar Berita</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('categories.index') }}">Kategori Berita</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
 
                     <!-- Tambahkan Menu Kategori -->
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('categories.index') }}">
-        <i class="las la-tags menu-icon"></i>
-        <span>Data Kategori</span>
-    </a>
-</li>
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('categories.index') }}">
+                            <i class="las la-tags menu-icon"></i>
+                            <span>Data Kategori</span>
+                        </a>
+                    </li>
 
                     <!-- Menu data obat -->
                     <li class="nav-item">
-                         <a class="nav-link" href="{{ route('products.index') }}">
-                             <i class="las la-pills menu-icon"></i>
-                             <span>Data Obat / Produk</span>
-                         </a>
+                        <a class="nav-link" href="{{ route('products.index') }}">
+                            <i class="las la-pills menu-icon"></i>
+                            <span>Data Obat / Produk</span>
+                        </a>
                     </li>
+                    
                     <!-- INI ADALAH MENU MANAJEMEN ROLE YANG KITA BUAT -->
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('roles*') ? 'active' : '' }}" href="{{ route('roles.index') }}">
@@ -76,12 +79,11 @@
                     </li>
 
                     <li class="nav-item">
-    <a class="nav-link" href="{{ route('opds.index') }}">
-        <i class="las la-building menu-icon"></i>
-        <span>Manajemen OPD</span>
-    </a>
-</li>
-
+                        <a class="nav-link" href="{{ route('opds.index') }}">
+                            <i class="las la-building menu-icon"></i>
+                            <span>Manajemen OPD</span>
+                        </a>
+                    </li>
 
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}" href="{{ route('users.index') }}">
@@ -97,18 +99,20 @@
                         </small>
                         <span>Template Components</span>
                     </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="#sidebarElements" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarElements">
                             <i class="iconoir-compact-disc menu-icon"></i>
                             <span>UI Elements</span>
                         </a>
-                        <div class="collapse " id="sidebarElements">
+                        <div class="collapse" id="sidebarElements">
                             <ul class="nav flex-column">
                                 <li class="nav-item"><a class="nav-link" href="#">Alerts</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#">Buttons</a></li>
                             </ul>
                         </div>
                     </li>
+                    
                 </ul>
             </div>
         </div>
