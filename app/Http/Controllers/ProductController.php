@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -12,31 +16,34 @@ class ProductController extends Controller
     public function index()
     {
         // Mengambil semua data produk beserta relasi kategori dan user penginput
-        $products = \App\Models\Product::with(['category', 'user'])->latest()->get();
+        $products = Product::with(['category', 'user'])->latest()->get();
 
         // Mengirim data ke halaman view
         return view('products.index', compact('products'));
     }
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
         // Mengambil kategori khusus produk untuk ditampilkan di dropdown form
-        $categories = \App\Models\Category::where('type', 'product')->get();
+        $categories = Category::where('type', 'product')->get();
 
         return view('products.create', compact('categories'));
     }
+
     /**
      * Store a newly created resource in storage.
      */
-    public function store(\Illuminate\Http\Request $request)
+    public function store(Request $request)
     {
-        // 1. Validasi data dari form
+        // 1. Validasi data dari form (Ditambah validasi 'unit')
         $request->validate([
             'name'        => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price'       => 'required|numeric',
+            'unit'        => 'required|string|max:50',
             'stock'       => 'required|integer',
             'status'      => 'required|in:published,draft,inactive',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -46,37 +53,44 @@ class ProductController extends Controller
         $data = $request->all();
 
         // 3. Buat slug otomatis dari nama obat (ditambah waktu agar unik)
-        $data['slug'] = \Illuminate\Support\Str::slug($request->name) . '-' . time();
+        $data['slug'] = Str::slug($request->name) . '-' . time();
 
-        // 4. Catat siapa user/admin yang sedang login
-        $data['user_id'] = auth()->id() ?? 1;
+        // 4. Catat ID admin yang sedang login secara dinamis
+        $data['user_id'] = auth()->id();
 
-        // 5. Proses upload gambar jika ada
+        // 5. Cek apakah checkbox resep dokter dicentang (bernilai true) atau tidak (bernilai false)
+        $data['requires_prescription'] = $request->has('requires_prescription') ? true : false;
+
+        // 6. Proses upload gambar jika ada
         if ($request->hasFile('image')) {
             // Gambar akan disimpan di folder storage/app/public/products
             $data['image'] = $request->file('image')->store('products', 'public');
         }
 
-        // 6. Simpan ke database
-        \App\Models\Product::create($data);
+        // 7. Simpan ke database
+        Product::create($data);
 
-        // 7. Kembali ke halaman index dengan pesan sukses
+        // 8. Kembali ke halaman index dengan pesan sukses
         return redirect()->route('products.index')->with('success', 'Data obat berhasil ditambahkan!');
     }
+
     /**
      * Display the specified resource.
      */
     public function edit($id)
     {
-        $product = \App\Models\Product::findOrFail($id);
-        $categories = \App\Models\Category::where('type', 'product')->get();
+        $product = Product::findOrFail($id);
+        $categories = Category::where('type', 'product')->get();
 
         return view('products.edit', compact('product', 'categories'));
     }
 
-    public function update(\Illuminate\Http\Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id)
     {
-        $product = \App\Models\Product::findOrFail($id);
+        $product = Product::findOrFail($id);
 
         $request->validate([
             'name'        => 'required|string|max:255',
@@ -89,17 +103,17 @@ class ProductController extends Controller
         ]);
 
         $data = $request->all();
+        
         // Update slug jika nama berubah
-        $data['slug'] = \Illuminate\Support\Str::slug($request->name) . '-' . time();
+        $data['slug'] = Str::slug($request->name) . '-' . time();
+        
         // Cek apakah checkbox dicentang (bernilai true) atau tidak (bernilai false)
         $data['requires_prescription'] = $request->has('requires_prescription') ? true : false;
-
-        // ... (kode slug dan upload gambar tetap sama di bawahnya)
 
         if ($request->hasFile('image')) {
             // Hapus gambar lama dari storage jika ada
             if ($product->image) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
+                Storage::disk('public')->delete($product->image);
             }
             $data['image'] = $request->file('image')->store('products', 'public');
         }
@@ -109,9 +123,12 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Data obat berhasil diperbarui!');
     }
 
+    /**
+     * Methods untuk Frontend (Halaman Publik SiFit)
+     */
     public function frontendIndex(Request $request)
     {
-        $query = \App\Models\Product::with(['category', 'user'])
+        $query = Product::with(['category', 'user'])
             ->where('status', 'published')
             ->latest();
 
@@ -124,20 +141,19 @@ class ProductController extends Controller
         }
 
         $products = $query->paginate(9)->withQueryString();
-
-        $categories = \App\Models\Category::where('type', 'product')->get();
+        $categories = Category::where('type', 'product')->get();
 
         return view('frontend.obat.index', compact('products', 'categories'));
     }
 
     public function frontendShow($slug)
     {
-        $product = \App\Models\Product::with(['category', 'user'])
+        $product = Product::with(['category', 'user'])
             ->where('slug', $slug)
             ->where('status', 'published')
             ->firstOrFail();
 
-        $relatedProducts = \App\Models\Product::with('category')
+        $relatedProducts = Product::with('category')
             ->where('status', 'published')
             ->where('id', '!=', $product->id)
             ->where('category_id', $product->category_id)
@@ -148,13 +164,16 @@ class ProductController extends Controller
         return view('frontend.obat.detail', compact('product', 'relatedProducts'));
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy($id)
     {
-        $product = \App\Models\Product::findOrFail($id);
+        $product = Product::findOrFail($id);
 
         // Hapus gambar dari storage sebelum datanya dihapus dari database
         if ($product->image) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
+            Storage::disk('public')->delete($product->image);
         }
 
         $product->delete();
