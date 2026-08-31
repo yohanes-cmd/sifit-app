@@ -79,6 +79,8 @@
                             <option value="">-- Pilih Cakupan --</option>
                             <option value="Global">Global (Bisa akses semua data sistem)</option>
                             <option value="OPD">OPD (Hanya akses data di OPD miliknya)</option>
+                            <!-- INI OPSI BARU UNTUK VIEWER/CUSTOMER -->
+                            <option value="Personal">Personal / Publik (Hanya belanja & akses front-end)</option>
                         </select>
                         <span class="text-danger error-text akses_data_error"></span>
                     </div>
@@ -156,6 +158,8 @@
                         render: function(data) {
                             if (data === 'Global') return '<span class="badge bg-danger">Global</span>';
                             if (data === 'OPD') return '<span class="badge bg-primary">OPD</span>';
+                            // INI TAMBAHAN BADGE UNTUK PERSONAL
+                            if (data === 'Personal') return '<span class="badge bg-success">Personal</span>';
                             return '<span class="badge bg-secondary">Belum Diatur</span>';
                         }
                     },

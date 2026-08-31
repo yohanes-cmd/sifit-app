@@ -1,5 +1,6 @@
 <?php
 
+<<<<<<< HEAD
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
@@ -7,39 +8,58 @@ use App\Http\Controllers\UserController;
 // Tambahkan ini:
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OpdController;
+=======
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
+>>>>>>> 64f01cdf76d9d5fa38ca912ecdd7321ad898d37b
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\OpdController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Models\News;
+use App\Models\Product;
+use Illuminate\Support\Facades\Route;
 
+// --- INI YANG KITA UBAH ---
 Route::get('/', function () {
-    return redirect('/dashboard');
+    return redirect('/home');
 });
+// --------------------------
 
-Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->name('dashboard');
+// Auth Routes
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
 
-// Manajemen Data Master
-Route::resource('roles', RoleController::class);
-Route::resource('users', UserController::class);
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard.index');
+    })->name('dashboard');
 
-// Manajemen E-Commerce
-Route::resource('categories', CategoryController::class); // <--- Rute Kategori Baru
-Route::resource('products', ProductController::class);
+    // Manajemen Data Master
+    Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
 
-// ... (route lainnya)
-Route::resource('opds', OpdController::class);
+    // Manajemen E-Commerce
+    Route::resource('categories', CategoryController::class);
+    Route::resource('products', ProductController::class);
 
-Route::resource('news', NewsController::class);
-
+    Route::resource('opds', OpdController::class);
+    Route::resource('news', NewsController::class);
+});
 
 // Frontend
 Route::get('/home', function () {
-    $latestNews = \App\Models\News::with(['category', 'user'])
+    $latestNews = News::with(['category', 'user'])
         ->where('status', 'publish')
         ->latest('published_at')
         ->take(3)
         ->get();
 
-    $latestProducts = \App\Models\Product::with('category')
+    $latestProducts = Product::with('category')
         ->where('status', 'published')
         ->latest()
         ->take(4)
@@ -82,12 +102,6 @@ Route::get('/about/galeri', function () {
 
     return view('frontend.about.galeri', compact('galeri'));
 })->name('frontend.about.galeri');
-
-// Route::get('/about/galeri', function () {
-//     $galeri = \App\Models\GaleriAlbum::latest('id_album')->get();
-
-//     return view('frontend.about.galeri', compact('galeri'));
-// })->name('frontend.about.galeri');
 
 Route::get('/berita', [NewsController::class, 'frontendIndex'])
     ->name('frontend.berita');

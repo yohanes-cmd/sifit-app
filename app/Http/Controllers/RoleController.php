@@ -37,7 +37,8 @@ class RoleController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|regex:/^[a-zA-Z\s_]+$/|unique:roles,name',
-            'akses_data' => 'required|string|in:Global,OPD',
+            // Opsi 'Personal' ditambahkan ke dalam validasi
+            'akses_data' => 'required|string|in:Global,OPD,Personal', 
         ]);
 
         if ($validator->fails()) {
@@ -80,7 +81,8 @@ class RoleController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|regex:/^[a-zA-Z\s_]+$/|unique:roles,name,'.$id,
-            'akses_data' => 'required|string|in:Global,OPD',
+            // Opsi 'Personal' ditambahkan ke dalam validasi
+            'akses_data' => 'required|string|in:Global,OPD,Personal',
         ]);
 
         if ($validator->fails()) {
