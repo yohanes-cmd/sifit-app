@@ -1,17 +1,7 @@
 <?php
 
-<<<<<<< HEAD
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-// Tambahkan ini:
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\OpdController;
-=======
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CategoryController;
->>>>>>> 64f01cdf76d9d5fa38ca912ecdd7321ad898d37b
+use App\Http\Controllers\CategoryController; 
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OpdController;
 use App\Http\Controllers\ProductController;
