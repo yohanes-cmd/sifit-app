@@ -286,8 +286,8 @@
     <!-- Left Branding Panel -->
     <div class="auth-left">
         <div class="auth-left-content">
-            <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="SiFit Logo" class="brand-logo"
-                 onerror="this.src='{{ asset('assets/images/logo-riau.png') }}'">
+            <!-- <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="SiFit Logo" class="brand-logo" -->
+                 <!-- onerror="this.src='{{ asset('assets/images/logo-riau.png') }}'"> -->
             <h1>SIFIT</h1>
             <p class="tagline">Sistem Informasi Farmasi<br>Provinsi Riau</p>
 

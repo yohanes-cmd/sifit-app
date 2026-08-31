@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta content="Sistem Informasi Farmasi Riau" name="description" />
 
-    <link rel="shortcut icon" href="{{ asset('assets/images/logo-riau.png') }}">
+    <!-- <link rel="shortcut icon" href="{{ asset('assets/images/logo-riau.png') }}"> -->
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
@@ -290,8 +290,8 @@
     <!-- Left Branding Panel -->
     <div class="auth-left">
         <div class="auth-left-content">
-            <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="SiFit Logo" class="brand-logo"
-                 onerror="this.src='{{ asset('assets/images/logo-riau.png') }}'">
+            <!-- <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="SiFit Logo" class="brand-logo" -->
+                 <!-- onerror="this.src='{{ asset('assets/images/logo-riau.png') }}'">s -->
             <h1>SIFIT</h1>
             <p class="tagline">Sistem Informasi Farmasi <br>Provinsi Riau</p>
 
