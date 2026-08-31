@@ -7,7 +7,6 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Cloudinary\Cloudinary;
 
 class ProductController extends Controller
 {
@@ -62,13 +61,10 @@ class ProductController extends Controller
         // 5. Cek apakah checkbox resep dokter dicentang (bernilai true) atau tidak (bernilai false)
         $data['requires_prescription'] = $request->has('requires_prescription') ? true : false;
 
-        // 6. Proses upload gambar ke Cloudinary jika ada
+        // 6. Proses upload gambar jika ada
         if ($request->hasFile('image')) {
-            $cloudinary = new Cloudinary(env('CLOUDINARY_URL'));
-            $upload = $cloudinary->uploadApi()->upload($request->file('image')->getRealPath(), [
-                'folder' => 'sifit_products'
-            ]);
-            $data['image'] = $upload['secure_url'];
+            // Gambar akan disimpan di folder storage/app/public/products
+            $data['image'] = $request->file('image')->store('products', 'public');
         }
 
         // 7. Simpan ke database
@@ -115,13 +111,11 @@ class ProductController extends Controller
         $data['requires_prescription'] = $request->has('requires_prescription') ? true : false;
 
         if ($request->hasFile('image')) {
-            // Karena gambar sekarang disimpan di Cloudinary berbentuk URL, 
-            // kita cukup timpa variabel datanya dengan file baru ke awan.
-            $cloudinary = new Cloudinary(env('CLOUDINARY_URL'));
-            $upload = $cloudinary->uploadApi()->upload($request->file('image')->getRealPath(), [
-                'folder' => 'sifit_products'
-            ]);
-            $data['image'] = $upload['secure_url'];
+            // Hapus gambar lama dari storage jika ada
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $data['image'] = $request->file('image')->store('products', 'public');
         }
 
         $product->update($data);
@@ -177,7 +171,11 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        // Hapus data dari database (file di Cloudinary dibiarkan aman di awan)
+        // Hapus gambar dari storage sebelum datanya dihapus dari database
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'Data obat berhasil dihapus!');
