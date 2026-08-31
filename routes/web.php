@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController; 
-use App\Http\Controllers\RoleController; 
-use App\Http\Controllers\UserController; 
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 // Tambahkan ini:
-use App\Http\Controllers\CategoryController; 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OpdController;
 use App\Http\Controllers\NewsController;
 
@@ -49,7 +49,20 @@ Route::get('/home', function () {
 })->name('frontend.home');
 
 Route::get('/about', function () {
-    return view('frontend.about.index');
+    $totalProducts = \App\Models\Product::where('status', 'published')->count();
+
+    $totalNews = \App\Models\News::where('status', 'publish')->count();
+
+    $totalCategories = \App\Models\Category::where('type', 'product')->count();
+
+    $totalPublishedInfo = $totalProducts + $totalNews;
+
+    return view('frontend.about.index', compact(
+        'totalProducts',
+        'totalNews',
+        'totalCategories',
+        'totalPublishedInfo'
+    ));
 })->name('frontend.about');
 
 Route::get('/about/visi-misi', function () {
@@ -95,6 +108,6 @@ Route::get('/obat/informasi', function () {
 Route::get('/obat/{slug}', [ProductController::class, 'frontendShow'])
     ->name('frontend.obat.detail');
 
-    Route::get('/kontak', function () {
+Route::get('/kontak', function () {
     return view('frontend.contact.index');
 })->name('frontend.contact');

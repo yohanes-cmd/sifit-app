@@ -355,19 +355,26 @@
     <div class="container">
         <div class="sec-title text-center wow fadeInUp" data-wow-delay="0.2s">
             <h1>Informasi <span>Farmasi</span> dalam Satu Sistem</h1>
-            <p>SIFIT menyediakan berbagai informasi untuk membantu masyarakat memperoleh informasi obat dan informasi kefarmasian secara lebih mudah.</p>
+            <p>SIFIT menampilkan data berdasarkan informasi yang telah tersedia dan dipublikasikan pada sistem.</p>
         </div>
 
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <ul>
-
                     <li class="wow fadeInUp" data-wow-delay="0.2s">
                         <div class="single-item text-center">
                             <div class="icon-holder">
                                 <span class="flaticon-medical"></span>
                             </div>
-                            <h1>01</h1>
+                            <h1>
+                                <span class="timer"
+                                    data-from="0"
+                                    data-to="{{ $totalProducts }}"
+                                    data-speed="2000"
+                                    data-refresh-interval="50">
+                                    {{ $totalProducts }}
+                                </span>
+                            </h1>
                             <h3>Data Obat</h3>
                         </div>
                     </li>
@@ -377,7 +384,15 @@
                             <div class="icon-holder">
                                 <span class="flaticon-smile"></span>
                             </div>
-                            <h1>02</h1>
+                            <h1>
+                                <span class="timer"
+                                    data-from="0"
+                                    data-to="{{ $totalNews }}"
+                                    data-speed="2000"
+                                    data-refresh-interval="50">
+                                    {{ $totalNews }}
+                                </span>
+                            </h1>
                             <h3>Berita Farmasi</h3>
                         </div>
                     </li>
@@ -387,7 +402,15 @@
                             <div class="icon-holder">
                                 <span class="flaticon-medical-1"></span>
                             </div>
-                            <h1>03</h1>
+                            <h1>
+                                <span class="timer"
+                                    data-from="0"
+                                    data-to="{{ $totalCategories }}"
+                                    data-speed="2000"
+                                    data-refresh-interval="50">
+                                    {{ $totalCategories }}
+                                </span>
+                            </h1>
                             <h3>Kategori Obat</h3>
                         </div>
                     </li>
@@ -397,11 +420,18 @@
                             <div class="icon-holder">
                                 <span class="flaticon-ribbon"></span>
                             </div>
-                            <h1>04</h1>
-                            <h3>Informasi Tersedia</h3>
+                            <h1>
+                                <span class="timer"
+                                    data-from="0"
+                                    data-to="{{ $totalPublishedInfo }}"
+                                    data-speed="2000"
+                                    data-refresh-interval="50">
+                                    {{ $totalPublishedInfo }}
+                                </span>
+                            </h1>
+                            <h3>Informasi Dipublikasikan</h3>
                         </div>
                     </li>
-
                 </ul>
             </div>
         </div>
