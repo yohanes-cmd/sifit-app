@@ -10,6 +10,10 @@ use App\Http\Controllers\UserController;
 use App\Models\News;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MasterObatController;
+use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\StokObatController;
+
 
 // --- INI YANG KITA UBAH ---
 Route::get('/', function () {
@@ -115,3 +119,13 @@ Route::get('/obat/{slug}', [ProductController::class, 'frontendShow'])
 Route::get('/kontak', function () {
     return view('frontend.contact.index');
 })->name('frontend.contact');
+
+// Rute untuk Master Obat
+Route::resource('master-obat', MasterObatController::class);
+
+// Rute khusus Transaksi Pemasukan
+Route::get('/pemasukan/create', [TransaksiController::class, 'createPemasukan'])->name('pemasukan.create');
+Route::post('/pemasukan', [TransaksiController::class, 'storePemasukan'])->name('pemasukan.store');
+
+// rute stok obat
+Route::get('/stok-obat', [StokObatController::class, 'index'])->name('stok-obat.index');

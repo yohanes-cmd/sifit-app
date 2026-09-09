@@ -69,6 +69,25 @@
                             <span>Data Obat / Produk</span>
                         </a>
                     </li>
+
+                    <!-- Menu master obat -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('master-obat.index') }}">
+                            <i class="las la-pills menu-icon"></i>
+                            <span> Master Obat </span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+    <a class="nav-link" href="{{ route('stok-obat.index') }}">
+        <i class="las la-boxes menu-icon"></i>
+        <span> Daftar Stok Obat </span>
+    </a>
+</li>
+
+                    
+
+
                     
                     <!-- INI ADALAH MENU MANAJEMEN ROLE YANG KITA BUAT -->
                     <li class="nav-item">
