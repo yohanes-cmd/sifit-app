@@ -13,13 +13,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterObatController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\StokObatController;
+use App\Http\Controllers\GudangController;
 
 
-// --- INI YANG KITA UBAH ---
+// --- Root Redirect ---
 Route::get('/', function () {
     return redirect('/home');
 });
-// --------------------------
 
 // Auth Routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -43,6 +43,34 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('opds', OpdController::class);
     Route::resource('news', NewsController::class);
+
+    // --- RUTE STOK OBAT & EXPORT (HARUS DI DALAM MIDDLEWARE AUTH KALAU PERLU AMAN) ---
+    // Posisikan rute khusus export DI ATAS Route::resource('stok-obat')
+    Route::get('/stok-obat/export-excel', [StokObatController::class, 'exportExcel'])->name('stok-obat.export');
+    
+    // Rute resource stok obat (mencakup index, destroy, dll)
+    Route::resource('stok-obat', StokObatController::class);
+
+    // Rute untuk Master Obat
+    Route::resource('master-obat', MasterObatController::class);
+
+    // Rute khusus Transaksi Pemasukan
+    Route::get('/pemasukan/create', [TransaksiController::class, 'createPemasukan'])->name('pemasukan.create');
+    Route::post('/pemasukan', [TransaksiController::class, 'storePemasukan'])->name('pemasukan.store');
+
+    // Rute khusus Transaksi Pengeluaran
+    Route::get('/pengeluaran/create', [TransaksiController::class, 'createPengeluaran'])->name('pengeluaran.create');
+    Route::post('/pengeluaran', [TransaksiController::class, 'storePengeluaran'])->name('pengeluaran.store');
+
+    // Rute khusus Transaksi Pemindahan
+    Route::get('/pemindahan/create', [TransaksiController::class, 'createPemindahan'])->name('pemindahan.create');
+    Route::post('/pemindahan', [TransaksiController::class, 'storePemindahan'])->name('pemindahan.store');
+
+    // Rute untuk Master Gudang
+    Route::resource('gudang', GudangController::class);
+
+    // Rute untuk Master Instansi / OPD
+    Route::resource('opd', OpdController::class);
 });
 
 // Frontend
@@ -64,11 +92,8 @@ Route::get('/home', function () {
 
 Route::get('/about', function () {
     $totalProducts = \App\Models\Product::where('status', 'published')->count();
-
     $totalNews = \App\Models\News::where('status', 'publish')->count();
-
     $totalCategories = \App\Models\Category::where('type', 'product')->count();
-
     $totalPublishedInfo = $totalProducts + $totalNews;
 
     return view('frontend.about.index', compact(
@@ -93,7 +118,6 @@ Route::get('/about/faq', function () {
 
 Route::get('/about/galeri', function () {
     $galeri = collect();
-
     return view('frontend.about.galeri', compact('galeri'));
 })->name('frontend.about.galeri');
 
@@ -119,13 +143,3 @@ Route::get('/obat/{slug}', [ProductController::class, 'frontendShow'])
 Route::get('/kontak', function () {
     return view('frontend.contact.index');
 })->name('frontend.contact');
-
-// Rute untuk Master Obat
-Route::resource('master-obat', MasterObatController::class);
-
-// Rute khusus Transaksi Pemasukan
-Route::get('/pemasukan/create', [TransaksiController::class, 'createPemasukan'])->name('pemasukan.create');
-Route::post('/pemasukan', [TransaksiController::class, 'storePemasukan'])->name('pemasukan.store');
-
-// rute stok obat
-Route::get('/stok-obat', [StokObatController::class, 'index'])->name('stok-obat.index');

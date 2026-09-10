@@ -62,13 +62,13 @@
                         </a>
                     </li>
 
-                    <!-- Menu data obat -->
+                    <!-- Menu data obat
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('products.index') }}">
                             <i class="las la-pills menu-icon"></i>
                             <span>Data Obat / Produk</span>
                         </a>
-                    </li>
+                    </li> -->
 
                     <!-- Menu master obat -->
                     <li class="nav-item">
@@ -85,8 +85,40 @@
     </a>
 </li>
 
-                    
+                    <li class="nav-item">
+    <a class="nav-link" href="{{ route('pemasukan.create') }}">
+        <i class="las la-truck-loading menu-icon"></i>
+        <span> Pemasukan Barang </span>
+    </a>
+</li>
 
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('pengeluaran.create') }}">
+        <i class="las la-dolly menu-icon"></i>
+        <span> Pengeluaran Barang </span>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('pemindahan.create') }}">
+        <i class="las la-exchange-alt menu-icon"></i>
+        <span> Pemindahan Barang </span>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('gudang.index') }}">
+        <i class="las la-building menu-icon"></i>
+        <span> Master Gudang </span>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('opd.index') }}">
+        <i class="las la-hospital menu-icon"></i>
+        <span> Instansi / OPD </span>
+    </a>
+</li>
 
                     
                     <!-- INI ADALAH MENU MANAJEMEN ROLE YANG KITA BUAT -->

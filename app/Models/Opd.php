@@ -9,6 +9,6 @@ class Opd extends Model
 {
     use HasFactory;
 
-    // Mengizinkan kolom 'name' diisi secara massal (mass assignment)
-   protected $fillable = ['name'];
+    // Mengizinkan semua kolom diisi secara massal
+    protected $guarded = []; 
 }
