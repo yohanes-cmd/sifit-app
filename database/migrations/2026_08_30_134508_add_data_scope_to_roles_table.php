@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('roles', function (Blueprint $table) {
             // Cek dulu, kalau kolomnya BELUM ada, baru ditambahkan
-            if (!Schema::hasColumn('roles', 'akses_data')) {
+            if (! Schema::hasColumn('roles', 'akses_data')) {
                 $table->string('akses_data')->nullable()->after('name');
             }
         });

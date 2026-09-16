@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\News;
 use App\Models\Category;
-use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
+use App\Models\News;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Yajra\DataTables\Facades\DataTables;
 
 class NewsController extends Controller
 {
@@ -18,7 +18,7 @@ class NewsController extends Controller
         if ($request->ajax()) {
             $data = News::with(['category', 'user'])->latest()->get();
 
-            return Datatables::of($data)
+            return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('category_name', function ($row) {
                     return $row->category ? $row->category->name : '-';
@@ -30,11 +30,13 @@ class NewsController extends Controller
                     if ($row->status == 'publish') {
                         return '<span class="badge bg-success">Publish</span>';
                     }
+
                     return '<span class="badge bg-warning text-dark">Draft</span>';
                 })
                 ->addColumn('action', function ($row) {
-                    $btn = '<button data-id="' . $row->id . '" class="btn btn-warning btn-sm editNews text-white">Ubah</button> ';
-                    $btn .= '<button data-id="' . $row->id . '" class="btn btn-danger btn-sm deleteNews">Hapus</button>';
+                    $btn = '<button data-id="'.$row->id.'" class="btn btn-warning btn-sm editNews text-white">Ubah</button> ';
+                    $btn .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-sm deleteNews">Hapus</button>';
+
                     return $btn;
                 })
                 ->rawColumns(['status_badge', 'action'])
@@ -47,6 +49,7 @@ class NewsController extends Controller
     public function create()
     {
         $categories = Category::where('type', 'news')->orWhereNull('type')->get();
+
         return view('news.create', compact('categories'));
     }
 
@@ -77,7 +80,7 @@ class NewsController extends Controller
 
         News::create([
             'title' => $request->title,
-            'slug' => Str::slug($request->title) . '-' . time(),
+            'slug' => Str::slug($request->title).'-'.time(),
             'category_id' => $request->category_id,
             'user_id' => Auth::id() ?? 1,
             'content' => $request->content,
@@ -93,6 +96,7 @@ class NewsController extends Controller
     public function edit($id)
     {
         $news = News::find($id);
+
         return response()->json($news);
     }
 
@@ -133,13 +137,13 @@ class NewsController extends Controller
 
         $news->update([
             'title' => $request->title,
-            'slug' => Str::slug($request->title) . '-' . time(),
+            'slug' => Str::slug($request->title).'-'.time(),
             'category_id' => $request->category_id,
             'content' => $request->content,
             'status' => $request->status,
             'image' => $imagePath,
             'pdf_file' => $pdfPath, // Update data PDF
-            'published_at' => $request->status == 'publish' && !$news->published_at ? now() : $news->published_at,
+            'published_at' => $request->status == 'publish' && ! $news->published_at ? now() : $news->published_at,
         ]);
 
         return response()->json(['status' => 'success', 'message' => 'Berita berhasil diperbarui!']);
@@ -152,7 +156,7 @@ class NewsController extends Controller
             ->latest('published_at');
 
         if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
+            $query->where('title', 'like', '%'.$request->search.'%');
         }
 
         $news = $query->paginate(6)->withQueryString();
@@ -176,7 +180,6 @@ class NewsController extends Controller
 
         return view('frontend.berita.detail', compact('news', 'latestNews'));
     }
-
 
     public function destroy($id)
     {

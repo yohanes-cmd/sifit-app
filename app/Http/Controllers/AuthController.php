@@ -45,10 +45,16 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
+        $fromFrontend = $request->get('from') === 'frontend';
+
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        if ($fromFrontend) {
+            return redirect()->route('frontend.home');
+        }
 
         return redirect()->route('login');
     }
@@ -95,5 +101,67 @@ class AuthController extends Controller
         Auth::login($user);
 
         return redirect('/dashboard');
+    }
+
+    /**
+     * Show the frontend login form.
+     */
+    public function showFrontendLoginForm()
+    {
+        return view('frontend.auth.login');
+    }
+
+    /**
+     * Handle a frontend authentication attempt.
+     */
+    public function frontendLogin(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();
+
+            return redirect()->intended(route('frontend.home'));
+        }
+
+        return back()->withErrors([
+            'email' => 'Email atau kata sandi yang Anda masukkan salah.',
+        ])->onlyInput('email');
+    }
+
+    /**
+     * Show the frontend registration form.
+     */
+    public function showFrontendRegisterForm()
+    {
+        return view('frontend.auth.register');
+    }
+
+    /**
+     * Handle a frontend customer registration.
+     */
+    public function frontendRegister(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        $role = Role::firstOrCreate(['name' => 'viewer', 'guard_name' => 'web']);
+        $user->assignRole($role);
+
+        Auth::login($user);
+
+        return redirect()->route('frontend.home')->with('success', 'Pendaftaran akun berhasil! Selamat datang di SIFIT.');
     }
 }

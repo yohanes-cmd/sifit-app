@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
-use App\Models\MasterObat;
 use App\Models\Gudang;
+use App\Models\MasterObat;
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
 {
@@ -16,6 +16,7 @@ class TransaksiController extends Controller
     {
         $masterObats = MasterObat::all();
         $gudangs = Gudang::all();
+
         return view('transaksi.pemasukan.create', compact('masterObats', 'gudangs'));
     }
 
@@ -38,9 +39,9 @@ class TransaksiController extends Controller
                 'nomor_surat' => $request->nomor_surat,
                 'tanggal' => $request->tanggal,
                 'jenis_transaksi' => 'pemasukan',
-                'gudang_asal_id' => null, 
+                'gudang_asal_id' => null,
                 'gudang_tujuan_id' => $request->gudang_tujuan_id,
-                'user_id' => Auth::id(), 
+                'user_id' => Auth::id(),
             ]);
 
             // 2. Insert ke Detail Transaksi (Ditambah exp_date agar dibaca oleh Trigger)
@@ -53,11 +54,13 @@ class TransaksiController extends Controller
             ]);
 
             DB::commit();
+
             return redirect()->back()->with('success', 'Pemasukan berhasil! Silakan cek database stok, pasti otomatis bertambah.');
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal menyimpan transaksi: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Gagal menyimpan transaksi: '.$e->getMessage());
         }
     }
 
@@ -65,6 +68,7 @@ class TransaksiController extends Controller
     {
         $masterObats = MasterObat::all();
         $gudangs = Gudang::all();
+
         return view('transaksi.pengeluaran.create', compact('masterObats', 'gudangs'));
     }
 
@@ -73,7 +77,7 @@ class TransaksiController extends Controller
         $request->validate([
             'tanggal' => 'required|date',
             'nomor_surat' => 'required|string',
-            'gudang_asal_id' => 'required|exists:gudangs,id', 
+            'gudang_asal_id' => 'required|exists:gudangs,id',
             'master_obat_id' => 'required|exists:master_obats,id',
             'no_batch' => 'required|string',
             'jumlah' => 'required|integer|min:1',
@@ -85,8 +89,8 @@ class TransaksiController extends Controller
                 'nomor_surat' => $request->nomor_surat,
                 'tanggal' => $request->tanggal,
                 'jenis_transaksi' => 'pengeluaran',
-                'gudang_asal_id' => $request->gudang_asal_id, 
-                'gudang_tujuan_id' => null, 
+                'gudang_asal_id' => $request->gudang_asal_id,
+                'gudang_tujuan_id' => null,
                 'user_id' => Auth::id(),
             ]);
 
@@ -98,11 +102,13 @@ class TransaksiController extends Controller
             ]);
 
             DB::commit();
+
             return redirect()->back()->with('success', 'Pengeluaran berhasil! Silakan cek halaman Daftar Stok, pasti jumlahnya otomatis berkurang.');
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal menyimpan transaksi: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Gagal menyimpan transaksi: '.$e->getMessage());
         }
     }
 
@@ -110,6 +116,7 @@ class TransaksiController extends Controller
     {
         $masterObats = MasterObat::all();
         $gudangs = Gudang::all();
+
         return view('transaksi.pemindahan.create', compact('masterObats', 'gudangs'));
     }
 
@@ -119,7 +126,7 @@ class TransaksiController extends Controller
             'tanggal' => 'required|date',
             'nomor_surat' => 'required|string',
             'gudang_asal_id' => 'required|exists:gudangs,id',
-            'gudang_tujuan_id' => 'required|exists:gudangs,id|different:gudang_asal_id', 
+            'gudang_tujuan_id' => 'required|exists:gudangs,id|different:gudang_asal_id',
             'master_obat_id' => 'required|exists:master_obats,id',
             'no_batch' => 'required|string',
             'jumlah' => 'required|integer|min:1',
@@ -144,11 +151,13 @@ class TransaksiController extends Controller
             ]);
 
             DB::commit();
+
             return redirect()->back()->with('success', 'Pemindahan barang berhasil! Cek Daftar Stok untuk melihat perubahannya.');
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal memproses pemindahan: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Gagal memproses pemindahan: '.$e->getMessage());
         }
     }
 }

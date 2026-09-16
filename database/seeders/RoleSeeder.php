@@ -21,7 +21,7 @@ class RoleSeeder extends Seeder
             'validator',
             'publisher',
             'operator',
-            'viewer'
+            'viewer',
         ];
 
         // Looping untuk memasukkan semua role ke dalam database

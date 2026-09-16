@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('nama_opd')->after('id')->nullable();
             $table->string('status_kantor')->after('nama_opd')->nullable();
             $table->text('alamat')->after('status_kantor')->nullable();
-            
+
             // Menghapus kolom 'name' yang lama agar rapi (jika sebelumnya ada)
             if (Schema::hasColumn('opds', 'name')) {
                 $table->dropColumn('name');

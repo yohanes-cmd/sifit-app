@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('detail_transaksis', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('transaksi_id')->constrained('transaksis')->onDelete('cascade');
-    $table->foreignId('master_obat_id')->constrained('master_obats');
-    $table->string('no_batch');
-    $table->integer('jumlah');
-    $table->timestamps();
-});
+        Schema::create('detail_transaksis', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('transaksi_id')->constrained('transaksis')->onDelete('cascade');
+            $table->foreignId('master_obat_id')->constrained('master_obats');
+            $table->string('no_batch');
+            $table->integer('jumlah');
+            $table->timestamps();
+        });
     }
 
     /**

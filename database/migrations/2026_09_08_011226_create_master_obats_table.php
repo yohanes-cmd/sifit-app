@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('master_obats', function (Blueprint $table) {
-    $table->id();
-    $table->string('kode_obat')->unique(); // Contoh: OBT001
-    $table->string('nama_obat');
-    $table->string('kategori'); // Obat / Logistik
-    $table->string('satuan'); // Strip / Kotak / Botol
-    $table->timestamps();
-});
+            $table->id();
+            $table->string('kode_obat')->unique(); // Contoh: OBT001
+            $table->string('nama_obat');
+            $table->string('kategori'); // Obat / Logistik
+            $table->string('satuan'); // Strip / Kotak / Botol
+            $table->timestamps();
+        });
     }
 
     /**

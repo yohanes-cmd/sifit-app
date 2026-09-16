@@ -143,7 +143,7 @@
                         <h1>Sistem Informasi<br>Farmasi <span>Terintegrasi.</span></h1>
                         <p>Akses informasi obat dan berita kefarmasian<br>secara mudah melalui SIFIT.</p>
                         <div class="button">
-                            <a href="{{ route('frontend.about') }}">Tentang SIFIT</a>
+                            <a href="{{ route('frontend.about') }}">Tentang SIFIT< /a>
                             <a class="btn-style-two" href="{{ route('frontend.obat') }}">Data Obat</a>
                         </div>
                     </div>

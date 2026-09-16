@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -40,20 +40,20 @@ class ProductController extends Controller
     {
         // 1. Validasi data dari form (Ditambah validasi 'unit')
         $request->validate([
-            'name'        => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'price'       => 'required|numeric',
-            'unit'        => 'required|string|max:50',
-            'stock'       => 'required|integer',
-            'status'      => 'required|in:published,draft,inactive',
-            'image'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'price' => 'required|numeric',
+            'unit' => 'required|string|max:50',
+            'stock' => 'required|integer',
+            'status' => 'required|in:published,draft,inactive',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         // 2. Ambil semua data inputan
         $data = $request->all();
 
         // 3. Buat slug otomatis dari nama obat (ditambah waktu agar unik)
-        $data['slug'] = Str::slug($request->name) . '-' . time();
+        $data['slug'] = Str::slug($request->name).'-'.time();
 
         // 4. Catat ID admin yang sedang login secara dinamis
         $data['user_id'] = auth()->id();
@@ -93,20 +93,20 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         $request->validate([
-            'name'        => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'price'       => 'required|numeric',
-            'unit'        => 'required|string|max:50',
-            'stock'       => 'required|integer',
-            'status'      => 'required|in:published,draft,inactive',
-            'image'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'price' => 'required|numeric',
+            'unit' => 'required|string|max:50',
+            'stock' => 'required|integer',
+            'status' => 'required|in:published,draft,inactive',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $data = $request->all();
-        
+
         // Update slug jika nama berubah
-        $data['slug'] = Str::slug($request->name) . '-' . time();
-        
+        $data['slug'] = Str::slug($request->name).'-'.time();
+
         // Cek apakah checkbox dicentang (bernilai true) atau tidak (bernilai false)
         $data['requires_prescription'] = $request->has('requires_prescription') ? true : false;
 
@@ -133,7 +133,7 @@ class ProductController extends Controller
             ->latest();
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         if ($request->filled('category')) {

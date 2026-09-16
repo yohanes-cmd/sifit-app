@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
+use Yajra\DataTables\Facades\DataTables;
 
 class RoleController extends Controller
 {
@@ -15,19 +16,20 @@ class RoleController extends Controller
     {
         if ($request->ajax()) {
             $data = Role::with('permissions')->get();
-            
-            return Datatables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('jumlah_permission', function($row){
-                        return $row->permissions->count(); 
-                    })
-                    ->addColumn('action', function($row){
-                        $btn = '<button data-id="'.$row->id.'" class="btn btn-warning btn-sm editRole text-white">Ubah</button> ';
-                        $btn .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-sm deleteRole">Hapus</button>';
-                        return $btn;
-                    })
-                    ->rawColumns(['action']) 
-                    ->make(true);
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('jumlah_permission', function ($row) {
+                    return $row->permissions->count();
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<button data-id="'.$row->id.'" class="btn btn-warning btn-sm editRole text-white">Ubah</button> ';
+                    $btn .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-sm deleteRole">Hapus</button>';
+
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         }
 
         return view('roles.index');
@@ -38,7 +40,7 @@ class RoleController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|regex:/^[a-zA-Z\s_]+$/|unique:roles,name',
             // Opsi 'Personal' ditambahkan ke dalam validasi
-            'akses_data' => 'required|string|in:Global,OPD,Personal', 
+            'akses_data' => 'required|string|in:Global,OPD,Personal',
         ]);
 
         if ($validator->fails()) {
@@ -51,7 +53,7 @@ class RoleController extends Controller
             'guard_name' => 'web',
             'akses_data' => $request->akses_data,
             'created_at' => now(),
-            'updated_at' => now()
+            'updated_at' => now(),
         ]);
 
         // 2. Ambil instance role untuk sinkronisasi permissions
@@ -59,7 +61,7 @@ class RoleController extends Controller
         $permissions = $request->input('permissions', []);
         $role->syncPermissions($permissions);
 
-        app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
 
         return response()->json(['status' => 'success', 'message' => 'Role dan Permission berhasil ditambahkan!']);
     }
@@ -67,13 +69,13 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = Role::with('permissions')->find($id);
-        
+
         // Ambil daftar nama permission yang sudah dimiliki role ini
         $rolePermissions = $role->permissions->pluck('name')->toArray();
 
         return response()->json([
             'role' => $role,
-            'rolePermissions' => $rolePermissions
+            'rolePermissions' => $rolePermissions,
         ]);
     }
 
@@ -93,7 +95,7 @@ class RoleController extends Controller
         DB::table('roles')->where('id', $id)->update([
             'name' => $request->name,
             'akses_data' => $request->akses_data,
-            'updated_at' => now()
+            'updated_at' => now(),
         ]);
 
         // 2. Sinkronisasi permissions dari checkbox kotak-kotak
@@ -101,7 +103,7 @@ class RoleController extends Controller
         $permissions = $request->input('permissions', []);
         $role->syncPermissions($permissions);
 
-        app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
 
         return response()->json(['status' => 'success', 'message' => 'Data Role dan Permission berhasil diperbarui!']);
     }
@@ -109,7 +111,8 @@ class RoleController extends Controller
     public function destroy($id)
     {
         Role::find($id)->delete();
-        app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
+
         return response()->json(['status' => 'success', 'message' => 'Role berhasil dihapus!']);
     }
 }

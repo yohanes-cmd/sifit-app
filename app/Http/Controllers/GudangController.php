@@ -10,6 +10,7 @@ class GudangController extends Controller
     public function index()
     {
         $gudangs = Gudang::latest()->get();
+
         return view('pengaturan.gudang.index', compact('gudangs'));
     }
 
@@ -33,6 +34,7 @@ class GudangController extends Controller
     public function edit($id)
     {
         $gudang = Gudang::findOrFail($id);
+
         return view('pengaturan.gudang.edit', compact('gudang'));
     }
 

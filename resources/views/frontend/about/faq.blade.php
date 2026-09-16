@@ -1,4 +1,4 @@
-@extends('frontend.layouts.app')
+L@extends('frontend.layouts.app')
 @section('title', 'FAQ - SIFIT')
 
 @section('content')

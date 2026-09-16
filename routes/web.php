@@ -1,32 +1,40 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CategoryController; 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\GudangController;
+use App\Http\Controllers\MasterObatController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OpdController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\StokObatController;
+use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
+use App\Models\Category;
 use App\Models\News;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MasterObatController;
-use App\Http\Controllers\TransaksiController;
-use App\Http\Controllers\StokObatController;
-use App\Http\Controllers\GudangController;
-
 
 // --- Root Redirect ---
 Route::get('/', function () {
     return redirect('/home');
 });
 
-// Auth Routes
+// Auth Routes (Backend / Admin)
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
+
+// Frontend Auth Routes (Pengunjung / Pelanggan)
+Route::middleware('guest')->group(function () {
+    Route::get('/masuk', [AuthController::class, 'showFrontendLoginForm'])->name('frontend.login');
+    Route::post('/masuk', [AuthController::class, 'frontendLogin'])->name('frontend.login.post');
+    Route::get('/daftar', [AuthController::class, 'showFrontendRegisterForm'])->name('frontend.register');
+    Route::post('/daftar', [AuthController::class, 'frontendRegister'])->name('frontend.register.post');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
@@ -47,7 +55,7 @@ Route::middleware('auth')->group(function () {
     // --- RUTE STOK OBAT & EXPORT (HARUS DI DALAM MIDDLEWARE AUTH KALAU PERLU AMAN) ---
     // Posisikan rute khusus export DI ATAS Route::resource('stok-obat')
     Route::get('/stok-obat/export-excel', [StokObatController::class, 'exportExcel'])->name('stok-obat.export');
-    
+
     // Rute resource stok obat (mencakup index, destroy, dll)
     Route::resource('stok-obat', StokObatController::class);
 
@@ -91,9 +99,9 @@ Route::get('/home', function () {
 })->name('frontend.home');
 
 Route::get('/about', function () {
-    $totalProducts = \App\Models\Product::where('status', 'published')->count();
-    $totalNews = \App\Models\News::where('status', 'publish')->count();
-    $totalCategories = \App\Models\Category::where('type', 'product')->count();
+    $totalProducts = Product::where('status', 'published')->count();
+    $totalNews = News::where('status', 'publish')->count();
+    $totalCategories = Category::where('type', 'product')->count();
     $totalPublishedInfo = $totalProducts + $totalNews;
 
     return view('frontend.about.index', compact(
@@ -118,6 +126,7 @@ Route::get('/about/faq', function () {
 
 Route::get('/about/galeri', function () {
     $galeri = collect();
+
     return view('frontend.about.galeri', compact('galeri'));
 })->name('frontend.about.galeri');
 

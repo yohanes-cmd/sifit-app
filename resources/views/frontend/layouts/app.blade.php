@@ -30,6 +30,110 @@
         sizes="16x16"
         href="{{ asset('frontend/images/favicon/favicon-16x16.png') }}">
 
+    <style>
+        /* Top Bar Auth Buttons (Blue Theme) */
+        .top-auth-links {
+            display: inline-flex;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            gap: 8px;
+        }
+        .top-auth-links > li {
+            display: inline-block;
+            position: relative;
+        }
+        .btn-top-login {
+            background: #0392ce !important;
+            color: #ffffff !important;
+            padding: 5px 16px !important;
+            border-radius: 20px;
+            font-size: 12.5px !important;
+            font-weight: 700 !important;
+            line-height: normal !important;
+            display: inline-flex !important;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(3, 146, 206, 0.25);
+            transition: all 0.3s ease !important;
+            text-decoration: none !important;
+            border: 1px solid #0392ce !important;
+        }
+        .btn-top-login:hover {
+            background: #0277a8 !important;
+            border-color: #0277a8 !important;
+            color: #ffffff !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(3, 146, 206, 0.35);
+        }
+        .btn-top-register {
+            background: #ffffff !important;
+            color: #0392ce !important;
+            padding: 5px 16px !important;
+            border-radius: 20px;
+            font-size: 12.5px !important;
+            font-weight: 700 !important;
+            line-height: normal !important;
+            display: inline-flex !important;
+            align-items: center;
+            gap: 6px;
+            border: 1.5px solid #0392ce !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            transition: all 0.3s ease !important;
+            text-decoration: none !important;
+        }
+        .btn-top-register:hover {
+            background: #f0f9ff !important;
+            color: #0277a8 !important;
+            transform: translateY(-1px);
+        }
+        .user-top-badge {
+            background: #0392ce !important;
+            color: #ffffff !important;
+            padding: 5px 16px !important;
+            border-radius: 20px;
+            font-size: 12.5px !important;
+            font-weight: 700 !important;
+            line-height: normal !important;
+            display: inline-flex !important;
+            align-items: center;
+            gap: 7px;
+            border: none !important;
+            box-shadow: 0 2px 8px rgba(3, 146, 206, 0.25);
+            transition: all 0.3s ease !important;
+            text-decoration: none !important;
+        }
+        .user-top-badge:hover {
+            background: #0277a8 !important;
+            color: #ffffff !important;
+        }
+        .top-auth-links .dropdown-menu {
+            right: 0;
+            left: auto;
+            min-width: 180px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border: 1px solid #e2e8f0;
+            padding: 8px 0;
+            background: #ffffff;
+            margin-top: 6px;
+        }
+        .top-auth-links .dropdown-menu > li > a {
+            padding: 9px 18px;
+            font-size: 13px;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.5;
+            text-decoration: none;
+        }
+        .top-auth-links .dropdown-menu > li > a:hover {
+            background: #f0f9ff;
+            color: #0392ce;
+        }
+    </style>
     @stack('styles')
 </head>
 
@@ -64,7 +168,42 @@
 
                         <div class="top-right clearfix">
 
-                            <ul class="social-links">
+                            <ul class="top-auth-links pull-right">
+                                @guest
+                                    <li>
+                                        <a href="{{ route('frontend.login') }}" class="btn-top-login">
+                                            <i class="fa fa-sign-in"></i> Masuk
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('frontend.register') }}" class="btn-top-register">
+                                            <i class="fa fa-user-plus"></i> Daftar
+                                        </a>
+                                    </li>
+                                @else
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle user-top-badge" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-user-circle"></i> {{ Auth::user()->name }} <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            @if(Auth::user()->hasAnyRole(['super_admin', 'admin', 'operator', 'produsen_data', 'verifikator', 'validator', 'publisher']))
+                                                <li><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> Panel Admin</a></li>
+                                            @endif
+                                            <li>
+                                                <a href="#" onclick="event.preventDefault(); document.getElementById('frontend-logout-form-top').submit();">
+                                                    <i class="fa fa-power-off"></i> Keluar
+                                                </a>
+                                                <form id="frontend-logout-form-top" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                    @csrf
+                                                    <input type="hidden" name="from" value="frontend">
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endguest
+                            </ul>
+
+                            <ul class="social-links pull-right" style="margin-right: 18px;">
 
                                 <li>
                                     <a href="#">

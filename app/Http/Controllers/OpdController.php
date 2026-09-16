@@ -10,6 +10,7 @@ class OpdController extends Controller
     public function index()
     {
         $opds = Opd::latest()->get();
+
         return view('pengguna.opd.index', compact('opds'));
     }
 
@@ -34,6 +35,7 @@ class OpdController extends Controller
     public function edit($id)
     {
         $opd = Opd::findOrFail($id);
+
         return view('pengguna.opd.edit', compact('opd'));
     }
 

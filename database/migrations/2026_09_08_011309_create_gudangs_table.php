@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('gudangs', function (Blueprint $table) {
-    $table->id();
-    $table->string('nama_gudang');
-    $table->enum('tipe', ['pusat', 'upt']); // Pusat / UPT (Puskesmas)
-    $table->timestamps();
-});
+        Schema::create('gudangs', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_gudang');
+            $table->enum('tipe', ['pusat', 'upt']); // Pusat / UPT (Puskesmas)
+            $table->timestamps();
+        });
     }
 
     /**

@@ -20,7 +20,7 @@ class StokObatExport implements FromCollection, WithHeadings, WithMapping
     {
         // Judul kolom di baris pertama Excel
         return [
-            'No', 'Kode Barang', 'Nama Barang', 'Kategori', 'No Batch', 'Expired Date', 'Lokasi Gudang', 'Sisa Stok', 'Satuan'
+            'No', 'Kode Barang', 'Nama Barang', 'Kategori', 'No Batch', 'Expired Date', 'Lokasi Gudang', 'Sisa Stok', 'Satuan',
         ];
     }
 
@@ -28,6 +28,7 @@ class StokObatExport implements FromCollection, WithHeadings, WithMapping
     {
         // Pemetaan isi baris (otomatis *looping*)
         static $no = 1;
+
         return [
             $no++,
             $stok->masterObat->kode_obat ?? '-',
@@ -37,7 +38,7 @@ class StokObatExport implements FromCollection, WithHeadings, WithMapping
             $stok->exp_date ? date('d-m-Y', strtotime($stok->exp_date)) : 'Belum diset',
             $stok->gudang->nama_gudang ?? '-',
             $stok->jumlah,
-            $stok->masterObat->satuan ?? '-'
+            $stok->masterObat->satuan ?? '-',
         ];
     }
 }
