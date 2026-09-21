@@ -7,31 +7,31 @@
                 <img src="{{ asset('assets/images/logo-riau.png') }}" alt="logo-small" class="logo-sm" style="height: 34px;">
             </span>
             <span class="">
-                <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="logo-large" class="logo-lg logo-light" style="height: 42px;">
-                <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="logo-large" class="logo-lg logo-dark" style="height: 42px;">
+                <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="logo-large" class="logo-lg logo-light" style="height: 50px;">
+                <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="logo-large" class="logo-lg logo-dark" style="height: 50px;">
             </span>
         </a>
     </div>
     <!--end brand-->
-    
+
     <!--start startbar-menu-->
     <div class="startbar-menu" >
         <div class="startbar-collapse" id="startbarCollapse" data-simplebar>
             <div class="d-flex align-items-start flex-column w-100">
                 <!-- Navigation -->
                 <ul class="navbar-nav mb-auto w-100">
-                    
+
                     <li class="menu-label mt-2">
                         <span>Main Menu</span>
                     </li>
-                    
+
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/') }}"> 
-                            <i class="iconoir-report-columns menu-icon"></i>                                       
+                        <a class="nav-link" href="{{ url('/') }}">
+                            <i class="iconoir-report-columns menu-icon"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    
+
                     <li class="menu-label mt-2">
                         <span>Data Master</span>
                     </li>
@@ -120,11 +120,11 @@
     </a>
 </li>
 
-                    
+
                     <!-- INI ADALAH MENU MANAJEMEN ROLE YANG KITA BUAT -->
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('roles*') ? 'active' : '' }}" href="{{ route('roles.index') }}">
-                            <i class="iconoir-shield-check menu-icon"></i> 
+                            <i class="iconoir-shield-check menu-icon"></i>
                             <span>Manajemen Role</span>
                         </a>
                     </li>
@@ -138,7 +138,7 @@
 
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}" href="{{ route('users.index') }}">
-                            <i class="iconoir-community menu-icon"></i> 
+                            <i class="iconoir-community menu-icon"></i>
                             <span>Data Pengguna</span>
                         </a>
                     </li>
@@ -150,7 +150,7 @@
                         </small>
                         <span>Template Components</span>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a class="nav-link" href="#sidebarElements" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarElements">
                             <i class="iconoir-compact-disc menu-icon"></i>
@@ -163,7 +163,7 @@
                             </ul>
                         </div>
                     </li>
-                    
+
                 </ul>
             </div>
         </div>
