@@ -24,7 +24,7 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
-            background: #110d26;
+            background: #081d24;
             color: #ffffff;
             display: flex;
             align-items: center;
@@ -34,14 +34,14 @@
             padding: 20px;
         }
 
-        /* ===== BACKGROUND GLOWS & GRADIENT ===== */
+        /* ===== BACKGROUND GLOWS & GRADIENT (#115566 & #4db6ac) ===== */
         .bg-layer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #130d29 0%, #201344 35%, #301b63 70%, #0f3d36 100%);
+            background: linear-gradient(135deg, #06181e 0%, #0d2f38 35%, #115566 75%, #0d3d3a 100%);
             z-index: 1;
         }
 
@@ -49,7 +49,7 @@
             position: fixed;
             width: 500px;
             height: 500px;
-            background: radial-gradient(circle, rgba(123, 69, 240, 0.4) 0%, rgba(0, 0, 0, 0) 70%);
+            background: radial-gradient(circle, rgba(17, 85, 102, 0.5) 0%, rgba(0, 0, 0, 0) 70%);
             top: -100px;
             left: -100px;
             border-radius: 50%;
@@ -60,7 +60,7 @@
             position: fixed;
             width: 500px;
             height: 500px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, rgba(0, 0, 0, 0) 70%);
+            background: radial-gradient(circle, rgba(77, 182, 172, 0.35) 0%, rgba(0, 0, 0, 0) 70%);
             bottom: -100px;
             right: -100px;
             border-radius: 50%;
@@ -73,12 +73,12 @@
             z-index: 10;
             width: 100%;
             max-width: 1080px;
-            background: rgba(22, 17, 49, 0.55);
-            backdrop-filter: blur(30px) saturate(200%);
+            background: rgba(10, 36, 44, 0.65);
+            backdrop-filter: blur(30px) saturate(180%);
             -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(77, 182, 172, 0.25);
             border-radius: 28px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
             overflow: hidden;
             display: flex;
             min-height: 600px;
@@ -92,21 +92,21 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: #e0e7ff;
+            color: #d1fae5;
             font-size: 13.5px;
             font-weight: 600;
             text-decoration: none;
             padding: 8px 16px;
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(77, 182, 172, 0.3);
             border-radius: 30px;
             transition: all 0.3s ease;
             z-index: 20;
         }
 
         .btn-back-home:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(77, 182, 172, 0.25);
             color: #ffffff;
             transform: translateX(-3px);
         }
@@ -147,9 +147,9 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            background: rgba(123, 69, 240, 0.35);
-            border: 1px solid rgba(155, 109, 247, 0.55);
-            color: #e0d4fc;
+            background: rgba(77, 182, 172, 0.25);
+            border: 1px solid rgba(77, 182, 172, 0.45);
+            color: #80e5db;
             padding: 3px 10px;
             border-radius: 12px;
             margin-left: 5px;
@@ -166,7 +166,7 @@
         }
 
         .hero-title span {
-            background: linear-gradient(135deg, #c4b0f9 0%, #7b45f0 50%, #34d399 100%);
+            background: linear-gradient(135deg, #a7f3d0 0%, #4db6ac 50%, #ffffff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -191,7 +191,7 @@
             align-items: center;
             gap: 12px;
             background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(77, 182, 172, 0.2);
             padding: 10px 16px;
             border-radius: 14px;
             font-size: 13px;
@@ -202,14 +202,14 @@
             width: 32px;
             height: 32px;
             border-radius: 8px;
-            background: linear-gradient(135deg, #7b45f0, #10b981);
+            background: linear-gradient(135deg, #115566, #4db6ac);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 13px;
             color: #ffffff;
             flex-shrink: 0;
-            box-shadow: 0 3px 8px rgba(123, 69, 240, 0.4);
+            box-shadow: 0 3px 8px rgba(17, 85, 102, 0.4);
         }
 
         /* ===== RIGHT FORM CARD SECTION ===== */
@@ -219,17 +219,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.03);
-            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 1px solid rgba(77, 182, 172, 0.15);
         }
 
         .form-glass-card {
             width: 100%;
             max-width: 380px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(30px) saturate(200%);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(30px) saturate(180%);
             -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(77, 182, 172, 0.3);
             border-radius: 22px;
             padding: 34px 28px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
@@ -280,8 +280,8 @@
         }
 
         .input-group-glass input:focus {
-            border-color: #7b45f0;
-            box-shadow: 0 0 0 3px rgba(123, 69, 240, 0.35);
+            border-color: #4db6ac;
+            box-shadow: 0 0 0 3px rgba(77, 182, 172, 0.35);
         }
 
         .input-group-glass .icon-field {
@@ -289,7 +289,7 @@
             left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: #7b45f0;
+            color: #115566;
             font-size: 15px;
         }
 
@@ -310,15 +310,15 @@
         }
 
         .remember-checkbox input {
-            accent-color: #7b45f0;
+            accent-color: #115566;
             cursor: pointer;
         }
 
-        /* Submit Button (Purple to Teal Gradient) */
+        /* Submit Button (Teal to Mint Gradient) */
         .btn-submit-glow {
             width: 100%;
             height: 48px;
-            background: linear-gradient(135deg, #7b45f0 0%, #6528e0 50%, #10b981 100%);
+            background: linear-gradient(135deg, #115566 0%, #0d4452 45%, #4db6ac 100%);
             border: none;
             border-radius: 10px;
             color: #ffffff;
@@ -327,7 +327,7 @@
             letter-spacing: 0.5px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 18px rgba(123, 69, 240, 0.45);
+            box-shadow: 0 4px 18px rgba(17, 85, 102, 0.45);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -336,9 +336,9 @@
         }
 
         .btn-submit-glow:hover {
-            background: linear-gradient(135deg, #6528e0 0%, #5218cb 50%, #059669 100%);
+            background: linear-gradient(135deg, #0d4452 0%, #09313b 45%, #3b9b91 100%);
             transform: translateY(-2px);
-            box-shadow: 0 6px 24px rgba(123, 69, 240, 0.65);
+            box-shadow: 0 6px 24px rgba(77, 182, 172, 0.5);
         }
 
         .btn-submit-glow:active {
@@ -350,20 +350,20 @@
             text-align: center;
             margin-top: 20px;
             padding-top: 18px;
-            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            border-top: 1px solid rgba(77, 182, 172, 0.2);
             font-size: 13px;
             color: #cbd5e1;
         }
 
         .form-footer-link a {
-            color: #c4b0f9;
+            color: #80e5db;
             font-weight: 700;
             text-decoration: none;
             transition: color 0.2s;
         }
 
         .form-footer-link a:hover {
-            color: #34d399;
+            color: #ffffff;
             text-decoration: underline;
         }
 
@@ -406,7 +406,7 @@
 
             .auth-form-wrapper {
                 border-left: none;
-                border-top: 1px solid rgba(255, 255, 255, 0.08);
+                border-top: 1px solid rgba(77, 182, 172, 0.15);
                 padding: 35px 25px 40px;
             }
         }
@@ -430,8 +430,7 @@
         {{-- Left Hero Info --}}
         <div class="auth-hero">
             <div class="brand-badge">
-                <img src="{{ asset('assets/images/logo-riau.png') }}" alt="Logo Riau">
-                <span class="brand-title">SIFIT</span>
+                <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="Logo SIFIT">
                 <span class="brand-tag">Panel Petugas</span>
             </div>
 
@@ -454,7 +453,7 @@
                 </div>
                 <div class="feature-pill">
                     <div class="icon-box"><i class="fa-solid fa-shield-halved"></i></div>
-                    <div>Sistem Keamanan & Otorisasi RBAC</div>
+                    <div>Sistem Keamanan & Proteksi Anti-Spam</div>
                 </div>
             </div>
         </div>

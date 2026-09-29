@@ -25,7 +25,7 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
-            background: #0b1528;
+            background: #06181e;
             color: #ffffff;
             display: flex;
             align-items: center;
@@ -35,7 +35,7 @@
             padding: 25px 20px;
         }
 
-        /* ===== BACKGROUND WRAPPER ===== */
+        /* ===== BACKGROUND WRAPPER (#115566 & #4db6ac) ===== */
         .bg-layer {
             position: fixed;
             top: 0;
@@ -55,7 +55,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(8, 28, 58, 0.88) 0%, rgba(3, 146, 206, 0.45) 50%, rgba(10, 20, 40, 0.90) 100%);
+            background: linear-gradient(135deg, rgba(6, 24, 30, 0.90) 0%, rgba(17, 85, 102, 0.65) 50%, rgba(13, 46, 54, 0.92) 100%);
             backdrop-filter: blur(4px);
             z-index: 2;
         }
@@ -66,12 +66,12 @@
             z-index: 10;
             width: 100%;
             max-width: 1100px;
-            background: rgba(15, 25, 45, 0.45);
+            background: rgba(10, 36, 44, 0.55);
             backdrop-filter: blur(25px) saturate(190%);
             -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(77, 182, 172, 0.25);
             border-radius: 28px;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15);
             overflow: hidden;
             display: flex;
             min-height: 640px;
@@ -85,21 +85,21 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: #e2e8f0;
+            color: #d1fae5;
             font-size: 13.5px;
             font-weight: 600;
             text-decoration: none;
             padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(77, 182, 172, 0.3);
             border-radius: 30px;
             transition: all 0.3s ease;
             z-index: 20;
         }
 
         .btn-back-home:hover {
-            background: rgba(255, 255, 255, 0.22);
+            background: rgba(77, 182, 172, 0.25);
             color: #ffffff;
             transform: translateX(-3px);
         }
@@ -140,9 +140,9 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            background: rgba(3, 146, 206, 0.35);
-            border: 1px solid rgba(3, 146, 206, 0.6);
-            color: #7dd3fc;
+            background: rgba(77, 182, 172, 0.25);
+            border: 1px solid rgba(77, 182, 172, 0.45);
+            color: #80e5db;
             padding: 3px 10px;
             border-radius: 12px;
             margin-left: 5px;
@@ -159,7 +159,7 @@
         }
 
         .hero-title span {
-            background: linear-gradient(135deg, #38bdf8 0%, #0392ce 100%);
+            background: linear-gradient(135deg, #a7f3d0 0%, #4db6ac 50%, #ffffff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -183,7 +183,7 @@
             align-items: center;
             gap: 8px;
             background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(77, 182, 172, 0.2);
             padding: 8px 14px;
             border-radius: 20px;
             font-size: 12.5px;
@@ -191,7 +191,7 @@
         }
 
         .feature-pill i {
-            color: #38bdf8;
+            color: #4db6ac;
         }
 
         /* ===== RIGHT FORM CARD SECTION ===== */
@@ -201,17 +201,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.05);
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 1px solid rgba(77, 182, 172, 0.15);
         }
 
         .form-glass-card {
             width: 100%;
             max-width: 390px;
-            background: rgba(255, 255, 255, 0.14);
-            backdrop-filter: blur(30px) saturate(200%);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(30px) saturate(180%);
             -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.28);
+            border: 1px solid rgba(77, 182, 172, 0.3);
             border-radius: 22px;
             padding: 30px 28px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
@@ -262,8 +262,8 @@
         }
 
         .input-group-glass input:focus {
-            border-color: #38bdf8;
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+            border-color: #4db6ac;
+            box-shadow: 0 0 0 3px rgba(77, 182, 172, 0.35);
         }
 
         .input-group-glass .icon-field {
@@ -271,15 +271,15 @@
             left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: #64748b;
+            color: #115566;
             font-size: 14px;
         }
 
-        /* Submit Button */
+        /* Submit Button (Teal to Mint Gradient) */
         .btn-submit-glow {
             width: 100%;
             height: 46px;
-            background: linear-gradient(135deg, #0392ce 0%, #0284c7 100%);
+            background: linear-gradient(135deg, #115566 0%, #0d4452 45%, #4db6ac 100%);
             border: none;
             border-radius: 10px;
             color: #ffffff;
@@ -288,7 +288,7 @@
             letter-spacing: 0.5px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(3, 146, 206, 0.4);
+            box-shadow: 0 4px 15px rgba(17, 85, 102, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -298,9 +298,9 @@
         }
 
         .btn-submit-glow:hover {
-            background: linear-gradient(135deg, #0277a8 0%, #0369a1 100%);
+            background: linear-gradient(135deg, #0d4452 0%, #09313b 45%, #3b9b91 100%);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(3, 146, 206, 0.55);
+            box-shadow: 0 6px 20px rgba(77, 182, 172, 0.55);
         }
 
         .btn-submit-glow:active {
@@ -312,13 +312,13 @@
             text-align: center;
             margin-top: 18px;
             padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(77, 182, 172, 0.2);
             font-size: 13px;
             color: #cbd5e1;
         }
 
         .form-footer-link a {
-            color: #38bdf8;
+            color: #80e5db;
             font-weight: 700;
             text-decoration: none;
             transition: color 0.2s;
@@ -368,7 +368,7 @@
 
             .auth-form-wrapper {
                 border-left: none;
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                border-top: 1px solid rgba(77, 182, 172, 0.15);
                 padding: 30px 25px 35px;
             }
         }
@@ -391,8 +391,7 @@
         {{-- Left Hero Info --}}
         <div class="auth-hero">
             <div class="brand-badge">
-                <img src="{{ asset('assets/images/logo-riau.png') }}" alt="Logo Riau">
-                <span class="brand-title">SIFIT</span>
+                <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="Logo SIFIT">
                 <span class="brand-tag">Farmasi Riau</span>
             </div>
 

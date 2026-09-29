@@ -55,11 +55,11 @@
                                 <td><strong class="font-14">{{ $category->name }}</strong></td>
                                 <td>
                                     @if($category->type == 'product')
-                                        <span class="badge bg-soft-primary text-primary">Produk / Obat</span>
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1">Produk / Obat</span>
                                     @elseif($category->type == 'news')
-                                        <span class="badge bg-soft-info text-info">Berita</span>
+                                        <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1">Berita</span>
                                     @else
-                                        <span class="badge bg-soft-secondary text-secondary">Informasi</span>
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1">Informasi</span>
                                     @endif
                                 </td>
                                 <td class="text-center">

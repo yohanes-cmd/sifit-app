@@ -18,6 +18,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'avatar',
+        'phone',
         'password',
         'role',
         'opd',
@@ -33,5 +35,17 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Get avatar url or fallback to default.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->avatar && file_exists(public_path('storage/'.$this->avatar))) {
+            return asset('storage/'.$this->avatar);
+        }
+
+        return asset('assets/images/users/avatar-1.jpg');
     }
 }

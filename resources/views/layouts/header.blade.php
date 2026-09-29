@@ -17,28 +17,32 @@
                     </form>
                 </li>     
                 <li class="topbar-item">
-                    <a class="nav-link nav-icon" href="javascript:void(0);" id="light-dark-mode">
+                    <a class="nav-link nav-icon theme-toggle-btn" href="javascript:void(0);" id="light-dark-mode" title="Ganti Mode Gelap/Terang">
                         <i class="iconoir-half-moon dark-mode"></i>
                         <i class="iconoir-sun-light light-mode"></i>
                     </a>                    
                 </li>
                 <li class="dropdown topbar-item">
-                    <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button"
+                    <a class="nav-link dropdown-toggle arrow-none nav-icon d-flex align-items-center" data-bs-toggle="dropdown" href="#" role="button"
                         aria-haspopup="false" aria-expanded="false" data-bs-offset="0,19">
-                        <img src="{{ asset('assets/images/users/avatar-1.jpg') }}" alt="" class="thumb-md rounded-circle">
+                        <img src="{{ auth()->check() ? auth()->user()->avatar_url : asset('assets/images/users/avatar-1.jpg') }}" alt="Avatar" class="thumb-md rounded-circle object-fit-cover border border-2 border-primary-subtle">
                     </a>
-                    <div class="dropdown-menu dropdown-menu-end py-0">
+                    <div class="dropdown-menu dropdown-menu-end py-0 shadow border-0">
                         <div class="d-flex align-items-center dropdown-item py-2 bg-secondary-subtle">
                             <div class="flex-shrink-0">
-                                <img src="{{ asset('assets/images/users/avatar-1.jpg') }}" alt="" class="thumb-md rounded-circle">
+                                <img src="{{ auth()->check() ? auth()->user()->avatar_url : asset('assets/images/users/avatar-1.jpg') }}" alt="Avatar" class="thumb-md rounded-circle object-fit-cover">
                             </div>
                             <div class="flex-grow-1 ms-2 text-truncate align-self-center">
-                                <h6 class="my-0 fw-medium text-dark fs-13">{{ auth()->check() ? auth()->user()->name : 'Super Admin' }}</h6>
-                                <small class="text-muted mb-0">SiFit Administrator</small>
+                                <h6 class="my-0 fw-semibold text-dark fs-13">{{ auth()->check() ? auth()->user()->name : 'Super Admin' }}</h6>
+                                <small class="text-muted mb-0">
+                                    {{ auth()->check() && auth()->user()->roles->count() > 0 ? ucfirst(auth()->user()->roles->first()->name) : (auth()->check() && auth()->user()->opd ? auth()->user()->opd : 'SiFit Administrator') }}
+                                </small>
                             </div>
                         </div>
                         <div class="dropdown-divider mt-0"></div>
-                        <a class="dropdown-item" href="#"><i class="las la-user fs-18 me-1 align-text-bottom"></i> Profile</a>
+                        <a class="dropdown-item" href="{{ route('profile.index') }}">
+                            <i class="las la-user fs-18 me-1 align-text-bottom text-primary"></i> Profile
+                        </a>
                         <div class="dropdown-divider mb-0"></div>
                         <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
                             @csrf

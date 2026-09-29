@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\MasterObatController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OpdController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StokObatController;
 use App\Http\Controllers\TransaksiController;
@@ -23,23 +25,26 @@ Route::get('/', function () {
 
 // Auth Routes (Backend / Admin)
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:3,1');
 
 // Frontend Auth Routes (Pengunjung / Pelanggan)
 Route::middleware('guest')->group(function () {
     Route::get('/masuk', [AuthController::class, 'showFrontendLoginForm'])->name('frontend.login');
-    Route::post('/masuk', [AuthController::class, 'frontendLogin'])->name('frontend.login.post');
+    Route::post('/masuk', [AuthController::class, 'frontendLogin'])->name('frontend.login.post')->middleware('throttle:5,1');
     Route::get('/daftar', [AuthController::class, 'showFrontendRegisterForm'])->name('frontend.register');
-    Route::post('/daftar', [AuthController::class, 'frontendRegister'])->name('frontend.register.post');
+    Route::post('/daftar', [AuthController::class, 'frontendRegister'])->name('frontend.register.post')->middleware('throttle:3,1');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard.index');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Profil Pengguna
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
 
     // Manajemen Data Master
     Route::resource('roles', RoleController::class);

@@ -2,7 +2,7 @@
 <div class="startbar d-print-none">
     <!--start brand-->
     <div class="brand">
-        <a href="{{ url('/') }}" class="logo">
+        <a href="{{ route('dashboard') }}" class="logo">
             <span>
                 <img src="{{ asset('assets/images/logo-riau.png') }}" alt="logo-small" class="logo-sm" style="height: 34px;">
             </span>
@@ -26,7 +26,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/') }}">
+                        <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
                             <i class="iconoir-report-columns menu-icon"></i>
                             <span>Dashboard</span>
                         </a>
