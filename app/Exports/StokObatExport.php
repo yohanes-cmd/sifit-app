@@ -10,35 +10,56 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class StokObatExport implements FromCollection, WithHeadings, WithMapping
 {
+    public function __construct(public ?int $gudangId = null) {}
+
     public function collection(): Collection
     {
-        // Tarik data stok beserta relasinya
-        return StokObat::with(['masterObat', 'gudang'])->latest()->get();
+        $query = StokObat::with(['masterObat', 'gudang'])->latest();
+
+        if ($this->gudangId) {
+            $query->where('gudang_id', $this->gudangId);
+        }
+
+        return $query->get();
     }
 
     public function headings(): array
     {
-        // Judul kolom di baris pertama Excel
         return [
-            'No', 'Kode Barang', 'Nama Barang', 'Kategori', 'No Batch', 'Expired Date', 'Lokasi Gudang', 'Sisa Stok', 'Satuan',
+            'No',
+            'Kode Obat/Logistik',
+            'Nama Obat/Logistik',
+            'Sub Kategori',
+            'Kategori',
+            'Satuan',
+            'Peringatan Jumlah',
+            'Harga Satuan (Rp)',
+            'Jumlah Barang',
+            'Date Expired',
+            'Gudang',
+            'Keterangan',
+            'Total Nilai (Rp)',
         ];
     }
 
     public function map($stok): array
     {
-        // Pemetaan isi baris (otomatis *looping*)
         static $no = 1;
 
         return [
             $no++,
-            $stok->masterObat->kode_obat ?? '-',
-            $stok->masterObat->nama_obat ?? '-',
-            $stok->masterObat->kategori ?? '-',
-            $stok->no_batch,
-            $stok->exp_date ? date('d-m-Y', strtotime($stok->exp_date)) : 'Belum diset',
-            $stok->gudang->nama_gudang ?? '-',
+            $stok->display_kode,
+            $stok->display_nama,
+            $stok->sub_kategori ?? '-',
+            $stok->display_kategori,
+            $stok->display_satuan,
+            $stok->peringatan_jumlah ?? 10,
+            $stok->display_harga,
             $stok->jumlah,
-            $stok->masterObat->satuan ?? '-',
+            $stok->exp_date ? $stok->exp_date->format('Y-m-d') : '-',
+            $stok->gudang->nama_gudang ?? '-',
+            $stok->keterangan ?? '-',
+            $stok->total_nilai,
         ];
     }
 }

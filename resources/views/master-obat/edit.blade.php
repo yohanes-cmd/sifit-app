@@ -1,103 +1,228 @@
 @extends('layouts.app')
 
+@section('title', 'Ubah Master Obat/Logistik - SIFIT')
+
+@push('css')
+<style>
+    .form-label {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 6px;
+    }
+    .form-control {
+        border-color: #cbd5e1;
+        font-size: 13.5px;
+        padding: 9px 13px;
+        border-radius: 6px;
+    }
+    .form-control:focus {
+        border-color: #115566;
+        box-shadow: 0 0 0 3px rgba(77, 182, 172, 0.25);
+    }
+    .btn-toggle-jenis {
+        padding: 7px 22px;
+        font-size: 13px;
+        font-weight: 700;
+        border-radius: 6px;
+        cursor: pointer;
+        border: 1.5px solid #cbd5e1;
+        background: #ffffff;
+        color: #475569;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .btn-toggle-jenis.active-obat {
+        background: #115566;
+        border-color: #115566;
+        color: #ffffff;
+        box-shadow: 0 2px 8px rgba(17, 85, 102, 0.3);
+    }
+    .btn-toggle-jenis.active-logistik {
+        background: #0284c7;
+        border-color: #0284c7;
+        color: #ffffff;
+        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+    }
+    .btn-sifit-submit {
+        background: linear-gradient(135deg, #115566 0%, #0d4452 50%, #4db6ac 100%);
+        color: #ffffff;
+        border: none;
+        padding: 9px 24px;
+        border-radius: 6px;
+        font-size: 13.5px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 3px 10px rgba(17, 85, 102, 0.25);
+    }
+    .btn-sifit-submit:hover {
+        background: linear-gradient(135deg, #0d4452 0%, #09313b 50%, #3b9b91 100%);
+        color: #ffffff;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="container-fluid">
+
+    {{-- Page Header --}}
     <div class="row">
         <div class="col-sm-12">
             <div class="page-title-box">
-                <h4 class="page-title">Edit Master Obat / Logistik</h4>
+                <div class="row">
+                    <div class="col">
+                        <h4 class="page-title">Ubah Master Obat/Logistik</h4>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('master-obat.index') }}">Master Obat/Logistik</a></li>
+                            <li class="breadcrumb-item active">Ubah Data</li>
+                        </ol>
+                    </div>
+                    <div class="col-auto align-self-center">
+                        <a href="{{ route('master-obat.index') }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="las la-arrow-left me-1"></i> Kembali ke Daftar
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    {{-- Form Card --}}
     <div class="row">
-        <div class="col-lg-8 mx-auto">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Form Ubah Data</h4>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('master-obat.update', $masterObat->id) }}" method="POST" enctype="multipart/form-data">
+        <div class="col-lg-8 col-md-10 col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    
+                    <div class="mb-4 pb-2 border-bottom">
+                        <h5 class="fw-bold mb-1" style="color: #115566;">Ubah Data: {{ $masterObat->nama_obat }}</h5>
+                        <p class="text-muted small mb-0">Perbarui informasi master obat atau logistik di bawah ini.</p>
+                    </div>
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="las la-exclamation-triangle fs-18 me-2"></i>
+                                <strong>Mohon periksa form isian:</strong>
+                            </div>
+                            <ul class="mb-0 ps-4">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('master-obat.update', $masterObat->id) }}" method="POST">
                         @csrf
                         @method('PUT')
-                        
+
+                        {{-- Hidden Input Kategori --}}
+                        <input type="hidden" name="kategori" id="inputKategori" value="{{ old('kategori', $masterObat->kategori) }}">
+
+                        {{-- 1. Kode Obat/Logistik --}}
+                        <div class="mb-3 row align-items-center">
+                            <label for="kode_obat" class="col-sm-3 col-form-label form-label">
+                                Kode Obat/Logistik <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control @error('kode_obat') is-invalid @enderror" id="kode_obat" name="kode_obat" value="{{ old('kode_obat', $masterObat->kode_obat) }}" required placeholder="Contoh: 07197">
+                            </div>
+                        </div>
+
+                        {{-- 2. Nama Obat/Logistik --}}
+                        <div class="mb-3 row align-items-center">
+                            <label for="nama_obat" class="col-sm-3 col-form-label form-label">
+                                Nama Obat/Logistik <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control @error('nama_obat') is-invalid @enderror" id="nama_obat" name="nama_obat" value="{{ old('nama_obat', $masterObat->nama_obat) }}" required placeholder="Masukkan nama obat atau logistik">
+                            </div>
+                        </div>
+
+                        {{-- 3. Kode Kemkes --}}
+                        <div class="mb-4 row align-items-center">
+                            <label for="kode_kemkes" class="col-sm-3 col-form-label form-label">
+                                Kode Kemkes
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control @error('kode_kemkes') is-invalid @enderror" id="kode_kemkes" name="kode_kemkes" value="{{ old('kode_kemkes', $masterObat->kode_kemkes) }}" placeholder="Contoh: KRD, KN, KM">
+                            </div>
+                        </div>
+
+                        {{-- 4. Tombol Pilihan Jenis: OBAT / LOGISTIK --}}
+                        <div class="mb-4 row align-items-center">
+                            <label class="col-sm-3 col-form-label form-label">
+                                Jenis Barang <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <div class="d-inline-flex gap-2" role="group">
+                                    @if(!$isLogistikOnly)
+                                        <button type="button" class="btn-toggle-jenis {{ old('kategori', $masterObat->kategori) == 'Obat' ? 'active-obat' : '' }}" id="btnPilihObat" onclick="selectJenis('Obat')">
+                                            <i class="las la-capsules me-1"></i> OBAT
+                                        </button>
+                                    @endif
+
+                                    @if(!$isFarmasiOnly)
+                                        <button type="button" class="btn-toggle-jenis {{ old('kategori', $masterObat->kategori) == 'Logistik' ? 'active-logistik' : '' }}" id="btnPilihLogistik" onclick="selectJenis('Logistik')">
+                                            <i class="las la-boxes me-1"></i> LOGISTIK
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- 5. Tombol Submit --}}
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="kode_obat" class="form-label">Kode Obat/Logistik <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('kode_obat') is-invalid @enderror" id="kode_obat" name="kode_obat" value="{{ old('kode_obat', $masterObat->kode_obat) }}" required>
-                                @error('kode_obat') <span class="text-danger small">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="nama_obat" class="form-label">Nama Obat/Logistik <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('nama_obat') is-invalid @enderror" id="nama_obat" name="nama_obat" value="{{ old('nama_obat', $masterObat->nama_obat) }}" required>
-                                @error('nama_obat') <span class="text-danger small">{{ $message }}</span> @enderror
+                            <div class="col-sm-9 offset-sm-3">
+                                <button type="submit" class="btn-sifit-submit">
+                                    <i class="las la-save fs-16"></i> Simpan Perubahan Data
+                                </button>
+                                <a href="{{ route('master-obat.index') }}" class="btn btn-outline-secondary ms-2" style="padding: 8px 18px; font-size: 13px; border-radius: 6px;">
+                                    Batal
+                                </a>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label for="kategori" class="form-label">Kategori <span class="text-danger">*</span></label>
-                                <select class="form-select @error('kategori') is-invalid @enderror" id="kategori" name="kategori" required>
-                                    <option value="Obat" {{ old('kategori', $masterObat->kategori) == 'Obat' ? 'selected' : '' }}>Obat</option>
-                                    <option value="Logistik" {{ old('kategori', $masterObat->kategori) == 'Logistik' ? 'selected' : '' }}>Logistik Medis / Alkes</option>
-                                </select>
-                                @error('kategori') <span class="text-danger small">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="satuan" class="form-label">Satuan <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('satuan') is-invalid @enderror" id="satuan" name="satuan" value="{{ old('satuan', $masterObat->satuan) }}" required>
-                                @error('satuan') <span class="text-danger small">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="harga" class="form-label">Harga (Rp) <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control @error('harga') is-invalid @enderror" id="harga" name="harga" value="{{ old('harga', $masterObat->harga) }}" min="0" required>
-                                @error('harga') <span class="text-danger small">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
-
-                        <!-- Fitur Frontend -->
-                        <div class="mb-3 p-3 border rounded bg-light">
-                            <label for="status" class="form-label fw-bold">Pengaturan Etalase (Front-End)</label>
-                            <select class="form-select mb-3 @error('status') is-invalid @enderror" id="status" name="status" required>
-                                <option value="published" {{ old('status', $masterObat->status) == 'published' ? 'selected' : '' }}>Published (Tampil di Katalog Umum)</option>
-                                <option value="draft" {{ old('status', $masterObat->status) == 'draft' ? 'selected' : '' }}>Draft (Disimpan Sementara)</option>
-                                <option value="inactive" {{ old('status', $masterObat->status) == 'inactive' ? 'selected' : '' }}>Inactive (Tidak Aktif)</option>
-                            </select>
-
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="requires_prescription" name="requires_prescription" value="1" {{ old('requires_prescription', $masterObat->requires_prescription) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="requires_prescription">Obat ini membutuhkan <strong>Resep Dokter</strong></label>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="gambar" class="form-label">Gambar Obat/Logistik (Opsional)</label><br>
-                            @if($masterObat->gambar)
-                                <img src="{{ asset($masterObat->gambar) }}" alt="Gambar {{ $masterObat->nama_obat }}" class="img-thumbnail mb-3" style="max-height: 150px;">
-                                <br>
-                            @endif
-                            <input type="file" class="form-control @error('gambar') is-invalid @enderror" id="gambar" name="gambar" accept="image/*">
-                            <small class="text-muted">Format: JPG, PNG, WEBP. Maksimal 2MB. <strong>Kosongkan jika tidak ingin mengubah gambar.</strong></small>
-                            @error('gambar') <span class="text-danger small">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="deskripsi" class="form-label">Deskripsi Lengkap / Indikasi (Opsional)</label>
-                            <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" rows="4" placeholder="Masukkan deskripsi untuk ditampilkan di Front-End...">{{ old('deskripsi', $masterObat->deskripsi) }}</textarea>
-                            @error('deskripsi') <span class="text-danger small">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div class="text-end mt-4">
-                            <a href="{{ route('master-obat.index') }}" class="btn btn-secondary">Batal</a>
-                            <button type="submit" class="btn btn-warning">Perbarui Master Data</button>
-                        </div>
                     </form>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function selectJenis(jenis) {
+        const inputKategori = document.getElementById('inputKategori');
+        const btnObat = document.getElementById('btnPilihObat');
+        const btnLogistik = document.getElementById('btnPilihLogistik');
+
+        if (inputKategori) {
+            inputKategori.value = jenis;
+        }
+
+        if (btnObat) {
+            if (jenis === 'Obat') {
+                btnObat.classList.add('active-obat');
+            } else {
+                btnObat.classList.remove('active-obat');
+            }
+        }
+
+        if (btnLogistik) {
+            if (jenis === 'Logistik') {
+                btnLogistik.classList.add('active-logistik');
+            } else {
+                btnLogistik.classList.remove('active-logistik');
+            }
+        }
+    }
+</script>
+@endpush

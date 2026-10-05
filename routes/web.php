@@ -62,13 +62,17 @@ Route::middleware('auth')->group(function () {
     Route::resource('news', NewsController::class);
 
     // --- RUTE STOK OBAT & EXPORT (HARUS DI DALAM MIDDLEWARE AUTH KALAU PERLU AMAN) ---
-    // Posisikan rute khusus export DI ATAS Route::resource('stok-obat')
+    // Posisikan rute khusus export & bulk action DI ATAS Route::resource('stok-obat')
     Route::get('/stok-obat/export-excel', [StokObatController::class, 'exportExcel'])->name('stok-obat.export');
+    Route::get('/stok-obat/export-csv', [StokObatController::class, 'exportCsv'])->name('stok-obat.export-csv');
+    Route::post('/stok-obat/bulk-destroy', [StokObatController::class, 'bulkDestroy'])->name('stok-obat.bulk-destroy');
 
-    // Rute resource stok obat (mencakup index, destroy, dll)
+    // Rute resource stok obat (mencakup index, create, store, edit, update, destroy)
     Route::resource('stok-obat', StokObatController::class);
 
     // Rute untuk Master Obat
+    Route::get('/master-obat/export-excel', [MasterObatController::class, 'exportExcel'])->name('master-obat.export');
+    Route::get('/master-obat/export-csv', [MasterObatController::class, 'exportCsv'])->name('master-obat.export-csv');
     Route::resource('master-obat', MasterObatController::class);
 
     // Rute khusus Transaksi Pemasukan
