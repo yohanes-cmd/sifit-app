@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FrontendProfileController;
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\MasterObatController;
 use App\Http\Controllers\NewsController;
@@ -41,10 +42,13 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Profil Pengguna
+    // Profil Pengguna (Backend & Frontend)
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
+    Route::get('/profil', [FrontendProfileController::class, 'index'])->name('frontend.profile');
+    Route::put('/profil', [FrontendProfileController::class, 'update'])->name('frontend.profile.update');
+    Route::put('/profil/password', [FrontendProfileController::class, 'updatePassword'])->name('frontend.profile.update-password');
 
     // Manajemen Data Master
     Route::resource('roles', RoleController::class);

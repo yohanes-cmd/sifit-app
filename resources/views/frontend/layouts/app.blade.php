@@ -89,7 +89,7 @@
             transform: translateY(-1px);
         }
         .user-top-badge {
-            background: #0392ce !important;
+            background: #115566 !important;
             color: #ffffff !important;
             padding: 5px 16px !important;
             border-radius: 20px;
@@ -100,12 +100,12 @@
             align-items: center;
             gap: 7px;
             border: none !important;
-            box-shadow: 0 2px 8px rgba(3, 146, 206, 0.25);
+            box-shadow: 0 2px 8px rgba(17, 85, 102, 0.25);
             transition: all 0.3s ease !important;
             text-decoration: none !important;
         }
         .user-top-badge:hover {
-            background: #0277a8 !important;
+            background: #0d4452 !important;
             color: #ffffff !important;
         }
         .top-auth-links .dropdown-menu {
@@ -128,10 +128,16 @@
             gap: 8px;
             line-height: 1.5;
             text-decoration: none;
+            transition: all 0.2s ease;
         }
         .top-auth-links .dropdown-menu > li > a:hover {
-            background: #f0f9ff;
-            color: #0392ce;
+            background: #f0fdfa;
+            color: #115566;
+        }
+        .top-auth-links .dropdown-menu > li > a i {
+            color: #4db6ac;
+            width: 16px;
+            text-align: center;
         }
     </style>
     @stack('styles')
@@ -189,6 +195,10 @@
                                             @if(Auth::user()->hasAnyRole(['super_admin', 'admin', 'operator', 'produsen_data', 'verifikator', 'validator', 'publisher']))
                                                 <li><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> Panel Admin</a></li>
                                             @endif
+                                            <li>
+                                                <a href="{{ route('frontend.profile') }}"><i class="fa fa-user"></i> Profil Saya</a>
+                                            </li>
+                                            <li role="separator" class="divider" style="margin: 4px 0; border-top: 1px solid #f1f5f9;"></li>
                                             <li>
                                                 <a href="#" onclick="event.preventDefault(); document.getElementById('frontend-logout-form-top').submit();">
                                                     <i class="fa fa-power-off"></i> Keluar
