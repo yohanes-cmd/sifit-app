@@ -79,11 +79,18 @@
     </a>
 </li>
 
-                    <li class="nav-item">
-    <a class="nav-link" href="{{ route('pemasukan.create') }}">
+<li class="nav-item">
+    <a class="nav-link" href="#sidebarPemasukan" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPemasukan">
         <i class="las la-truck-loading menu-icon"></i>
-        <span> Pemasukan Barang </span>
+        <span> Pemasukan </span>
     </a>
+    <div class="collapse {{ request()->is('pemasukan*') ? 'show' : '' }}" id="sidebarPemasukan">
+        <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pemasukan.index') ? 'active' : '' }}" href="{{ route('pemasukan.index') }}">Daftar Pemasukan</a>
+            </li>
+        </ul>
+    </div>
 </li>
 
 <li class="nav-item">

@@ -82,8 +82,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('master-obat', MasterObatController::class);
 
     // Rute khusus Transaksi Pemasukan
+    Route::get('/pemasukan', [TransaksiController::class, 'indexPemasukan'])->name('pemasukan.index');
+    Route::post('/pemasukan/bulk-delete', [TransaksiController::class, 'bulkDeletePemasukan'])->name('pemasukan.bulk-delete');
     Route::get('/pemasukan/create', [TransaksiController::class, 'createPemasukan'])->name('pemasukan.create');
     Route::post('/pemasukan', [TransaksiController::class, 'storePemasukan'])->name('pemasukan.store');
+    Route::get('/pemasukan/{transaksi}', [TransaksiController::class, 'showPemasukan'])->name('pemasukan.show');
+    Route::delete('/pemasukan/{transaksi}', [TransaksiController::class, 'destroyPemasukan'])->name('pemasukan.destroy');
 
     // Rute khusus Transaksi Pengeluaran
     Route::get('/pengeluaran/create', [TransaksiController::class, 'createPengeluaran'])->name('pengeluaran.create');
