@@ -19,9 +19,9 @@
                             <label class="form-label">Status Kepemilikan (Kantor 1 / 2) <span class="text-danger">*</span></label>
                             <select class="form-select" name="status_kantor" required>
                                 <option value="">-- Pilih Status --</option>
-                                <option value="kantor_pusat">Kantor Pusat (Dinkes)</option>
-                                <option value="puskesmas">Puskesmas</option>
-                                <option value="upt">UPT Farmasi / Logistik</option>
+                                @foreach($statusKantors as $sk)
+                                    <option value="{{ $sk->slug }}" {{ old('status_kantor') == $sk->slug ? 'selected' : '' }}>{{ $sk->nama_status }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="mb-3">

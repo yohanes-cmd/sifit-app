@@ -161,10 +161,13 @@
         <i class="las la-cog menu-icon"></i>
         <span>Pengaturan</span>
     </a>
-    <div class="collapse {{ request()->is('pejabat*') || request()->is('program*') || request()->is('categories*') || request()->is('subkategori*') || request()->is('gudang*') || request()->is('pengangkut*') || request()->is('backup*') ? 'show' : '' }}" id="sidebarPengaturan">
+    <div class="collapse {{ request()->is('pejabat*') || request()->is('program*') || request()->is('categories*') || request()->is('subkategori*') || request()->is('gudang*') || request()->is('pengangkut*') || request()->is('backup*') || request()->is('status-kantor*') ? 'show' : '' }}" id="sidebarPengaturan">
         <ul class="nav flex-column sub-menu">
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('pejabat.*') ? 'active' : '' }}" href="{{ route('pejabat.index') }}">Setting Pejabat</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('status-kantor.*') ? 'active' : '' }}" href="{{ route('status-kantor.index') }}">Status Kepemilikan</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('program.*') ? 'active' : '' }}" href="{{ route('program.index') }}">Program</a>

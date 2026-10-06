@@ -85,9 +85,9 @@
                         <label for="opd" class="form-label">OPD <span class="text-danger">*</span></label>
                         <!-- Tambahkan id="opd" agar terbaca oleh jQuery saat Edit -->
                         <select name="opd" id="opd" class="form-select" required>
-                            <option value="">-- Pilih OPD --</option>
+                            <option value="">-- Pilih Instansi / OPD --</option>
                             @foreach($opds as $opd)
-                                <option value="{{ $opd->name }}">{{ $opd->name }}</option>
+                                <option value="{{ $opd->nama_opd }}">{{ $opd->nama_opd }}</option>
                             @endforeach
                         </select>
                         <span class="text-danger error-text opd_error"></span>

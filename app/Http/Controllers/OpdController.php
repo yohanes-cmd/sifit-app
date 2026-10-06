@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Opd;
+use App\Models\StatusKantor;
 use Illuminate\Http\Request;
 
 class OpdController extends Controller
@@ -16,14 +17,18 @@ class OpdController extends Controller
 
     public function create()
     {
-        return view('pengguna.opd.create');
+        $statusKantors = StatusKantor::orderBy('nama_status')->get();
+
+        return view('pengguna.opd.create', compact('statusKantors'));
     }
 
     public function store(Request $request)
     {
+        $validSlugs = StatusKantor::pluck('slug')->toArray();
+
         $request->validate([
             'nama_opd' => 'required|string|max:255',
-            'status_kantor' => 'required|in:kantor_pusat,puskesmas,upt',
+            'status_kantor' => 'required|in:'.implode(',', $validSlugs),
             'alamat' => 'nullable|string',
         ]);
 
@@ -35,15 +40,18 @@ class OpdController extends Controller
     public function edit($id)
     {
         $opd = Opd::findOrFail($id);
+        $statusKantors = StatusKantor::orderBy('nama_status')->get();
 
-        return view('pengguna.opd.edit', compact('opd'));
+        return view('pengguna.opd.edit', compact('opd', 'statusKantors'));
     }
 
     public function update(Request $request, $id)
     {
+        $validSlugs = StatusKantor::pluck('slug')->toArray();
+
         $request->validate([
             'nama_opd' => 'required|string|max:255',
-            'status_kantor' => 'required|in:kantor_pusat,puskesmas,upt',
+            'status_kantor' => 'required|in:'.implode(',', $validSlugs),
             'alamat' => 'nullable|string',
         ]);
 

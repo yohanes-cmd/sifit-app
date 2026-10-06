@@ -16,6 +16,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\StatusKantorController;
 use App\Http\Controllers\StokObatController;
 use App\Http\Controllers\SubKategoriController;
 use App\Http\Controllers\TransaksiController;
@@ -117,6 +118,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('program', ProgramController::class);
     Route::resource('subkategori', SubKategoriController::class);
     Route::resource('pengangkut', PengangkutController::class);
+    Route::resource('status-kantor', StatusKantorController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
 });
 
