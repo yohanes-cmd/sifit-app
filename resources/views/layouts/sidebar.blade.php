@@ -94,10 +94,20 @@
 </li>
 
 <li class="nav-item">
-    <a class="nav-link" href="{{ route('pemindahan.create') }}">
+    <a class="nav-link" href="#sidebarPemindahan" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPemindahan">
         <i class="las la-exchange-alt menu-icon"></i>
         <span> Pemindahan Barang </span>
     </a>
+    <div class="collapse {{ request()->is('pemindahan*') ? 'show' : '' }}" id="sidebarPemindahan">
+        <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pemindahan.index') ? 'active' : '' }}" href="{{ route('pemindahan.index') }}">Daftar Pemindahan</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pemindahan.create') ? 'active' : '' }}" href="{{ route('pemindahan.create') }}">Tambah Pemindahan</a>
+            </li>
+        </ul>
+    </div>
 </li>
 
 <!-- Master Gudang dipindahkan ke Pengaturan -->

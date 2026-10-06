@@ -90,8 +90,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/pengeluaran', [TransaksiController::class, 'storePengeluaran'])->name('pengeluaran.store');
 
     // Rute khusus Transaksi Pemindahan
+    Route::get('/pemindahan', [TransaksiController::class, 'indexPemindahan'])->name('pemindahan.index');
     Route::get('/pemindahan/create', [TransaksiController::class, 'createPemindahan'])->name('pemindahan.create');
     Route::post('/pemindahan', [TransaksiController::class, 'storePemindahan'])->name('pemindahan.store');
+    Route::get('/pemindahan/{transaksi}', [TransaksiController::class, 'showPemindahan'])->name('pemindahan.show');
 
     // Rute untuk Master Gudang
     Route::resource('gudang', GudangController::class);
