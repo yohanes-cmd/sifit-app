@@ -13,7 +13,7 @@
     }
     .stat-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 10px 20px rgba(17, 85, 102, 0.12) !important;
+        box-shadow: 0 12px 24px rgba(17, 85, 102, 0.15) !important;
     }
     .stat-icon {
         width: 52px;
@@ -23,6 +23,10 @@
         align-items: center;
         justify-content: center;
         font-size: 26px;
+        transition: transform 0.3s ease;
+    }
+    .stat-card:hover .stat-icon {
+        transform: scale(1.1) rotate(5deg);
     }
     .bg-sifit-primary {
         background: linear-gradient(135deg, #115566 0%, #0d4452 100%) !important;
@@ -47,6 +51,7 @@
     }
     .quick-action-btn:hover {
         transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
     }
     .table-dashboard th {
         font-size: 12px;
@@ -54,33 +59,88 @@
         letter-spacing: 0.5px;
         font-weight: 600;
     }
+    
+    /* Interactive Animations */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+    }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+
+    /* Interactive Table rows */
+    .table-hover tbody tr {
+        transition: all 0.2s ease;
+    }
+    .table-hover tbody tr:hover {
+        transform: scale(1.01);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        z-index: 10;
+        position: relative;
+    }
+
+    /* Welcome Banner */
+    .welcome-banner {
+        background: linear-gradient(135deg, #115566 0%, #0d4452 100%);
+        border-radius: 16px;
+        padding: 32px;
+        color: white;
+        box-shadow: 0 10px 25px rgba(17, 85, 102, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    .welcome-banner::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(77, 182, 172, 0.15) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: pulseGlow 4s infinite alternate;
+    }
+    @keyframes pulseGlow {
+        0% { transform: scale(1); opacity: 0.5; }
+        100% { transform: scale(1.2); opacity: 1; }
+    }
+    
+    .counter-value {
+        display: inline-block;
+    }
 </style>
 @endpush
 
 @section('content')
 <!-- Header Salam & Quick Actions -->
-<div class="row align-items-center mb-4">
-    <div class="col-md-7">
-        <div class="page-title-box pb-0">
-            <h4 class="page-title mb-1 fw-bold text-dark" style="font-size: 22px;">
-                Selamat Datang, {{ auth()->user()->name }}! 👋
-            </h4>
-            <p class="text-muted mb-0">
-                Pusat kendali operasional logistik obat, inventaris gudang, dan berita sistem SiFit.
-            </p>
-        </div>
-    </div>
-    <div class="col-md-5 text-md-end mt-3 mt-md-0">
-        <div class="d-inline-flex flex-wrap gap-2">
-            <a href="{{ route('pemasukan.create') }}" class="btn btn-primary quick-action-btn shadow-sm">
-                <i class="las la-truck-loading me-1 fs-16 align-text-bottom"></i> Pemasukan
-            </a>
-            <a href="{{ route('pengeluaran.create') }}" class="btn btn-info quick-action-btn shadow-sm text-white">
-                <i class="las la-dolly me-1 fs-16 align-text-bottom"></i> Pengeluaran
-            </a>
-            <a href="{{ route('master-obat.index') }}" class="btn btn-outline-primary quick-action-btn">
-                <i class="las la-pills me-1 fs-16 align-text-bottom"></i> Master Obat
-            </a>
+<div class="row align-items-center mb-4 fade-in-up">
+    <div class="col-12">
+        <div class="welcome-banner d-md-flex justify-content-between align-items-center">
+            <div class="mb-4 mb-md-0 position-relative" style="z-index: 2;">
+                <h4 class="mb-2 fw-bold text-white" style="font-size: 26px;">
+                    Selamat Datang, {{ auth()->user()->name }}! <span class="d-inline-block" style="animation: wave 2s infinite; transform-origin: 70% 70%;">👋</span>
+                </h4>
+                <p class="text-white-50 mb-0 fs-15">
+                    Pusat kendali operasional logistik obat, inventaris gudang, dan berita sistem SiFit.
+                </p>
+                <style>
+                    @keyframes wave { 0% { transform: rotate( 0.0deg) } 10% { transform: rotate(14.0deg) } 20% { transform: rotate(-8.0deg) } 30% { transform: rotate(14.0deg) } 40% { transform: rotate(-4.0deg) } 50% { transform: rotate(10.0deg) } 60% { transform: rotate( 0.0deg) } 100% { transform: rotate( 0.0deg) } }
+                </style>
+            </div>
+            <div class="d-inline-flex flex-wrap gap-2 position-relative" style="z-index: 2;">
+                <a href="{{ route('pemasukan.create') }}" class="btn btn-light text-primary quick-action-btn shadow-sm fw-bold px-4">
+                    <i class="las la-truck-loading me-1 fs-18 align-text-bottom"></i> Pemasukan
+                </a>
+                <a href="{{ route('pengeluaran.create') }}" class="btn btn-info quick-action-btn shadow-sm text-white fw-bold px-4 border-0" style="background: linear-gradient(135deg, #4db6ac, #2e8b82);">
+                    <i class="las la-dolly me-1 fs-18 align-text-bottom"></i> Pengeluaran
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -88,8 +148,8 @@
 <!-- 4 Kartu Statistik Utama -->
 <div class="row">
     <!-- Card 1: Master Obat & Stok -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card stat-card shadow-sm h-100">
+    <div class="col-xl-3 col-md-6 mb-4 fade-in-up delay-1">
+        <div class="card stat-card shadow-sm h-100 border-0">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <span class="text-muted fw-semibold fs-13 text-uppercase ls-1">Master & Stok Obat</span>
@@ -99,12 +159,12 @@
                 </div>
                 <div class="d-flex align-items-baseline justify-content-between">
                     <div>
-                        <h3 class="fw-bold mb-0 text-dark">{{ number_format($totalMasterObat) }}</h3>
+                        <h3 class="fw-bold mb-0 text-dark counter-value" data-target="{{ $totalMasterObat }}">0</h3>
                         <small class="text-muted">Jenis Master Obat</small>
                     </div>
                     <div class="text-end">
-                        <span class="badge bg-sifit-soft-primary px-2 py-1 fs-12 fw-bold">
-                            <i class="las la-boxes me-1"></i>{{ number_format($totalStokObat) }} Total Fisik
+                        <span class="badge bg-sifit-soft-primary px-2 py-1 fs-12 fw-bold" data-bs-toggle="tooltip" title="Total fisik dari seluruh gudang">
+                            <i class="las la-boxes me-1"></i><span class="counter-value" data-target="{{ $totalStokObat }}">0</span>
                         </span>
                     </div>
                 </div>
@@ -116,8 +176,8 @@
     </div>
 
     <!-- Card 2: Transaksi Logistik -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card stat-card shadow-sm h-100">
+    <div class="col-xl-3 col-md-6 mb-4 fade-in-up delay-2">
+        <div class="card stat-card shadow-sm h-100 border-0">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <span class="text-muted fw-semibold fs-13 text-uppercase ls-1">Aktivitas Transaksi</span>
@@ -127,12 +187,12 @@
                 </div>
                 <div class="d-flex align-items-baseline justify-content-between">
                     <div>
-                        <h3 class="fw-bold mb-0 text-dark">{{ number_format($totalTransaksi) }}</h3>
+                        <h3 class="fw-bold mb-0 text-dark counter-value" data-target="{{ $totalTransaksi }}">0</h3>
                         <small class="text-muted">Total Transaksi</small>
                     </div>
                     <div class="text-end">
-                        <small class="text-success fw-semibold d-block"><i class="las la-arrow-down"></i> Masuk: {{ $totalPemasukan }}</small>
-                        <small class="text-danger fw-semibold d-block"><i class="las la-arrow-up"></i> Keluar: {{ $totalPengeluaran }}</small>
+                        <small class="text-success fw-semibold d-block"><i class="las la-arrow-down"></i> Masuk: <span class="counter-value" data-target="{{ $totalPemasukan }}">0</span></small>
+                        <small class="text-danger fw-semibold d-block"><i class="las la-arrow-up"></i> Keluar: <span class="counter-value" data-target="{{ $totalPengeluaran }}">0</span></small>
                     </div>
                 </div>
             </div>
@@ -143,8 +203,8 @@
     </div>
 
     <!-- Card 3: Gudang & Instansi OPD -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card stat-card shadow-sm h-100">
+    <div class="col-xl-3 col-md-6 mb-4 fade-in-up delay-3">
+        <div class="card stat-card shadow-sm h-100 border-0">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <span class="text-muted fw-semibold fs-13 text-uppercase ls-1">Gudang & OPD</span>
@@ -154,12 +214,12 @@
                 </div>
                 <div class="d-flex align-items-baseline justify-content-between">
                     <div>
-                        <h3 class="fw-bold mb-0 text-dark">{{ number_format($totalOpd) }}</h3>
+                        <h3 class="fw-bold mb-0 text-dark counter-value" data-target="{{ $totalOpd }}">0</h3>
                         <small class="text-muted">Instansi / OPD Mitra</small>
                     </div>
                     <div class="text-end">
                         <span class="badge bg-secondary-subtle text-secondary px-2 py-1 fs-12">
-                            <i class="las la-warehouse me-1"></i>{{ $totalGudang }} Gudang
+                            <i class="las la-warehouse me-1"></i><span class="counter-value" data-target="{{ $totalGudang }}">0</span> Gudang
                         </span>
                     </div>
                 </div>
@@ -171,8 +231,8 @@
     </div>
 
     <!-- Card 4: Berita & Pengguna -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card stat-card shadow-sm h-100">
+    <div class="col-xl-3 col-md-6 mb-4 fade-in-up delay-4">
+        <div class="card stat-card shadow-sm h-100 border-0">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <span class="text-muted fw-semibold fs-13 text-uppercase ls-1">Informasi & Pengguna</span>
@@ -182,12 +242,12 @@
                 </div>
                 <div class="d-flex align-items-baseline justify-content-between">
                     <div>
-                        <h3 class="fw-bold mb-0 text-dark">{{ number_format($totalUser) }}</h3>
+                        <h3 class="fw-bold mb-0 text-dark counter-value" data-target="{{ $totalUser }}">0</h3>
                         <small class="text-muted">Pengguna Terdaftar</small>
                     </div>
                     <div class="text-end">
                         <span class="badge bg-sifit-soft-accent text-dark px-2 py-1 fs-12 fw-bold">
-                            <i class="las la-newspaper me-1"></i>{{ $totalNews }} Berita
+                            <i class="las la-newspaper me-1"></i><span class="counter-value" data-target="{{ $totalNews }}">0</span> Berita
                         </span>
                     </div>
                 </div>
@@ -202,14 +262,14 @@
 <!-- Section Grafik Analitik & Ringkasan -->
 <div class="row">
     <!-- Grafik Tren Transaksi Masuk vs Keluar (ApexCharts) -->
-    <div class="col-lg-8 mb-4">
-        <div class="card shadow-sm h-100">
+    <div class="col-lg-8 mb-4 fade-in-up delay-2">
+        <div class="card shadow-sm h-100 border-0" style="border-radius: 12px; transition: box-shadow 0.3s;" onmouseover="this.style.boxShadow='0 10px 25px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)'">
             <div class="card-header border-0 bg-transparent pt-4 pb-0 d-flex justify-content-between align-items-center">
                 <div>
                     <h5 class="card-title fw-bold mb-1">Tren Aktivitas Logistik Obat</h5>
                     <p class="text-muted small mb-0">Statistik transaksi pemasukan dan pengeluaran 6 bulan terakhir</p>
                 </div>
-                <span class="badge bg-sifit-soft-primary px-3 py-2 fw-semibold">
+                <span class="badge bg-sifit-soft-primary px-3 py-2 fw-semibold" style="border-radius: 8px;">
                     <i class="las la-chart-area me-1"></i> Real-time Log
                 </span>
             </div>
@@ -220,8 +280,8 @@
     </div>
 
     <!-- Ringkasan Cepat & Status Distribusi -->
-    <div class="col-lg-4 mb-4">
-        <div class="card shadow-sm h-100">
+    <div class="col-lg-4 mb-4 fade-in-up delay-3">
+        <div class="card shadow-sm h-100 border-0" style="border-radius: 12px; transition: box-shadow 0.3s;" onmouseover="this.style.boxShadow='0 10px 25px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)'">
             <div class="card-header border-0 bg-transparent pt-4 pb-0">
                 <h5 class="card-title fw-bold mb-1">Distribusi Transaksi</h5>
                 <p class="text-muted small mb-0">Proporsi jenis transaksi barang dalam sistem</p>
@@ -230,17 +290,17 @@
                 <div id="chartTransaksiDonut" style="min-height: 250px;"></div>
                 
                 <div class="mt-3 pt-3 border-top">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="small text-muted"><i class="las la-square fs-14 me-1" style="color: #115566;"></i> Pemasukan</span>
-                        <span class="fw-bold fs-13">{{ $totalPemasukan }}</span>
+                    <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded hover-bg-light" style="transition: background 0.2s;">
+                        <span class="small text-muted fw-semibold"><i class="las la-square fs-14 me-2" style="color: #115566;"></i> Pemasukan</span>
+                        <span class="fw-bold fs-14 counter-value" data-target="{{ $totalPemasukan }}">0</span>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="small text-muted"><i class="las la-square fs-14 me-1" style="color: #4db6ac;"></i> Pengeluaran</span>
-                        <span class="fw-bold fs-13">{{ $totalPengeluaran }}</span>
+                    <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded hover-bg-light" style="transition: background 0.2s;">
+                        <span class="small text-muted fw-semibold"><i class="las la-square fs-14 me-2" style="color: #4db6ac;"></i> Pengeluaran</span>
+                        <span class="fw-bold fs-14 counter-value" data-target="{{ $totalPengeluaran }}">0</span>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="small text-muted"><i class="las la-square fs-14 me-1" style="color: #ffb822;"></i> Pemindahan</span>
-                        <span class="fw-bold fs-13">{{ $totalPemindahan }}</span>
+                    <div class="d-flex justify-content-between align-items-center p-2 rounded hover-bg-light" style="transition: background 0.2s;">
+                        <span class="small text-muted fw-semibold"><i class="las la-square fs-14 me-2" style="color: #ffb822;"></i> Pemindahan</span>
+                        <span class="fw-bold fs-14 counter-value" data-target="{{ $totalPemindahan }}">0</span>
                     </div>
                 </div>
             </div>
@@ -251,8 +311,8 @@
 <!-- Section Tabel Data Terbaru -->
 <div class="row">
     <!-- 5 Transaksi Logistik Terakhir -->
-    <div class="col-lg-7 mb-4">
-        <div class="card shadow-sm h-100">
+    <div class="col-lg-7 mb-4 fade-in-up delay-4">
+        <div class="card shadow-sm h-100 border-0" style="border-radius: 12px; transition: box-shadow 0.3s;" onmouseover="this.style.boxShadow='0 10px 25px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)'">
             <div class="card-header border-0 bg-transparent pt-4 pb-2 d-flex justify-content-between align-items-center">
                 <div>
                     <h5 class="card-title fw-bold mb-1">Transaksi Barang Terbaru</h5>
@@ -334,14 +394,14 @@
     </div>
 
     <!-- Stok Obat Terkini -->
-    <div class="col-lg-5 mb-4">
-        <div class="card shadow-sm h-100">
+    <div class="col-lg-5 mb-4 fade-in-up delay-4">
+        <div class="card shadow-sm h-100 border-0" style="border-radius: 12px; transition: box-shadow 0.3s;" onmouseover="this.style.boxShadow='0 10px 25px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)'">
             <div class="card-header border-0 bg-transparent pt-4 pb-2 d-flex justify-content-between align-items-center">
                 <div>
                     <h5 class="card-title fw-bold mb-1">Stok Obat Terkini</h5>
                     <p class="text-muted small mb-0">Daftar stok obat yang tersimpan di gudang</p>
                 </div>
-                <a href="{{ route('stok-obat.index') }}" class="btn btn-sm btn-outline-primary">
+                <a href="{{ route('stok-obat.index') }}" class="btn btn-sm btn-outline-primary" style="border-radius: 20px;">
                     Detail <i class="las la-arrow-right ms-1"></i>
                 </a>
             </div>
@@ -373,7 +433,7 @@
                                     @endif
                                 </td>
                                 <td class="text-end pe-4">
-                                    <span class="badge bg-primary px-3 py-1 fs-12 fw-bold">
+                                    <span class="badge bg-primary px-3 py-1 fs-12 fw-bold shadow-sm">
                                         {{ number_format($stok->jumlah) }}
                                     </span>
                                 </td>
@@ -398,7 +458,35 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Data dari Controller
+        // --- Counter Animation ---
+        const counters = document.querySelectorAll('.counter-value');
+        const speed = 200; // The lower the slower
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText.replace(/,/g, '');
+                
+                const inc = target / speed;
+                
+                if(count < target) {
+                    counter.innerText = Math.ceil(count + inc).toLocaleString('en-US');
+                    setTimeout(updateCount, 15);
+                } else {
+                    counter.innerText = target.toLocaleString('en-US');
+                }
+            };
+            
+            // Intersection Observer to start counting when visible
+            const observer = new IntersectionObserver(entries => {
+                if(entries[0].isIntersecting) {
+                    updateCount();
+                    observer.disconnect();
+                }
+            });
+            observer.observe(counter);
+        });
+
+        // --- Data dari Controller ---
         const months = @json($months);
         const masukData = @json($masukMonthly);
         const keluarData = @json($keluarMonthly);

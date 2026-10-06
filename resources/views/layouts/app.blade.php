@@ -258,6 +258,103 @@
             color: #115566;
         }
 
+        /* ==========================================
+           GLOBAL INTERACTIVE UI ENHANCEMENTS
+           ========================================== */
+        
+        /* Smooth Page Load Animation */
+        .page-content {
+            animation: fadeInContent 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeInContent {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Modern Cards */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(17, 85, 102, 0.05);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(17, 85, 102, 0.1);
+        }
+        .card-header {
+            border-bottom: 1px solid rgba(17, 85, 102, 0.08);
+            background-color: transparent;
+            padding: 1.25rem 1.5rem;
+        }
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Modern Buttons */
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.25s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(17, 85, 102, 0.15);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Interactive Tables */
+        .table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .table thead th {
+            border-bottom: 2px solid rgba(17, 85, 102, 0.1);
+            color: #555b7e;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+        }
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(17, 85, 102, 0.05);
+            transition: background-color 0.2s ease;
+        }
+        .table-hover tbody tr {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .table-hover tbody tr:hover {
+            transform: scale(1.005);
+            box-shadow: 0 4px 15px rgba(17, 85, 102, 0.08);
+            background-color: #ffffff;
+            z-index: 2;
+            position: relative;
+        }
+
+        /* Inputs & Forms */
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid rgba(17, 85, 102, 0.2);
+            padding: 0.6rem 1rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #fff;
+        }
+
+        /* Page Title */
+        .page-title-box {
+            padding: 1.5rem 0;
+        }
+        .page-title {
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
         /* Dark Mode Theme Enhancements */
         html[data-bs-theme="dark"] {
             color-scheme: dark;
@@ -293,6 +390,18 @@
             background-color: transparent;
             color: #d9e1ec;
             border-color: #1c202b;
+        }
+        
+        /* Dark Mode Override for Global Interactivity */
+        html[data-bs-theme="dark"] .card {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        html[data-bs-theme="dark"] .card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+        html[data-bs-theme="dark"] .table-hover tbody tr:hover {
+            background-color: #1a1e2b !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
         html[data-bs-theme="dark"] .form-control,
         html[data-bs-theme="dark"] .form-select {
