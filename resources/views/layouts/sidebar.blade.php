@@ -54,13 +54,7 @@
                         </div>
                     </li>
 
-                    <!-- Tambahkan Menu Kategori -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('categories.index') }}">
-                            <i class="las la-tags menu-icon"></i>
-                            <span>Data Kategori</span>
-                        </a>
-                    </li>
+                    <!-- Tambahkan Menu Kategori Dihapus (Dipindahkan ke Pengaturan) -->
 
                     <!-- Menu data obat
                     <li class="nav-item">
@@ -106,19 +100,89 @@
     </a>
 </li>
 
+<!-- Master Gudang dipindahkan ke Pengaturan -->
+
+<!-- Menu Pengguna Induk (Terintegrasi) -->
 <li class="nav-item">
-    <a class="nav-link" href="{{ route('gudang.index') }}">
-        <i class="las la-building menu-icon"></i>
-        <span> Master Gudang </span>
+    <a class="nav-link" href="#sidebarPengguna" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPengguna">
+        <i class="las la-users menu-icon"></i>
+        <span>Pengguna</span>
     </a>
+    <div class="collapse {{ request()->is('users*') || request()->is('pemasok*') || request()->is('opd*') || request()->is('opds*') ? 'show' : '' }}" id="sidebarPengguna">
+        <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}" href="{{ route('users.index') }}">Daftar User</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('users.create') ? 'active' : '' }}" href="{{ route('users.create') }}">Tambahkan User Baru</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pemasok.index') ? 'active' : '' }}" href="{{ route('pemasok.index') }}">Daftar Pemasok</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pemasok.create') ? 'active' : '' }}" href="{{ route('pemasok.create') }}">Pemasok Baru</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pemasok.import.form') ? 'active' : '' }}" href="{{ route('pemasok.import.form') }}">Tambahkan Pemasok dengan CSV</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('opd.index') || request()->routeIs('opds.index') ? 'active' : '' }}" href="{{ route('opd.index') }}">Daftar Instansi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('opd.create') || request()->routeIs('opds.create') ? 'active' : '' }}" href="{{ route('opd.create') }}">Instansi Baru</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('opd.import.form') ? 'active' : '' }}" href="{{ route('opd.import.form') }}">Tambahkan Instansi dengan CSV</a>
+            </li>
+        </ul>
+    </div>
 </li>
 
+<!-- Menu Pengaturan Induk -->
 <li class="nav-item">
-    <a class="nav-link" href="{{ route('opd.index') }}">
-        <i class="las la-hospital menu-icon"></i>
-        <span> Instansi / OPD </span>
+    <a class="nav-link" href="#sidebarPengaturan" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPengaturan">
+        <i class="las la-cog menu-icon"></i>
+        <span>Pengaturan</span>
     </a>
+    <div class="collapse {{ request()->is('pejabat*') || request()->is('program*') || request()->is('categories*') || request()->is('subkategori*') || request()->is('gudang*') || request()->is('pengangkut*') || request()->is('backup*') ? 'show' : '' }}" id="sidebarPengaturan">
+        <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pejabat.*') ? 'active' : '' }}" href="{{ route('pejabat.index') }}">Setting Pejabat</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('program.*') ? 'active' : '' }}" href="{{ route('program.index') }}">Program</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('categories.index') ? 'active' : '' }}" href="{{ route('categories.index') }}">Daftar Kategori</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('categories.create') ? 'active' : '' }}" href="{{ route('categories.create') }}">Tambahkan Kategori Baru</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('subkategori.index') ? 'active' : '' }}" href="{{ route('subkategori.index') }}">Daftar Sub Kategori</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('subkategori.create') ? 'active' : '' }}" href="{{ route('subkategori.create') }}">Tambahkan Sub Kategori</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('gudang.index') ? 'active' : '' }}" href="{{ route('gudang.index') }}">Gudang</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('gudang.create') ? 'active' : '' }}" href="{{ route('gudang.create') }}">Tambahkan Gudang</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pengangkut.index') ? 'active' : '' }}" href="{{ route('pengangkut.index') }}">Pengangkut/Pengantar</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pengangkut.create') ? 'active' : '' }}" href="{{ route('pengangkut.create') }}">Tambahkan Pengangkut</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('backup.*') ? 'active' : '' }}" href="{{ route('backup.index') }}">Backup Database</a>
+            </li>
+        </ul>
+    </div>
 </li>
+
 
 
                     <!-- INI ADALAH MENU MANAJEMEN ROLE YANG KITA BUAT -->
@@ -126,20 +190,6 @@
                         <a class="nav-link {{ request()->is('roles*') ? 'active' : '' }}" href="{{ route('roles.index') }}">
                             <i class="iconoir-shield-check menu-icon"></i>
                             <span>Manajemen Role</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('opds.index') }}">
-                            <i class="las la-building menu-icon"></i>
-                            <span>Manajemen OPD</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}" href="{{ route('users.index') }}">
-                            <i class="iconoir-community menu-icon"></i>
-                            <span>Data Pengguna</span>
                         </a>
                     </li>
 

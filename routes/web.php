@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontendProfileController;
@@ -8,10 +9,15 @@ use App\Http\Controllers\GudangController;
 use App\Http\Controllers\MasterObatController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OpdController;
+use App\Http\Controllers\PejabatController;
+use App\Http\Controllers\PemasokController;
+use App\Http\Controllers\PengangkutController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StokObatController;
+use App\Http\Controllers\SubKategoriController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
 use App\Models\Category;
@@ -91,7 +97,21 @@ Route::middleware('auth')->group(function () {
     Route::resource('gudang', GudangController::class);
 
     // Rute untuk Master Instansi / OPD
+    Route::get('/opd/import', [OpdController::class, 'showImportForm'])->name('opd.import.form');
+    Route::post('/opd/import', [OpdController::class, 'import'])->name('opd.import');
     Route::resource('opd', OpdController::class);
+
+    // Manajemen Pemasok
+    Route::get('/pemasok/import', [PemasokController::class, 'showImportForm'])->name('pemasok.import.form');
+    Route::post('/pemasok/import', [PemasokController::class, 'import'])->name('pemasok.import');
+    Route::resource('pemasok', PemasokController::class);
+
+    // Pengaturan
+    Route::resource('pejabat', PejabatController::class);
+    Route::resource('program', ProgramController::class);
+    Route::resource('subkategori', SubKategoriController::class);
+    Route::resource('pengangkut', PengangkutController::class);
+    Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
 });
 
 // Frontend

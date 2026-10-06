@@ -144,6 +144,12 @@
                 $('#modalUser').modal('show');
             });
 
+            @if(request('action') == 'create')
+                setTimeout(function() {
+                    $('#btnTambahUser').click();
+                }, 500);
+            @endif
+
             $('body').on('click', '.editUser', function() {
                 var user_id = $(this).data('id');
                 $.get("{{ route('users.index') }}/" + user_id + "/edit", function(data) {

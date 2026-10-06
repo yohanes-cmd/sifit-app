@@ -60,4 +60,19 @@ class OpdController extends Controller
 
         return redirect()->route('opd.index')->with('success', 'Data Instansi / OPD berhasil dihapus!');
     }
+
+    public function showImportForm()
+    {
+        return view('pengguna.opd.import');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:csv,xlsx,xls',
+        ]);
+
+        // TODO: Implement excel import logic
+        return redirect()->route('opd.index')->with('success', 'Data Instansi berhasil diimport (placeholder).');
+    }
 }
