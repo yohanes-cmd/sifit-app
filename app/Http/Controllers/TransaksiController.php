@@ -366,4 +366,14 @@ class TransaksiController extends Controller
 
         return view('transaksi.pemindahan.show', compact('transaksi'));
     }
+
+    public function destroyPemindahan(Transaksi $transaksi)
+    {
+        try {
+            $transaksi->delete();
+            return redirect()->route('pemindahan.index')->with('success', 'Data transaksi pemindahan berhasil dihapus. Stok terkait otomatis dikembalikan.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus transaksi: '.$e->getMessage());
+        }
+    }
 }

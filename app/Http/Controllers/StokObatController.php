@@ -260,4 +260,24 @@ class StokObatController extends Controller
 
         return Excel::download(new StokObatExport($gudangId ? (int) $gudangId : null), 'Daftar_Stok_Logistik_'.date('Y-m-d').'.csv', \Maatwebsite\Excel\Excel::CSV);
     }
+
+    /**
+     * Print View
+     */
+    public function print(Request $request): View
+    {
+        $query = StokObat::with(['masterObat', 'gudang'])->latest();
+
+        $gudangId = $request->get('gudang_id');
+        if (!empty($gudangId)) {
+            $query->where('gudang_id', $gudangId);
+            $selectedGudangName = Gudang::find($gudangId)->nama_gudang ?? 'Semua Gudang';
+        } else {
+            $selectedGudangName = 'Semua Gudang';
+        }
+
+        $stokObats = $query->get(); // Get all
+
+        return view('stok-obat.print', compact('stokObats', 'selectedGudangName'));
+    }
 }

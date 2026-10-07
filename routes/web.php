@@ -99,6 +99,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pemindahan/create', [TransaksiController::class, 'createPemindahan'])->name('pemindahan.create');
     Route::post('/pemindahan', [TransaksiController::class, 'storePemindahan'])->name('pemindahan.store');
     Route::get('/pemindahan/{transaksi}', [TransaksiController::class, 'showPemindahan'])->name('pemindahan.show');
+    Route::delete('/pemindahan/{transaksi}', [TransaksiController::class, 'destroyPemindahan'])->name('pemindahan.destroy');
 
     // Rute untuk Master Gudang
     Route::resource('gudang', GudangController::class);

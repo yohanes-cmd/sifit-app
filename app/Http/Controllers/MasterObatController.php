@@ -216,4 +216,26 @@ class MasterObatController extends Controller
 
         return Excel::download(new MasterObatExport($search), 'Master_Obat_Logistik_'.date('Y-m-d').'.csv', \Maatwebsite\Excel\Excel::CSV);
     }
+
+    /**
+     * Print View
+     */
+    public function print(Request $request): View
+    {
+        $search = $request->get('search');
+        $query = MasterObat::latest();
+
+        if (! empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('kode_obat', 'like', "%{$search}%")
+                    ->orWhere('nama_obat', 'like', "%{$search}%")
+                    ->orWhere('kode_kemkes', 'like', "%{$search}%")
+                    ->orWhere('kategori', 'like', "%{$search}%");
+            });
+        }
+
+        $masterObats = $query->get(); // Get all without pagination
+
+        return view('master-obat.print', compact('masterObats'));
+    }
 }

@@ -77,9 +77,14 @@
                                     </td>
                                     <td>{{ Str::limit($item->catatan ?? '-', 40) }}</td>
                                     <td class="text-center">
-                                        <a href="{{ route('pemindahan.show', $item->id) }}" class="btn btn-sm btn-outline-info" title="Lihat Detail">
-                                            <i class="las la-eye me-1"></i> Detail
-                                        </a>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="{{ route('pemindahan.show', $item->id) }}" class="btn btn-outline-info" title="Lihat Detail">
+                                                <i class="las la-eye"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger" title="Hapus" onclick="deleteSingle('{{ route('pemindahan.destroy', $item->id) }}')">
+                                                <i class="las la-trash"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                                 @empty
@@ -99,9 +104,27 @@
                             {{ $transaksis->links() }}
                         </div>
                     @endif
+                    
+                    <!-- Hidden single delete form -->
+                    <form id="formSingleDelete" method="POST" style="display: none;">
+                        @csrf
+                        @method('DELETE')
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function deleteSingle(url) {
+        if (confirm('Apakah Anda yakin ingin menghapus data transaksi pemindahan ini? Peringatan: Stok terkait akan dikembalikan secara otomatis.')) {
+            const form = document.getElementById('formSingleDelete');
+            form.action = url;
+            form.submit();
+        }
+    }
+</script>
+@endpush
