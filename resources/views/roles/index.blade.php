@@ -21,6 +21,20 @@
             border-bottom: 1px solid #e3e6f0;
             padding-bottom: 4px;
         }
+        #modalRole .modal-dialog {
+            max-height: 90vh;
+            margin-top: 2.5vh;
+            margin-bottom: 2.5vh;
+        }
+        #modalRole .modal-content {
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #modalRole .modal-body {
+            overflow-y: auto !important;
+            flex: 1 1 auto;
+        }
     </style>
 @endpush
 
@@ -56,15 +70,15 @@
 </div>
 
 <!-- Modal Form (Edit & Tambah) -->
-<div class="modal fade" id="modalRole" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg"> <!-- modal-lg agar lebar muat menampung grid -->
+<div class="modal fade" id="modalRole" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable"> <!-- modal-lg agar lebar muat menampung grid -->
         <div class="modal-content">
-            <form id="formRole">
+            <form id="formRole" class="d-flex flex-column h-100 mb-0">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="judulModal">Tambah Role</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title text-white" id="judulModal">Tambah Role</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                     <input type="hidden" name="role_id" id="role_id">
                     
                     <div class="mb-3">

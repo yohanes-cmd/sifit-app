@@ -264,11 +264,19 @@
         
         /* Smooth Page Load Animation */
         .page-content {
-            animation: fadeInContent 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeInContent 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes fadeInContent {
             from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            to { opacity: 1; transform: none; }
+        }
+
+        /* Ensure Bootstrap Modals are always on top and unobstructed */
+        .modal {
+            z-index: 1055 !important;
+        }
+        .modal-backdrop {
+            z-index: 1050 !important;
         }
 
         /* Modern Cards */
@@ -353,6 +361,35 @@
         .page-title {
             font-weight: 700;
             letter-spacing: -0.5px;
+        }
+
+        /* DataTables Length & Filter Styling Fix */
+        .dataTables_length label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 400;
+        }
+        .dataTables_length select.form-select,
+        .dataTables_length select {
+            width: auto !important;
+            display: inline-block !important;
+            padding: 0.35rem 2.2rem 0.35rem 0.75rem !important;
+            font-size: 0.8125rem !important;
+            min-width: 70px;
+        }
+        .dataTables_filter label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 400;
+        }
+        .dataTables_filter input.form-control,
+        .dataTables_filter input {
+            width: auto !important;
+            display: inline-block !important;
+            padding: 0.35rem 0.75rem !important;
+            font-size: 0.8125rem !important;
         }
 
         /* Dark Mode Theme Enhancements */
