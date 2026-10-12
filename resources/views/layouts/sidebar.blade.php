@@ -54,13 +54,7 @@
                         </div>
                     </li>
 
-                    <!-- Tambahkan Menu Kategori -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('categories.index') }}">
-                            <i class="las la-tags menu-icon"></i>
-                            <span>Data Kategori</span>
-                        </a>
-                    </li>
+                    <!-- Tambahkan Menu Kategori Dihapus (Dipindahkan ke Pengaturan) -->
 
                     <!-- Menu data obat
                     <li class="nav-item">
@@ -85,11 +79,18 @@
     </a>
 </li>
 
-                    <li class="nav-item">
-    <a class="nav-link" href="{{ route('pemasukan.create') }}">
+<li class="nav-item">
+    <a class="nav-link" href="#sidebarPemasukan" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPemasukan">
         <i class="las la-truck-loading menu-icon"></i>
-        <span> Pemasukan Barang </span>
+        <span> Pemasukan </span>
     </a>
+    <div class="collapse {{ request()->is('pemasukan*') ? 'show' : '' }}" id="sidebarPemasukan">
+        <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pemasukan.index') ? 'active' : '' }}" href="{{ route('pemasukan.index') }}">Daftar Pemasukan</a>
+            </li>
+        </ul>
+    </div>
 </li>
 
 <li class="nav-item">
@@ -100,25 +101,81 @@
 </li>
 
 <li class="nav-item">
-    <a class="nav-link" href="{{ route('pemindahan.create') }}">
+    <a class="nav-link" href="#sidebarPemindahan" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPemindahan">
         <i class="las la-exchange-alt menu-icon"></i>
         <span> Pemindahan Barang </span>
     </a>
+    <div class="collapse {{ request()->is('pemindahan*') ? 'show' : '' }}" id="sidebarPemindahan">
+        <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pemindahan.index') ? 'active' : '' }}" href="{{ route('pemindahan.index') }}">Daftar Pemindahan</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pemindahan.create') ? 'active' : '' }}" href="{{ route('pemindahan.create') }}">Tambah Pemindahan</a>
+            </li>
+        </ul>
+    </div>
 </li>
 
+<!-- Master Gudang dipindahkan ke Pengaturan -->
+
+<!-- Menu Pengguna Induk (Terintegrasi) -->
 <li class="nav-item">
-    <a class="nav-link" href="{{ route('gudang.index') }}">
-        <i class="las la-building menu-icon"></i>
-        <span> Master Gudang </span>
+    <a class="nav-link" href="#sidebarPengguna" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPengguna">
+        <i class="las la-users menu-icon"></i>
+        <span>Pengguna</span>
     </a>
+    <div class="collapse {{ request()->is('users*') || request()->is('pemasok*') || request()->is('opd*') || request()->is('opds*') ? 'show' : '' }}" id="sidebarPengguna">
+        <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">Daftar User</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pemasok.*') ? 'active' : '' }}" href="{{ route('pemasok.index') }}">Daftar Pemasok</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('opd.*') || request()->routeIs('opds.*') ? 'active' : '' }}" href="{{ route('opd.index') }}">Daftar Instansi</a>
+            </li>
+        </ul>
+    </div>
 </li>
 
+<!-- Menu Pengaturan Induk -->
 <li class="nav-item">
-    <a class="nav-link" href="{{ route('opd.index') }}">
-        <i class="las la-hospital menu-icon"></i>
-        <span> Instansi / OPD </span>
+    <a class="nav-link" href="#sidebarPengaturan" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPengaturan">
+        <i class="las la-cog menu-icon"></i>
+        <span>Pengaturan</span>
     </a>
+    <div class="collapse {{ request()->is('pejabat*') || request()->is('program*') || request()->is('categories*') || request()->is('subkategori*') || request()->is('gudang*') || request()->is('pengangkut*') || request()->is('backup*') || request()->is('status-kantor*') ? 'show' : '' }}" id="sidebarPengaturan">
+        <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pejabat.*') ? 'active' : '' }}" href="{{ route('pejabat.index') }}">Setting Pejabat</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('status-kantor.*') ? 'active' : '' }}" href="{{ route('status-kantor.index') }}">Status Kepemilikan</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('program.*') ? 'active' : '' }}" href="{{ route('program.index') }}">Program</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}" href="{{ route('categories.index') }}">Daftar Kategori</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('subkategori.*') ? 'active' : '' }}" href="{{ route('subkategori.index') }}">Daftar Sub Kategori</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('gudang.*') ? 'active' : '' }}" href="{{ route('gudang.index') }}">Gudang</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('pengangkut.*') ? 'active' : '' }}" href="{{ route('pengangkut.index') }}">Pengangkut/Pengantar</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('backup.*') ? 'active' : '' }}" href="{{ route('backup.index') }}">Backup Database</a>
+            </li>
+        </ul>
+    </div>
 </li>
+
 
 
                     <!-- INI ADALAH MENU MANAJEMEN ROLE YANG KITA BUAT -->
@@ -129,40 +186,7 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('opds.index') }}">
-                            <i class="las la-building menu-icon"></i>
-                            <span>Manajemen OPD</span>
-                        </a>
-                    </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}" href="{{ route('users.index') }}">
-                            <i class="iconoir-community menu-icon"></i>
-                            <span>Data Pengguna</span>
-                        </a>
-                    </li>
-
-                    <li class="menu-label mt-2">
-                        <small class="label-border">
-                            <div class="border_left hidden-xs"></div>
-                            <div class="border_right"></div>
-                        </small>
-                        <span>Template Components</span>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#sidebarElements" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarElements">
-                            <i class="iconoir-compact-disc menu-icon"></i>
-                            <span>UI Elements</span>
-                        </a>
-                        <div class="collapse" id="sidebarElements">
-                            <ul class="nav flex-column">
-                                <li class="nav-item"><a class="nav-link" href="#">Alerts</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Buttons</a></li>
-                            </ul>
-                        </div>
-                    </li>
 
                 </ul>
             </div>

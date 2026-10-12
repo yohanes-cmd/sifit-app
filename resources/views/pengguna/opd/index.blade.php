@@ -41,13 +41,11 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td><strong>{{ $item->nama_opd }}</strong></td>
                                     <td>
-                                        @if($item->status_kantor == 'kantor_pusat')
-                                            <span class="badge bg-primary">Kantor Pusat</span>
-                                        @elseif($item->status_kantor == 'puskesmas')
-                                            <span class="badge bg-success">Puskesmas</span>
-                                        @else
-                                            <span class="badge bg-info">UPT Farmasi</span>
-                                        @endif
+                                        @php
+                                            $statusObj = \App\Models\StatusKantor::where('slug', $item->status_kantor)->first();
+                                            $statusLabel = $statusObj ? $statusObj->nama_status : \Illuminate\Support\Str::title(str_replace('_', ' ', $item->status_kantor));
+                                        @endphp
+                                        <span class="badge bg-primary">{{ $statusLabel }}</span>
                                     </td>
                                     <td>{{ $item->alamat ?? '-' }}</td>
                                     <td>

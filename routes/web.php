@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthController;git 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontendProfileController;
@@ -9,10 +10,16 @@ use App\Http\Controllers\GudangController;
 use App\Http\Controllers\MasterObatController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OpdController;
+use App\Http\Controllers\PejabatController;
+use App\Http\Controllers\PemasokController;
+use App\Http\Controllers\PengangkutController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\StatusKantorController;
 use App\Http\Controllers\StokObatController;
+use App\Http\Controllers\SubKategoriController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
 use App\Models\Category;
@@ -67,32 +74,58 @@ Route::middleware('auth')->group(function () {
     Route::resource('news', NewsController::class);
 
     // --- RUTE STOK OBAT & EXPORT (HARUS DI DALAM MIDDLEWARE AUTH KALAU PERLU AMAN) ---
-    // Posisikan rute khusus export DI ATAS Route::resource('stok-obat')
+    // Posisikan rute khusus export & bulk action DI ATAS Route::resource('stok-obat')
     Route::get('/stok-obat/export-excel', [StokObatController::class, 'exportExcel'])->name('stok-obat.export');
+    Route::get('/stok-obat/export-csv', [StokObatController::class, 'exportCsv'])->name('stok-obat.export-csv');
+    Route::post('/stok-obat/bulk-destroy', [StokObatController::class, 'bulkDestroy'])->name('stok-obat.bulk-destroy');
 
-    // Rute resource stok obat (mencakup index, destroy, dll)
+    // Rute resource stok obat (mencakup index, create, store, edit, update, destroy)
     Route::resource('stok-obat', StokObatController::class);
 
     // Rute untuk Master Obat
+    Route::get('/master-obat/export-excel', [MasterObatController::class, 'exportExcel'])->name('master-obat.export');
+    Route::get('/master-obat/export-csv', [MasterObatController::class, 'exportCsv'])->name('master-obat.export-csv');
     Route::resource('master-obat', MasterObatController::class);
 
     // Rute khusus Transaksi Pemasukan
+    Route::get('/pemasukan', [TransaksiController::class, 'indexPemasukan'])->name('pemasukan.index');
+    Route::post('/pemasukan/bulk-delete', [TransaksiController::class, 'bulkDeletePemasukan'])->name('pemasukan.bulk-delete');
     Route::get('/pemasukan/create', [TransaksiController::class, 'createPemasukan'])->name('pemasukan.create');
     Route::post('/pemasukan', [TransaksiController::class, 'storePemasukan'])->name('pemasukan.store');
+    Route::get('/pemasukan/{transaksi}', [TransaksiController::class, 'showPemasukan'])->name('pemasukan.show');
+    Route::delete('/pemasukan/{transaksi}', [TransaksiController::class, 'destroyPemasukan'])->name('pemasukan.destroy');
 
     // Rute khusus Transaksi Pengeluaran
     Route::get('/pengeluaran/create', [TransaksiController::class, 'createPengeluaran'])->name('pengeluaran.create');
     Route::post('/pengeluaran', [TransaksiController::class, 'storePengeluaran'])->name('pengeluaran.store');
 
     // Rute khusus Transaksi Pemindahan
+    Route::get('/pemindahan', [TransaksiController::class, 'indexPemindahan'])->name('pemindahan.index');
     Route::get('/pemindahan/create', [TransaksiController::class, 'createPemindahan'])->name('pemindahan.create');
     Route::post('/pemindahan', [TransaksiController::class, 'storePemindahan'])->name('pemindahan.store');
+    Route::get('/pemindahan/{transaksi}', [TransaksiController::class, 'showPemindahan'])->name('pemindahan.show');
+    Route::delete('/pemindahan/{transaksi}', [TransaksiController::class, 'destroyPemindahan'])->name('pemindahan.destroy');
 
     // Rute untuk Master Gudang
     Route::resource('gudang', GudangController::class);
 
     // Rute untuk Master Instansi / OPD
+    Route::get('/opd/import', [OpdController::class, 'showImportForm'])->name('opd.import.form');
+    Route::post('/opd/import', [OpdController::class, 'import'])->name('opd.import');
     Route::resource('opd', OpdController::class);
+
+    // Manajemen Pemasok
+    Route::get('/pemasok/import', [PemasokController::class, 'showImportForm'])->name('pemasok.import.form');
+    Route::post('/pemasok/import', [PemasokController::class, 'import'])->name('pemasok.import');
+    Route::resource('pemasok', PemasokController::class);
+
+    // Pengaturan
+    Route::resource('pejabat', PejabatController::class);
+    Route::resource('program', ProgramController::class);
+    Route::resource('subkategori', SubKategoriController::class);
+    Route::resource('pengangkut', PengangkutController::class);
+    Route::resource('status-kantor', StatusKantorController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
 });
 
 // Frontend

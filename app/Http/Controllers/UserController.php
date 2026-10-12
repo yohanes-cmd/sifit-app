@@ -46,6 +46,11 @@ class UserController extends Controller
         return view('users.index', compact('roles', 'opds'));
     }
 
+    public function create()
+    {
+        return redirect()->route('users.index', ['action' => 'create']);
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
