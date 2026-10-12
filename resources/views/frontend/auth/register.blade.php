@@ -6,8 +6,8 @@
     <title>Daftar Akun Baru - SIFIT Farmasi Riau</title>
     
     {{-- Favicon --}}
-    <link rel="shortcut icon" href="{{ asset('assets/images/logo-riau.png') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('frontend/images/favicon/apple-touch-icon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/images/logo-sifit.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/images/logo-sifit.png') }}">
 
     {{-- Google Fonts & Icons --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -106,9 +106,20 @@ function scrollToTop() {
 //=== Prealoder===
 function prealoader() {
     if($('.preloader').length){
-        $('.preloader').delay(2000).fadeOut(500);
+        $('.preloader').fadeOut(250, function() {
+            $(this).addClass('loaded');
+        });
     }
 }
+
+// Fail-safe: pastikan preloader selalu tertutup dalam maks 600ms
+setTimeout(function() {
+    if($('.preloader').is(':visible')) {
+        $('.preloader').fadeOut(200, function() {
+            $(this).addClass('loaded');
+        });
+    }
+}, 600);
 
 
 
@@ -499,23 +510,26 @@ function tooltip () {
 
 //=== Accordion ===
 function accordion() {
-        if($('.accordion-box').length){
-            $('.accordion-box .accord-btn').click(function() {
-        if($(this).hasClass('active')!==true){
-            $('.accordion-box .accord-btn').removeClass('active');
-        }
+    if ($('.accordion-box').length) {
+        $('.accordion-box').off('click', '.accord-btn').on('click', '.accord-btn', function(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            var $box = $btn.closest('.accordion-box');
+            var $content = $btn.next('.accord-content');
 
-        if ($(this).next('.accord-content').is(':visible')){
-            $(this).removeClass('active');
-            $(this).next('.accord-content').slideUp(500);
-        }
+            if ($btn.hasClass('active')) {
+                $btn.removeClass('active');
+                $content.stop(true, false).slideUp(280);
+            } else {
+                // Close other items smoothly in the same accordion box
+                $box.find('.accord-btn.active').removeClass('active');
+                $box.find('.accord-content:visible').stop(true, false).slideUp(280);
 
-        else{
-            $(this).addClass('active');
-            $('.accordion-box .accord-content').slideUp(500);
-            $(this).next('.accord-content').slideDown(500); 
-        }
-      });
+                // Open current item smoothly
+                $btn.addClass('active');
+                $content.stop(true, false).slideDown(280);
+            }
+        });
     }
 }
 

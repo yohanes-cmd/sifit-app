@@ -159,9 +159,25 @@ class NewsController extends Controller
             $query->where('title', 'like', '%'.$request->search.'%');
         }
 
-        $news = $query->paginate(6)->withQueryString();
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
 
-        return view('frontend.berita.index', compact('news'));
+        $news = $query->paginate(6)->withQueryString();
+        $categories = Category::where('type', 'news')->get();
+
+        return view('frontend.berita.index', compact('news', 'categories'));
+    }
+
+    public function frontendCategory()
+    {
+        $categories = Category::where('type', 'news')
+            ->withCount(['news' => function ($query) {
+                $query->where('status', 'publish');
+            }])
+            ->get();
+
+        return view('frontend.berita.kategori', compact('categories'));
     }
 
     public function frontendShow($slug)

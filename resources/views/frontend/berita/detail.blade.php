@@ -1,408 +1,392 @@
 @extends('frontend.layouts.app')
-@section('title', $news->title . ' - SIFIT')
+@section('title', $news->title . ' - Berita & Informasi SIFIT')
 
 @section('content')
 <style>
-    .sifit-news-detail {
-        padding: 45px 0 55px;
+    .sifit-news-detail-section {
+        padding: 28px 0 50px;
+        background: #f8fafc;
     }
-
-    .sifit-news-main {
-        margin-bottom: 25px;
+    .sifit-article-container {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 24px 28px;
+        box-shadow: 0 4px 16px rgba(17, 85, 102, 0.04);
+        transition: box-shadow 0.3s ease;
     }
-
-    .sifit-news-main .img-holder {
+    .sifit-article-hero-img {
         width: 100%;
-        max-height: 430px;
+        max-height: 380px;
+        border-radius: 8px;
         overflow: hidden;
-        background: #f7f7f7;
-        margin-bottom: 20px;
+        margin: 16px 0 22px 0;
+        background: linear-gradient(135deg, #0b3a46, #115566);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
     }
-
-    .sifit-news-main .img-holder img {
+    .sifit-article-hero-img img {
         width: 100%;
-        max-height: 430px;
+        max-height: 380px;
         object-fit: cover;
         display: block;
+        transition: transform 0.4s ease;
     }
-
-    .sifit-news-main .text-holder {
-        padding-top: 0 !important;
+    .sifit-article-hero-img:hover img {
+        transform: scale(1.02);
     }
-
-    .sifit-news-main .blog-title {
-        margin: 0 0 12px;
-        line-height: 32px;
+    .sifit-article-body {
+        color: #334155;
+        font-size: 15px;
+        line-height: 1.8;
+        word-break: break-word;
     }
-
-    .sifit-news-main .meta-info {
-        margin: 0 0 18px !important;
-        padding: 0;
+    .sifit-article-body p {
+        margin-bottom: 16px;
     }
-
-    .sifit-news-main .meta-info li {
-        margin-right: 18px;
-        margin-bottom: 5px;
+    .sifit-article-body img {
+        max-width: 100% !important;
+        height: auto !important;
+        border-radius: 8px;
+        margin: 14px 0;
     }
-
-    .sifit-news-content {
-        margin-top: 0;
+    .sifit-article-body blockquote {
+        border-left: 4px solid var(--sifit-primary);
+        background: #f0fdfa;
+        padding: 12px 16px;
+        margin: 16px 0;
+        border-radius: 0 8px 8px 0;
+        font-style: italic;
+        color: #0f766e;
     }
-
-    .sifit-news-content p {
-        line-height: 27px;
-        margin-bottom: 14px;
+    .sifit-article-meta-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 12.5px;
+        color: #64748b;
     }
-
-    .sifit-news-content img {
-        max-width: 100%;
-        height: auto;
+    .sifit-meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #f1f5f9;
+        color: #475569;
+        padding: 3px 10px;
+        border-radius: 16px;
+        font-size: 11.5px;
+        font-weight: 600;
     }
-
-    .sifit-pdf {
-        margin-top: 18px;
+    .sifit-meta-pill-cat {
+        background: rgba(17, 85, 102, 0.1);
+        color: var(--sifit-primary);
+        border: 1px solid rgba(17, 85, 102, 0.2);
     }
-
-    .sifit-author-box {
-        margin-top: 25px !important;
-        padding: 18px !important;
+    .sifit-meta-pill-verified {
+        background: #ecfdf5;
+        color: #059669;
+        border: 1px solid #a7f3d0;
     }
-
-    .sifit-author-box .img-holder {
-        width: 70px !important;
-        height: 70px !important;
-        margin-right: 15px;
+    
+    /* Single Unified Sidebar */
+    .sifit-sidebar-unified {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 14px rgba(17, 85, 102, 0.04);
+        position: sticky;
+        top: 80px;
     }
-
-    .sifit-author-box .img-holder img {
-        width: 70px !important;
-        height: 70px !important;
-        object-fit: cover;
-        border-radius: 50%;
+    .sifit-sidebar-unified .sidebar-title {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--sifit-primary);
+        margin: 0 0 12px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
-
-    .sifit-author-box .text-holder {
-        padding-top: 3px !important;
+    .sifit-sidebar-search-box {
+        position: relative;
+        margin-bottom: 18px;
     }
-
-    .sifit-author-box .text-holder h3 {
-        margin-bottom: 5px;
-    }
-
-    .sifit-author-box .text-holder p {
-        margin: 0;
-        line-height: 24px;
-    }
-
-    .sifit-sidebar {
-        padding-left: 15px;
-    }
-
-    .sifit-sidebar .single-sidebar {
-        margin-bottom: 25px !important;
-    }
-
-    .sifit-sidebar .search-form {
-        margin-bottom: 0 !important;
-    }
-
-    .sifit-sidebar .sec-title {
-        margin-bottom: 15px !important;
-    }
-
-    .sifit-sidebar .sec-title h3 {
-        margin-bottom: 7px;
-    }
-
-    .sifit-sidebar .popular-post {
-        margin: 0;
-    }
-
-    .sifit-sidebar .popular-post li {
-        padding-bottom: 15px !important;
-        margin-bottom: 15px !important;
-    }
-
-    .sifit-sidebar .popular-post li:last-child {
-        margin-bottom: 0 !important;
-        padding-bottom: 0 !important;
-    }
-
-    .sifit-sidebar .popular-post .img-holder {
-        width: 85px;
-        height: 70px;
-        overflow: hidden;
-    }
-
-    .sifit-sidebar .popular-post .img-holder img {
+    .sifit-sidebar-search-box input {
         width: 100%;
-        height: 100%;
-        object-fit: cover;
+        height: 38px;
+        padding: 6px 40px 6px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 13px;
+        transition: border-color 0.2s, box-shadow 0.2s;
     }
-
-    .sifit-sidebar .popular-post .title-holder {
-        padding-left: 12px;
+    .sifit-sidebar-search-box input:focus {
+        border-color: var(--sifit-accent);
+        box-shadow: 0 0 0 3px rgba(77, 182, 172, 0.15);
+        outline: none;
     }
-
-    .sifit-sidebar .popular-post .post-title {
-        margin-bottom: 6px;
-        line-height: 20px;
+    .sifit-sidebar-search-box button {
+        position: absolute;
+        right: 4px;
+        top: 4px;
+        bottom: 4px;
+        width: 32px;
+        background: var(--sifit-primary);
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background 0.2s;
     }
-
-    .sifit-sidebar .popular-post .post-date {
-        margin: 0;
+    .sifit-sidebar-search-box button:hover {
+        background: var(--sifit-primary-dark);
     }
-
-    @media (max-width: 991px) {
-        .sifit-sidebar {
-            padding-left: 0;
-            margin-top: 35px;
-        }
+    .sifit-sidebar-divider {
+        height: 1px;
+        background: #f1f5f9;
+        margin: 16px 0;
     }
-
+    .sifit-related-item {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        padding: 8px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        text-decoration: none !important;
+        margin-bottom: 8px;
+    }
+    .sifit-related-item:hover {
+        background: #f0fdfa;
+        transform: translateX(4px);
+    }
+    .sifit-related-item:last-child {
+        margin-bottom: 0;
+    }
+    .sifit-share-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        text-decoration: none !important;
+        transition: all 0.2s ease;
+    }
+    .sifit-share-wa {
+        background: #25D366;
+        color: #ffffff !important;
+    }
+    .sifit-share-wa:hover {
+        background: #1eb954;
+        transform: translateY(-1px);
+    }
+    .sifit-share-copy {
+        background: #f1f5f9;
+        color: #334155 !important;
+        border: 1px solid #cbd5e1;
+    }
+    .sifit-share-copy:hover {
+        background: #e2e8f0;
+        transform: translateY(-1px);
+    }
     @media (max-width: 767px) {
-        .sifit-news-detail {
-            padding: 35px 0 45px;
+        .sifit-article-container {
+            padding: 16px 14px;
         }
-
-        .sifit-news-main .img-holder,
-        .sifit-news-main .img-holder img {
-            max-height: 300px;
-        }
-
-        .sifit-news-main .blog-title {
-            line-height: 28px;
-        }
-
-        .sifit-author-box .img-holder {
-            float: none !important;
-            margin-bottom: 12px;
+        .sifit-sidebar-unified {
+            margin-top: 24px;
+            position: static;
         }
     }
 </style>
 
-{{-- BREADCRUMB --}}
-<section class="breadcrumb-area" style="background-image: url('/frontend/images/resources/breadcrumb-bg.jpg');">
+{{-- BREADCRUMB COMPACT --}}
+<section class="breadcrumb-area">
     <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="breadcrumbs wow fadeInUp" data-wow-duration="0.8s" data-wow-delay="0.2s">
-                    <h1>Detail Berita</h1>
-                </div>
+        <div class="sifit-breadcrumb-wrapper">
+            <div class="sifit-breadcrumb-left wow fadeInLeft" data-wow-delay="0.1s">
+                <h1><i class="fa fa-newspaper-o" style="color: var(--sifit-accent);"></i> Warta & Siaran Resmi</h1>
+                <p>Publikasi informasi kefarmasian dan kesehatan Dinas Kesehatan Provinsi Riau</p>
             </div>
-        </div>
-    </div>
-
-    <div class="breadcrumb-bottom">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="left pull-left">
-                        <ul>
-                            <li><a href="{{ route('frontend.home') }}">Beranda</a></li>
-                            <li><i class="fa fa-angle-right" aria-hidden="true"></i></li>
-                            <li><a href="{{ route('frontend.berita') }}">Berita</a></li>
-                            <li><i class="fa fa-angle-right" aria-hidden="true"></i></li>
-                            <li class="active">Detail Berita</li>
-                        </ul>
-                    </div>
-                </div>
+            <div class="sifit-breadcrumb-right wow fadeInRight" data-wow-delay="0.1s">
+                <ul class="sifit-breadcrumb-list">
+                    <li><a href="{{ route('frontend.home') }}"><i class="fa fa-home"></i> Beranda</a></li>
+                    <li><i class="fa fa-angle-right"></i></li>
+                    <li><a href="{{ route('frontend.berita') }}">Berita</a></li>
+                    <li><i class="fa fa-angle-right"></i></li>
+                    <li class="active">{{ Str::limit($news->title, 25) }}</li>
+                </ul>
             </div>
         </div>
     </div>
 </section>
 
-{{-- DETAIL BERITA --}}
-<section id="blog-area" class="blog-single-area sifit-news-detail">
+{{-- DETAIL BERITA UTAMA --}}
+<section class="sifit-news-detail-section">
     <div class="container">
         <div class="row">
 
-            {{-- ARTIKEL --}}
+            {{-- ARTIKEL UTAMA (1 Single Clean Card) --}}
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                <div class="blog-post wow fadeInLeft" data-wow-duration="0.8s" data-wow-delay="0.2s">
+                <div class="sifit-article-container wow fadeInUp" data-wow-delay="0.1s">
 
-                    <div class="single-blog-item sifit-news-main">
-
-                        <div class="img-holder">
-                            @if($news->image)
-                                <img
-                                    src="{{ asset('storage/'.$news->image) }}"
-                                    alt="{{ $news->title }}"
-                                >
-                            @else
-                                <img
-                                    src="{{ asset('frontend/images/blog/blog-single.jpg') }}"
-                                    alt="{{ $news->title }}"
-                                >
-                            @endif
-                        </div>
-
-                        <div class="text-holder">
-
-                            <h3 class="blog-title">
-                                {{ $news->title }}
-                            </h3>
-
-                            <ul class="meta-info">
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <i class="fa fa-calendar" aria-hidden="true"></i>
-                                        {{ $news->published_at
-                                            ? \Carbon\Carbon::parse($news->published_at)->format('d M Y')
-                                            : $news->created_at->format('d M Y') }}
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <i class="fa fa-folder-open" aria-hidden="true"></i>
-                                        {{ $news->category ? $news->category->name : 'Berita' }}
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <i class="fa fa-user" aria-hidden="true"></i>
-                                        {{ $news->user ? $news->user->name : 'Admin' }}
-                                    </a>
-                                </li>
-                            </ul>
-
-                            <div class="text sifit-news-content">
-                                {!! $news->content !!}
-                            </div>
-
-                            @if($news->pdf_file)
-                                <div class="sifit-pdf">
-                                    <a
-                                        href="{{ asset('storage/'.$news->pdf_file) }}"
-                                        target="_blank"
-                                        class="thm-btn bgclr-1"
-                                    >
-                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                        Lihat PDF
-                                    </a>
-                                </div>
-                            @endif
-
-                        </div>
+                    {{-- METADATA BARIS ATAS --}}
+                    <div class="sifit-article-meta-row">
+                        <span class="sifit-meta-pill sifit-meta-pill-cat">
+                            <i class="fa fa-folder-open"></i> {{ $news->category ? $news->category->name : 'Informasi Farmasi' }}
+                        </span>
+                        <span class="sifit-meta-pill sifit-meta-pill-verified">
+                            <i class="fa fa-check-circle"></i> Rilis Resmi Dinkes Riau
+                        </span>
+                        <span style="margin-left: auto; font-size: 12px; color: #64748b;">
+                            <i class="fa fa-calendar-o" style="color: var(--sifit-primary); margin-right: 4px;"></i>
+                            {{ $news->published_at ? \Carbon\Carbon::parse($news->published_at)->translatedFormat('l, d F Y') : $news->created_at->translatedFormat('l, d F Y') }}
+                        </span>
                     </div>
 
-                    {{-- PENULIS --}}
-                    <div class="author-box sifit-author-box wow fadeInUp" data-wow-duration="0.8s" data-wow-delay="0.2s">
-                        <div class="row">
-                            <div class="col-md-12">
+                    {{-- JUDUL BERITA --}}
+                    <h1 style="font-size: 22px; font-weight: 800; color: #1e293b; margin: 14px 0 12px; line-height: 1.35; letter-spacing: -0.3px;">
+                        {{ $news->title }}
+                    </h1>
 
-                                <div class="img-holder">
-                                    <img
-                                        src="{{ asset('frontend/images/blog/author.jpg') }}"
-                                        alt="Penulis"
-                                    >
+                    {{-- PENULIS / PENERBIT --}}
+                    <div style="font-size: 12px; color: #64748b; margin-bottom: 14px; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa fa-user-circle" style="color: var(--sifit-primary);"></i>
+                        Diterbitkan oleh: <strong>{{ $news->user ? $news->user->name : 'Dinas Kesehatan Provinsi Riau' }}</strong>
+                    </div>
+
+                    {{-- GAMBAR UTAMA BERITA --}}
+                    @php
+                        $detailThumb = ($news->image && file_exists(public_path('storage/'.$news->image))) ? asset('storage/'.$news->image) : asset('assets/images/news-default.svg');
+                    @endphp
+                    <div class="sifit-article-hero-img">
+                        <img src="{{ $detailThumb }}" alt="{{ $news->title }}" onerror="this.onerror=null;this.src='{{ asset('assets/images/news-default.svg') }}';">
+                    </div>
+
+                    {{-- ISI KONTEN BERITA --}}
+                    <div class="sifit-article-body">
+                        {!! $news->content !!}
+                    </div>
+
+                    {{-- LAMPIRAN DOKUMEN RESMI (PDF) --}}
+                    @if($news->pdf_file)
+                        <div style="margin-top: 24px; padding: 14px 18px; background: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid #dc2626; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fa fa-file-pdf-o" style="font-size: 26px; color: #dc2626;"></i>
+                                <div>
+                                    <strong style="color: #991b1b; display: block; font-size: 13px;">Lampiran Dokumen Resmi (PDF)</strong>
+                                    <span style="color: #64748b; font-size: 12px;">Salinan resmi siaran pers / surat edaran</span>
                                 </div>
-
-                                <div class="text-holder">
-                                    <h3>
-                                        {{ $news->user ? $news->user->name : 'Admin SIFIT' }}
-                                    </h3>
-
-                                    <p>
-                                        Informasi dan berita kefarmasian melalui
-                                        Sistem Informasi Farmasi Terintegrasi (SIFIT).
-                                    </p>
-                                </div>
-
                             </div>
+                            <a href="{{ asset('storage/'.$news->pdf_file) }}" target="_blank" class="thm-btn" style="background: #dc2626 !important; border-color: #dc2626 !important; padding: 7px 16px; font-size: 12px; font-weight: 700; text-decoration: none; border-radius: 4px;">
+                                <i class="fa fa-download" style="margin-right: 5px;"></i> Unduh PDF
+                            </a>
+                        </div>
+                    @endif
+
+                    {{-- FOOTER ARTIKEL: BAGIKAN & KEMBALI --}}
+                    <div style="margin-top: 26px; padding-top: 16px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <span style="font-size: 12.5px; font-weight: 700; color: #475569;">
+                                <i class="fa fa-share-alt"></i> Bagikan:
+                            </span>
+                            <a href="https://api.whatsapp.com/send?text={{ urlencode($news->title . ' - ' . url()->current()) }}" target="_blank" class="sifit-share-btn sifit-share-wa">
+                                <i class="fa fa-whatsapp"></i> WhatsApp
+                            </a>
+                            <button onclick="navigator.clipboard.writeText(window.location.href); Swal.fire({ icon: 'success', title: 'Tautan Disalin!', text: 'Tautan berita berhasil disalin ke clipboard.', timer: 2000, showConfirmButton: false, timerProgressBar: true });" class="sifit-share-btn sifit-share-copy">
+                                <i class="fa fa-copy"></i> Salin Tautan
+                            </button>
+                        </div>
+
+                        <a href="{{ route('frontend.berita') }}" style="color: var(--sifit-primary); font-size: 12.5px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fa fa-arrow-left"></i> Kembali ke Warta
+                        </a>
+                    </div>
+
+                    {{-- VERIFIKASI INSTANSI RESMI --}}
+                    <div style="margin-top: 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 16px; display: flex; align-items: center; gap: 12px;">
+                        <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="Logo SIFIT" style="height: 36px; object-fit: contain;">
+                        <div style="font-size: 12px; color: #64748b; line-height: 1.4;">
+                            <strong style="color: #1e293b; display: block; font-size: 12.5px;">Dinas Kesehatan Pemerintah Provinsi Riau</strong>
+                            Informasi resmi diterbitkan melalui Pengelola Informasi dan Dokumentasi Kefarmasian SIFIT.
                         </div>
                     </div>
 
                 </div>
             </div>
 
-            {{-- SIDEBAR --}}
+            {{-- SIDEBAR TUNGGAL (1 Single Unified Card) --}}
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                <div class="sidebar-wrapper sifit-sidebar wow fadeInRight" data-wow-duration="0.8s" data-wow-delay="0.2s">
-
+                <div class="sifit-sidebar-unified wow fadeInRight" data-wow-delay="0.15s">
+                    
                     {{-- PENCARIAN --}}
-                    <div class="single-sidebar">
-                        <form
-                            class="search-form"
-                            action="{{ route('frontend.berita') }}"
-                            method="GET"
-                        >
+                    <h4 class="sidebar-title">
+                        <i class="fa fa-search" style="color: var(--sifit-accent);"></i> Cari Warta
+                    </h4>
+                    <form action="{{ route('frontend.berita') }}" method="GET">
+                        <div class="sifit-sidebar-search-box">
                             <input
                                 name="search"
-                                placeholder="Cari berita..."
+                                placeholder="Kata kunci warta..."
                                 type="text"
+                                value="{{ request('search') }}"
                             >
-
-                            <button type="submit">
-                                <i class="fa fa-search" aria-hidden="true"></i>
+                            <button type="submit" title="Cari">
+                                <i class="fa fa-search"></i>
                             </button>
-                        </form>
+                        </div>
+                    </form>
+
+                    <div class="sifit-sidebar-divider"></div>
+
+                    {{-- WARTA TERBARU LAINNYA --}}
+                    <h4 class="sidebar-title">
+                        <i class="fa fa-newspaper-o" style="color: var(--sifit-accent);"></i> Warta Terbaru
+                    </h4>
+
+                    <div style="display: flex; flex-direction: column;">
+                        @forelse($latestNews as $latest)
+                            @php
+                                $latThumb = ($latest->image && file_exists(public_path('storage/' . $latest->image))) ? asset('storage/' . $latest->image) : asset('assets/images/news-default.svg');
+                            @endphp
+                            <a href="{{ route('frontend.berita.detail', $latest->slug) }}" class="sifit-related-item">
+                                <div style="width: 60px; height: 48px; border-radius: 4px; overflow: hidden; background: #0f172a; flex-shrink: 0;">
+                                    <img
+                                        src="{{ $latThumb }}"
+                                        alt="{{ $latest->title }}"
+                                        style="width: 100%; height: 100%; object-fit: cover;"
+                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/news-default.svg') }}';"
+                                    >
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <h5 style="font-size: 12.5px; font-weight: 700; margin: 0 0 3px; line-height: 1.35; color: #1e293b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        {{ $latest->title }}
+                                    </h5>
+                                    <span style="color: #94a3b8; font-size: 11px;">
+                                        <i class="fa fa-calendar-o"></i> {{ $latest->published_at ? \Carbon\Carbon::parse($latest->published_at)->format('d M Y') : $latest->created_at->format('d M Y') }}
+                                    </span>
+                                </div>
+                            </a>
+                        @empty
+                            <p style="color: #64748b; font-size: 12.5px; margin: 0;">Belum ada warta lainnya.</p>
+                        @endforelse
                     </div>
 
-                    {{-- BERITA TERBARU --}}
-                    <div class="single-sidebar">
-
-                        <div class="sec-title">
-                            <h3>Berita Terbaru</h3>
-                            <span class="border"></span>
-                        </div>
-
-                        <ul class="popular-post">
-                            @forelse($latestNews as $latest)
-                                <li>
-
-                                    <div class="img-holder">
-                                        @if($latest->image)
-                                            <img
-                                                src="{{ asset('storage/'.$latest->image) }}"
-                                                alt="{{ $latest->title }}"
-                                            >
-                                        @else
-                                            <img
-                                                src="{{ asset('frontend/images/sidebar/popular-post-1.jpg') }}"
-                                                alt="{{ $latest->title }}"
-                                            >
-                                        @endif
-
-                                        <div class="overlay-style-one">
-                                            <div class="box">
-                                                <div class="content">
-                                                    <a href="{{ route('frontend.berita.detail', $latest->slug) }}">
-                                                        <span class="flaticon-plus-symbol"></span>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="title-holder">
-
-                                        <a href="{{ route('frontend.berita.detail', $latest->slug) }}">
-                                            <h5 class="post-title">
-                                                {{ \Illuminate\Support\Str::limit($latest->title, 45) }}
-                                            </h5>
-                                        </a>
-
-                                        <h6 class="post-date">
-                                            <i class="fa fa-calendar" aria-hidden="true"></i>
-
-                                            {{ $latest->published_at
-                                                ? \Carbon\Carbon::parse($latest->published_at)->format('d M Y')
-                                                : $latest->created_at->format('d M Y') }}
-                                        </h6>
-
-                                    </div>
-
-                                </li>
-                            @empty
-                                <li>
-                                    Belum ada berita lainnya.
-                                </li>
-                            @endforelse
-                        </ul>
-
+                    <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+                        <a href="{{ route('frontend.berita') }}" style="color: var(--sifit-primary); font-size: 12px; font-weight: 700; text-decoration: none;">
+                            Semua Warta <i class="fa fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ route('frontend.obat') }}" style="color: #0f766e; font-size: 12px; font-weight: 700; text-decoration: none;">
+                            <i class="fa fa-medkit"></i> Katalog Obat
+                        </a>
                     </div>
 
                 </div>

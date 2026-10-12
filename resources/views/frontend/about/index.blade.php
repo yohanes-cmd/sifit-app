@@ -1,589 +1,87 @@
 @extends('frontend.layouts.app')
-@section('title', 'Tentang Kami - SIFIT')
+@section('title', 'Profil, Visi & Misi - SIFIT Provinsi Riau')
 
 @section('content')
-{{-- BREADCRUMB --}}
-<section class="breadcrumb-area" style="background-image: url('/frontend/images/resources/breadcrumb-bg.jpg');">
+{{-- ==========================================================================
+     BREADCRUMB COMPACT RESMI
+     ========================================================================== --}}
+<section class="breadcrumb-area">
     <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="breadcrumbs wow fadeInUp" data-wow-delay="0.2s">
-                    <h1>Tentang Kami</h1>
-                </div>
+        <div class="sifit-breadcrumb-wrapper">
+            <div class="sifit-breadcrumb-left wow fadeInLeft" data-wow-delay="0.1s">
+                <h1><i class="fa fa-info-circle" style="color: var(--sifit-accent);"></i> Profil, Visi & Misi SIFIT</h1>
+                <p>Mengenal Sistem Informasi Farmasi Terintegrasi Dinas Kesehatan Provinsi Riau</p>
             </div>
-        </div>
-    </div>
-    <div class="breadcrumb-bottom">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="left pull-left">
-                        <ul>
-                            <li><a href="{{ route('frontend.home') }}">Beranda</a></li>
-                            <li><i class="fa fa-angle-right" aria-hidden="true"></i></li>
-                            <li class="active">Tentang Kami</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- WELCOME AREA --}}
-<section class="welcome-area">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="img-holder wow fadeInLeft" data-wow-delay="0.3s">
-                    <img src="{{ asset('frontend/images/resources/welcome.jpg') }}" alt="Tentang SIFIT">
-                </div>
-                <div class="inner-content wow fadeInUp" data-wow-delay="0.4s">
-                    <p>SIFIT hadir sebagai Sistem Informasi Farmasi yang membantu masyarakat memperoleh informasi obat dan layanan kefarmasian secara mudah, cepat, dan terpercaya.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="text-holder wow fadeInRight" data-wow-delay="0.3s">
-                    <div class="title">
-                        <h1>Selamat Datang di SIFIT</h1>
-                        <p>SIFIT merupakan platform informasi farmasi yang menyediakan berbagai informasi terkait obat, berita kefarmasian, dan informasi pendukung lainnya bagi masyarakat.</p>
-                    </div>
-
-                    <ul>
-                        <li>
-                            <div class="single-item">
-                                <div class="iocn-box">
-                                    <span class="flaticon-shapes"></span>
-                                </div>
-                                <div class="text-box">
-                                    <h3>Misi Kami</h3>
-                                    <p>Menyediakan informasi obat dan layanan kefarmasian yang mudah diakses, informatif, dan bermanfaat bagi masyarakat.</p>
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="single-item">
-                                <div class="iocn-box">
-                                    <span class="flaticon-technology-2"></span>
-                                </div>
-                                <div class="text-box">
-                                    <h3>Visi Kami</h3>
-                                    <p>Menjadi Sistem Informasi Farmasi yang terpercaya dan mendukung kemudahan akses informasi kefarmasian.</p>
-
-                                    <div class="text">
-                                        <p><i class="fa fa-hand-o-right"></i> Memberikan akses informasi obat secara mudah.</p>
-                                        <p><i class="fa fa-hand-o-right"></i> Mendukung penyebaran informasi kefarmasian secara digital.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-
-                    <div class="button">
-                        <a class="thm-btn bgclr-1" href="{{ route('frontend.obat') }}">
-                            Lihat Data Obat
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- SPECIAL FEATURES --}}
-<section class="special-features-area">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="single-item wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="icon-box">
-                        <span class="flaticon-transport"></span>
-                    </div>
-                    <div class="text-box">
-                        <h3>Informasi Obat</h3>
-                        <p>SIFIT menyediakan informasi mengenai berbagai obat yang dapat diakses masyarakat dengan lebih mudah.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="single-item wow fadeInUp" data-wow-delay="0.4s">
-                    <div class="icon-box">
-                        <span class="flaticon-drink"></span>
-                    </div>
-                    <div class="text-box">
-                        <h3>Data Obat Terintegrasi</h3>
-                        <p>Data obat ditampilkan secara terstruktur sehingga pengguna lebih mudah menemukan informasi yang dibutuhkan.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="single-item wow fadeInUp" data-wow-delay="0.6s">
-                    <div class="icon-box">
-                        <span class="flaticon-avatar"></span>
-                    </div>
-                    <div class="text-box">
-                        <h3>Informasi Kefarmasian</h3>
-                        <p>Berbagai informasi terkait dunia kefarmasian tersedia sebagai sumber informasi bagi masyarakat.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="single-item wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="icon-box">
-                        <span class="flaticon-church"></span>
-                    </div>
-                    <div class="text-box">
-                        <h3>Akses Mudah</h3>
-                        <p>Informasi dapat diakses melalui website SIFIT menggunakan perangkat yang terhubung dengan internet.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="single-item wow fadeInUp" data-wow-delay="0.4s">
-                    <div class="icon-box">
-                        <span class="flaticon-phone"></span>
-                    </div>
-                    <div class="text-box">
-                        <h3>Informasi Terpercaya</h3>
-                        <p>Informasi disajikan secara jelas dan terstruktur untuk membantu pengguna memperoleh informasi yang dibutuhkan.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="single-item wow fadeInUp" data-wow-delay="0.6s">
-                    <div class="icon-box">
-                        <span class="flaticon-medical-2"></span>
-                    </div>
-                    <div class="text-box">
-                        <h3>Layanan Informasi</h3>
-                        <p>SIFIT membantu masyarakat memperoleh informasi obat dan informasi kefarmasian dalam satu sistem.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- SLOGAN --}}
-<section class="slogan-area">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="title pull-left wow fadeInLeft" data-wow-delay="0.2s">
-                    <h2>Dapatkan informasi obat yang mudah, cepat, dan terpercaya melalui SIFIT.</h2>
-                </div>
-
-                <div class="button pull-right wow fadeInRight" data-wow-delay="0.2s">
-                    <a class="thm-btn bgclr-1" href="{{ route('frontend.obat') }}">
-                        Lihat Data Obat
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- GALLERY & FAQ --}}
-<section class="project-faq-area sec-padding">
-    <div class="container">
-        <div class="sec-title mar0auto text-center wow fadeInUp" data-wow-delay="0.2s">
-            <h1>Informasi & Pertanyaan Umum</h1>
-            <span class="border"></span>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                <div class="latest-project wow fadeInLeft" data-wow-delay="0.3s">
-
-                    <div class="single-project-item">
-                        <div class="img-holder">
-                            <img src="{{ asset('frontend/images/projects/latest-project-1.jpg') }}" alt="Informasi SIFIT">
-                            <div class="overlay-style-one">
-                                <div class="box">
-                                    <div class="content">
-                                        <a href="{{ route('frontend.about.galeri') }}">
-                                            <i class="fa fa-link" aria-hidden="true"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="single-project-item">
-                        <div class="img-holder">
-                            <img src="{{ asset('frontend/images/projects/latest-project-2.jpg') }}" alt="Informasi SIFIT">
-                            <div class="overlay-style-one">
-                                <div class="box">
-                                    <div class="content">
-                                        <a href="{{ route('frontend.about.galeri') }}">
-                                            <i class="fa fa-link" aria-hidden="true"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="single-project-item">
-                        <div class="img-holder">
-                            <img src="{{ asset('frontend/images/projects/latest-project-3.jpg') }}" alt="Informasi SIFIT">
-                            <div class="overlay-style-one">
-                                <div class="box">
-                                    <div class="content">
-                                        <a href="{{ route('frontend.about.galeri') }}">
-                                            <i class="fa fa-link" aria-hidden="true"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="single-project-item">
-                        <div class="img-holder">
-                            <img src="{{ asset('frontend/images/projects/latest-project-4.jpg') }}" alt="Informasi SIFIT">
-                            <div class="overlay-style-one">
-                                <div class="box">
-                                    <div class="content">
-                                        <a href="{{ route('frontend.about.galeri') }}">
-                                            <i class="fa fa-link" aria-hidden="true"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="single-project-item">
-                        <div class="img-holder">
-                            <img src="{{ asset('frontend/images/projects/latest-project-5.jpg') }}" alt="Informasi SIFIT">
-                            <div class="overlay-style-one">
-                                <div class="box">
-                                    <div class="content">
-                                        <a href="{{ route('frontend.about.galeri') }}">
-                                            <i class="fa fa-link" aria-hidden="true"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="single-project-item">
-                        <div class="img-holder">
-                            <img src="{{ asset('frontend/images/projects/latest-project-6.jpg') }}" alt="Informasi SIFIT">
-                            <div class="overlay-style-one">
-                                <div class="box">
-                                    <div class="content">
-                                        <a href="{{ route('frontend.about.galeri') }}">
-                                            <i class="fa fa-link" aria-hidden="true"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                <div class="faq-content wow fadeInRight" data-wow-delay="0.3s">
-                    <div class="accordion-box">
-
-                        <div class="accordion accordion-block">
-                            <div class="accord-btn">
-                                <h4>Apa itu SIFIT?</h4>
-                            </div>
-                            <div class="accord-content">
-                                <p>SIFIT adalah Sistem Informasi Farmasi yang menyediakan informasi mengenai obat dan informasi kefarmasian untuk membantu masyarakat memperoleh informasi dengan lebih mudah.</p>
-                            </div>
-                        </div>
-
-                        <div class="accordion accordion-block">
-                            <div class="accord-btn active">
-                                <h4>Informasi apa saja yang tersedia di SIFIT?</h4>
-                            </div>
-                            <div class="accord-content collapsed">
-                                <p>SIFIT menyediakan informasi data obat, berita kefarmasian, serta berbagai informasi pendukung terkait layanan farmasi.</p>
-                            </div>
-                        </div>
-
-                        <div class="accordion accordion-block">
-                            <div class="accord-btn">
-                                <h4>Apakah masyarakat dapat melihat data obat?</h4>
-                            </div>
-                            <div class="accord-content">
-                                <p>Ya. Pengguna dapat membuka menu Data Obat untuk melihat informasi obat yang tersedia pada SIFIT.</p>
-                            </div>
-                        </div>
-
-                        <div class="accordion accordion-block last">
-                            <div class="accord-btn last">
-                                <h4>Bagaimana cara mencari informasi obat?</h4>
-                            </div>
-                            <div class="accord-content">
-                                <p>Buka halaman Data Obat kemudian gunakan fitur pencarian untuk menemukan informasi obat yang dibutuhkan.</p>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div style="margin-top: 30px;">
-                        <a href="{{ route('frontend.about.faq') }}" class="thm-btn bgclr-1">
-                            Lihat Semua FAQ
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- FACT COUNTER --}}
-<section class="fact-counter-area black-bg" style="background-image: url('/frontend/images/resources/fact-counter-bg-v2.jpg');">
-    <div class="container">
-        <div class="sec-title text-center wow fadeInUp" data-wow-delay="0.2s">
-            <h1>Informasi <span>Farmasi</span> dalam Satu Sistem</h1>
-            <p>SIFIT menampilkan data berdasarkan informasi yang telah tersedia dan dipublikasikan pada sistem.</p>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <ul>
-                    <li class="wow fadeInUp" data-wow-delay="0.2s">
-                        <div class="single-item text-center">
-                            <div class="icon-holder">
-                                <span class="flaticon-medical"></span>
-                            </div>
-                            <h1>
-                                <span class="timer"
-                                    data-from="0"
-                                    data-to="{{ $totalProducts }}"
-                                    data-speed="2000"
-                                    data-refresh-interval="50">
-                                    {{ $totalProducts }}
-                                </span>
-                            </h1>
-                            <h3>Data Obat</h3>
-                        </div>
-                    </li>
-
-                    <li class="wow fadeInUp" data-wow-delay="0.4s">
-                        <div class="single-item text-center">
-                            <div class="icon-holder">
-                                <span class="flaticon-smile"></span>
-                            </div>
-                            <h1>
-                                <span class="timer"
-                                    data-from="0"
-                                    data-to="{{ $totalNews }}"
-                                    data-speed="2000"
-                                    data-refresh-interval="50">
-                                    {{ $totalNews }}
-                                </span>
-                            </h1>
-                            <h3>Berita Farmasi</h3>
-                        </div>
-                    </li>
-
-                    <li class="wow fadeInUp" data-wow-delay="0.6s">
-                        <div class="single-item text-center">
-                            <div class="icon-holder">
-                                <span class="flaticon-medical-1"></span>
-                            </div>
-                            <h1>
-                                <span class="timer"
-                                    data-from="0"
-                                    data-to="{{ $totalCategories }}"
-                                    data-speed="2000"
-                                    data-refresh-interval="50">
-                                    {{ $totalCategories }}
-                                </span>
-                            </h1>
-                            <h3>Kategori Obat</h3>
-                        </div>
-                    </li>
-
-                    <li class="wow fadeInUp" data-wow-delay="0.8s">
-                        <div class="single-item text-center">
-                            <div class="icon-holder">
-                                <span class="flaticon-ribbon"></span>
-                            </div>
-                            <h1>
-                                <span class="timer"
-                                    data-from="0"
-                                    data-to="{{ $totalPublishedInfo }}"
-                                    data-speed="2000"
-                                    data-refresh-interval="50">
-                                    {{ $totalPublishedInfo }}
-                                </span>
-                            </h1>
-                            <h3>Informasi Dipublikasikan</h3>
-                        </div>
-                    </li>
+            <div class="sifit-breadcrumb-right wow fadeInRight" data-wow-delay="0.1s">
+                <ul class="sifit-breadcrumb-list">
+                    <li><a href="{{ route('frontend.home') }}"><i class="fa fa-home"></i> Beranda</a></li>
+                    <li><i class="fa fa-angle-right"></i></li>
+                    <li class="active">Profil & Visi Misi</li>
                 </ul>
             </div>
         </div>
     </div>
 </section>
 
-{{-- TEAM --}}
-<section class="team-area doctor">
+{{-- ==========================================================================
+     1. PROFIL & IDENTITAS RESMI SIFIT
+     ========================================================================== --}}
+<section style="padding: 35px 0 40px; background: #ffffff;">
     <div class="container">
-        <div class="sec-title mar0auto text-center wow fadeInUp" data-wow-delay="0.2s">
-            <h1>Tim Pengelola SIFIT</h1>
-            <span class="border"></span>
-        </div>
+        <div class="row" style="display: flex; align-items: center; flex-wrap: wrap;">
 
-        <div class="row">
-
-            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                <div class="single-team-member wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="img-holder">
-                        <img src="{{ asset('frontend/images/team/1.jpg') }}" alt="Tim SIFIT">
-
-                        <div class="overlay-style">
-                            <div class="box">
-                                <div class="content">
-                                    <div class="top">
-                                        <h3>Tim SIFIT</h3>
-                                        <span>Pengelola Sistem</span>
-                                    </div>
-
-                                    <span class="border"></span>
-
-                                    <div class="bottom">
-                                        <ul>
-                                            <li>
-                                                <i class="fa fa-envelope" aria-hidden="true"></i>
-                                                info@sifit.id
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
+            {{-- KARTU KREDENSIAL RESMI INSTANSI --}}
+            <div class="col-lg-5 col-md-5 col-sm-12 wow fadeInLeft" data-wow-delay="0.1s" style="margin-bottom: 20px;">
+                <div class="sifit-official-badge-card" style="margin: 0; width: 100%;">
+                    <div class="card-crest">
+                        <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="Logo SIFIT" class="emblem-sifit" style="height: 64px;">
+                    </div>
+                    <div class="card-body-text">
+                        <span class="badge-label"><i class="fa fa-shield"></i> Portal Resmi Pelayanan Publik</span>
+                        <h3>SIFIT Provinsi Riau</h3>
+                        <p class="instansi">Dinas Kesehatan Pemerintah Provinsi Riau</p>
+                        <div class="card-features">
+                            <div class="feat-item">
+                                <i class="fa fa-check-circle"></i>
+                                <span>Informasi Obat Terstandarisasi</span>
+                            </div>
+                            <div class="feat-item">
+                                <i class="fa fa-check-circle"></i>
+                                <span>Publikasi & Edukasi Kefarmasian Resmi</span>
+                            </div>
+                            <div class="feat-item">
+                                <i class="fa fa-check-circle"></i>
+                                <span>Transparansi Ketersediaan Farmasi Daerah</span>
                             </div>
                         </div>
-
-                        <div class="text-holder">
-                            <h3>Tim SIFIT</h3>
-                            <span>Pengelola Sistem</span>
-                        </div>
+                    </div>
+                    <div class="card-footer-info">
+                        <span class="motto">"Mewujudkan Pelayanan Kesehatan Berdaya Saing & Terpercaya"</span>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                <div class="single-team-member wow fadeInUp" data-wow-delay="0.4s">
-                    <div class="img-holder">
-                        <img src="{{ asset('frontend/images/team/2.jpg') }}" alt="Admin SIFIT">
+            {{-- DESKRIPSI PROFIL --}}
+            <div class="col-lg-7 col-md-7 col-sm-12 wow fadeInRight" data-wow-delay="0.15s" style="margin-bottom: 20px;">
+                <div style="padding-left: 10px;">
+                    <span class="sifit-section-tag">Profil Instansi</span>
+                    <h2 style="font-size: 24px; font-weight: 800; color: #1e293b; margin: 6px 0 12px; line-height: 1.3;">
+                        Selamat Datang di Portal Resmi SIFIT
+                    </h2>
+                    <p style="font-size: 14px; color: #64748b; line-height: 1.65; margin-bottom: 18px;">
+                        <strong>SIFIT (Sistem Informasi Farmasi Terintegrasi)</strong> adalah platform digital resmi yang dikembangkan oleh Seksi Kefarmasian & Alat Kesehatan Dinas Kesehatan Pemerintah Provinsi Riau.
+                    </p>
+                    <p style="font-size: 13.5px; color: #64748b; line-height: 1.65; margin-bottom: 20px;">
+                        Platform ini dihadirkan untuk memberikan kemudahan bagi masyarakat, tenaga kesehatan, serta fasilitas pelayanan kesehatan dalam memperoleh informasi resmi ketersediaan obat, edukasi penggunaan obat yang aman (DAGUSIBU), serta transparansi kebijakan logistik farmasi pemerintah daerah.
+                    </p>
 
-                        <div class="overlay-style">
-                            <div class="box">
-                                <div class="content">
-                                    <div class="top">
-                                        <h3>Admin SIFIT</h3>
-                                        <span>Pengelola Data</span>
-                                    </div>
-
-                                    <span class="border"></span>
-
-                                    <div class="bottom">
-                                        <ul>
-                                            <li>
-                                                <i class="fa fa-envelope" aria-hidden="true"></i>
-                                                info@sifit.id
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="text-holder">
-                            <h3>Admin SIFIT</h3>
-                            <span>Pengelola Data</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                <div class="single-team-member wow fadeInUp" data-wow-delay="0.6s">
-                    <div class="img-holder">
-                        <img src="{{ asset('frontend/images/team/3.jpg') }}" alt="Tim Informasi SIFIT">
-
-                        <div class="overlay-style">
-                            <div class="box">
-                                <div class="content">
-                                    <div class="top">
-                                        <h3>Tim Informasi</h3>
-                                        <span>Informasi Farmasi</span>
-                                    </div>
-
-                                    <span class="border"></span>
-
-                                    <div class="bottom">
-                                        <ul>
-                                            <li>
-                                                <i class="fa fa-envelope" aria-hidden="true"></i>
-                                                info@sifit.id
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="text-holder">
-                            <h3>Tim Informasi</h3>
-                            <span>Informasi Farmasi</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                <div class="single-team-member wow fadeInUp" data-wow-delay="0.8s">
-                    <div class="img-holder">
-                        <img src="{{ asset('frontend/images/team/4.jpg') }}" alt="Tim Layanan SIFIT">
-
-                        <div class="overlay-style">
-                            <div class="box">
-                                <div class="content">
-                                    <div class="top">
-                                        <h3>Tim Layanan</h3>
-                                        <span>Layanan Informasi</span>
-                                    </div>
-
-                                    <span class="border"></span>
-
-                                    <div class="bottom">
-                                        <ul>
-                                            <li>
-                                                <i class="fa fa-envelope" aria-hidden="true"></i>
-                                                info@sifit.id
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="text-holder">
-                            <h3>Tim Layanan</h3>
-                            <span>Layanan Informasi</span>
-                        </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a href="{{ route('frontend.obat') }}" class="thm-btn" style="padding: 9px 20px; font-size: 12.5px; border-radius: 6px;">
+                            <i class="fa fa-medkit"></i> Lihat Katalog Obat
+                        </a>
+                        <a href="{{ route('frontend.contact') }}" class="btn-style-two" style="padding: 9px 18px; font-size: 12.5px; text-decoration: none; border-radius: 6px;">
+                            <i class="fa fa-phone"></i> Hubungi Pengelola
+                        </a>
                     </div>
                 </div>
             </div>
@@ -592,51 +90,135 @@
     </div>
 </section>
 
-{{-- CERTIFICATES --}}
-<section class="certificates-area">
+{{-- ==========================================================================
+     2. VISI & MISI TERPADU (SATU KESATUAN)
+     ========================================================================== --}}
+<section style="padding: 40px 0 45px; background: #f8fafc; border-top: 1px solid var(--sifit-border); border-bottom: 1px solid var(--sifit-border);">
     <div class="container">
-        <div class="sec-title wow fadeInUp" data-wow-delay="0.2s">
-            <h1>Mitra & Informasi Pendukung</h1>
-            <span class="border"></span>
+        <div class="sifit-section-header wow fadeInUp" data-wow-delay="0.1s" style="margin-bottom: 24px;">
+            <span class="sifit-section-tag">Komitmen Pelayanan</span>
+            <h2 class="sifit-section-title">Visi & Misi SIFIT Riau</h2>
+            <p class="sifit-section-subtitle">Arah strategis dan komitmen pelayanan kefarmasian Dinas Kesehatan Pemerintah Provinsi Riau.</p>
+            <div class="sifit-section-divider"></div>
         </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="certificates">
-
-                    <div class="single-item">
-                        <img src="{{ asset('frontend/images/certificates/1.jpg') }}" alt="Mitra SIFIT">
+        <div class="row" style="display: flex; flex-wrap: wrap;">
+            {{-- VISI --}}
+            <div class="col-lg-5 col-md-5 col-sm-12 wow fadeInLeft" data-wow-delay="0.15s" style="display: flex; margin-bottom: 20px;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 24px; width: 100%; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 4px 14px rgba(17,85,102,0.04);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                        <span style="width: 36px; height: 36px; border-radius: 8px; background: #f0fdfa; color: var(--sifit-primary); display: flex; align-items: center; justify-content: center; font-size: 18px; border: 1px solid rgba(77,182,172,0.4);">
+                            <i class="fa fa-eye"></i>
+                        </span>
+                        <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--sifit-primary);">Visi SIFIT</h3>
                     </div>
-
-                    <div class="single-item">
-                        <img src="{{ asset('frontend/images/certificates/2.jpg') }}" alt="Mitra SIFIT">
+                    <div style="background: #f8fafc; border-left: 4px solid var(--sifit-accent); padding: 16px; border-radius: 0 8px 8px 0;">
+                        <p style="margin: 0; font-size: 14px; line-height: 1.7; color: #334155; font-weight: 600;">
+                            "Menjadi sistem informasi farmasi yang terintegrasi, mudah diakses, dan mampu mendukung penyampaian informasi obat serta informasi kefarmasian kepada masyarakat secara akurat, transparan, dan terpercaya di Provinsi Riau."
+                        </p>
                     </div>
-
-                    <div class="single-item">
-                        <img src="{{ asset('frontend/images/certificates/3.jpg') }}" alt="Mitra SIFIT">
-                    </div>
-
-                    <div class="single-item">
-                        <img src="{{ asset('frontend/images/certificates/4.jpg') }}" alt="Mitra SIFIT">
-                    </div>
-
-                    <div class="single-item">
-                        <img src="{{ asset('frontend/images/certificates/1.jpg') }}" alt="Mitra SIFIT">
-                    </div>
-
-                    <div class="single-item">
-                        <img src="{{ asset('frontend/images/certificates/2.jpg') }}" alt="Mitra SIFIT">
-                    </div>
-
-                    <div class="single-item">
-                        <img src="{{ asset('frontend/images/certificates/3.jpg') }}" alt="Mitra SIFIT">
-                    </div>
-
-                    <div class="single-item">
-                        <img src="{{ asset('frontend/images/certificates/4.jpg') }}" alt="Mitra SIFIT">
-                    </div>
-
                 </div>
+            </div>
+
+            {{-- MISI --}}
+            <div class="col-lg-7 col-md-7 col-sm-12 wow fadeInRight" data-wow-delay="0.2s" style="display: flex; margin-bottom: 20px;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 24px; width: 100%; box-shadow: 0 4px 14px rgba(17,85,102,0.04);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+                        <span style="width: 36px; height: 36px; border-radius: 8px; background: #f0fdfa; color: var(--sifit-primary); display: flex; align-items: center; justify-content: center; font-size: 18px; border: 1px solid rgba(77,182,172,0.4);">
+                            <i class="fa fa-bullseye"></i>
+                        </span>
+                        <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--sifit-primary);">Misi Pelayanan</h3>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+                        <li style="display: flex; align-items: flex-start; gap: 10px; background: #f8fafc; padding: 9px 12px; border-radius: 6px; border: 1px solid #eef2f6;">
+                            <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 15px; margin-top: 2px;"></i>
+                            <span style="font-size: 13px; color: #334155; line-height: 1.45;">Menyediakan informasi obat yang tersusun jelas, terverifikasi, dan mudah diakses publik.</span>
+                        </li>
+                        <li style="display: flex; align-items: flex-start; gap: 10px; background: #f8fafc; padding: 9px 12px; border-radius: 6px; border: 1px solid #eef2f6;">
+                            <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 15px; margin-top: 2px;"></i>
+                            <span style="font-size: 13px; color: #334155; line-height: 1.45;">Mempermudah pencarian ketersediaan, indikasi, dan petunjuk pemakaian obat secara digital.</span>
+                        </li>
+                        <li style="display: flex; align-items: flex-start; gap: 10px; background: #f8fafc; padding: 9px 12px; border-radius: 6px; border: 1px solid #eef2f6;">
+                            <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 15px; margin-top: 2px;"></i>
+                            <span style="font-size: 13px; color: #334155; line-height: 1.45;">Menyajikan warta resmi, regulasi terkini, dan edukasi kefarmasian yang kredibel.</span>
+                        </li>
+                        <li style="display: flex; align-items: flex-start; gap: 10px; background: #f8fafc; padding: 9px 12px; border-radius: 6px; border: 1px solid #eef2f6;">
+                            <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 15px; margin-top: 2px;"></i>
+                            <span style="font-size: 13px; color: #334155; line-height: 1.45;">Mendukung tata kelola logistik farmasi pemerintah daerah yang transparan dan akuntabel.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ==========================================================================
+     3. TUJUAN & KEUNGGULAN SISTEM
+     ========================================================================== --}}
+<section style="padding: 40px 0 45px; background: #ffffff;">
+    <div class="container">
+        <div class="sifit-section-header wow fadeInUp" data-wow-delay="0.1s" style="margin-bottom: 24px;">
+            <span class="sifit-section-tag">Sasaran Strategis</span>
+            <h2 class="sifit-section-title">Tujuan & Nilai Layanan</h2>
+            <p class="sifit-section-subtitle">Prinsip utama yang menjadi pedoman dalam penyelenggaraan sistem informasi farmasi daerah.</p>
+            <div class="sifit-section-divider"></div>
+        </div>
+
+        <div class="row" style="display: flex; flex-wrap: wrap;">
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="0.1s" style="display: flex; margin-bottom: 20px;">
+                <div class="sifit-service-card" style="text-align: left; align-items: flex-start; padding: 20px;">
+                    <div class="sifit-service-icon-box" style="margin-bottom: 12px; width: 44px; height: 44px; font-size: 18px;">
+                        <i class="fa fa-medkit"></i>
+                    </div>
+                    <h3 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px;">Katalog Obat Terverifikasi</h3>
+                    <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin: 0;">Data obat lengkap meliputi kategori, stok, ketentuan resep, dan satuan resmi.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="0.2s" style="display: flex; margin-bottom: 20px;">
+                <div class="sifit-service-card" style="text-align: left; align-items: flex-start; padding: 20px;">
+                    <div class="sifit-service-icon-box" style="margin-bottom: 12px; width: 44px; height: 44px; font-size: 18px;">
+                        <i class="fa fa-book"></i>
+                    </div>
+                    <h3 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px;">Edukasi DAGUSIBU</h3>
+                    <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin: 0;">Sosialisasi resmi mengenai tata cara Dapatkan, Gunakan, Simpan, dan Buang obat secara tepat.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="0.3s" style="display: flex; margin-bottom: 20px;">
+                <div class="sifit-service-card" style="text-align: left; align-items: flex-start; padding: 20px;">
+                    <div class="sifit-service-icon-box" style="margin-bottom: 12px; width: 44px; height: 44px; font-size: 18px;">
+                        <i class="fa fa-shield"></i>
+                    </div>
+                    <h3 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px;">Transparansi & Akuntabilitas</h3>
+                    <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin: 0;">Mendukung keterbukaan informasi publik kefarmasian Dinas Kesehatan Provinsi Riau.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ==========================================================================
+     4. HELPDESK & CALL TO ACTION BANNER
+     ========================================================================== --}}
+<section class="sifit-helpdesk-banner">
+    <div class="container">
+        <div class="sifit-helpdesk-content wow fadeInUp" data-wow-delay="0.1s">
+            <div class="sifit-helpdesk-info">
+                <h2>Pertanyaan Seputar Layanan Kefarmasian?</h2>
+                <p>
+                    Dinas Kesehatan Provinsi Riau siap membantu melayani kebutuhan informasi obat dan permohonan informasi publik Anda.
+                </p>
+            </div>
+
+            <div class="sifit-helpdesk-actions">
+                <a href="{{ route('frontend.contact') }}" class="sifit-btn-helpdesk-primary">
+                    <i class="fa fa-phone"></i> Hubungi Tim SIFIT
+                </a>
+                <a href="{{ route('frontend.about.faq') }}" class="sifit-btn-helpdesk-outline">
+                    <i class="fa fa-question-circle"></i> Buka Tanya Jawab (FAQ)
+                </a>
             </div>
         </div>
     </div>

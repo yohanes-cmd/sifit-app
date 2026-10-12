@@ -48,4 +48,25 @@ class User extends Authenticatable
 
         return asset('assets/images/users/avatar-1.jpg');
     }
+
+    /**
+     * Check if user has admin privileges.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasAnyRole(['admin', 'super_admin'])
+            || in_array(strtolower((string) $this->role), ['admin', 'super_admin', 'administrator']);
+    }
+
+    /**
+     * Check if user is an internal officer / staff (any role except viewer).
+     */
+    public function isStaff(): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        return $this->roles()->whereNotIn('name', ['viewer'])->exists();
+    }
 }

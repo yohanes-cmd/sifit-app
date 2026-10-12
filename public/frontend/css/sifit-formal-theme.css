@@ -1,0 +1,2652 @@
+/**
+ * SIFIT Official Government Theme Stylesheet
+ * Brand Colors: Primary Teal (#115566), Accent Mint (#4db6ac), Dark Teal (#0b3a46)
+ * Standards: Clean, Formal, High Legibility, Government Portal Aesthetic
+ */
+
+:root {
+    --sifit-primary: #115566;
+    --sifit-primary-rgb: 17, 85, 102;
+    --sifit-primary-dark: #0b3a46;
+    --sifit-accent: #4db6ac;
+    --sifit-accent-rgb: 77, 182, 172;
+    --sifit-accent-hover: #3d928a;
+    --sifit-gold: #c59b27;
+    --sifit-bg-subtle: #f8fafc;
+    --sifit-border: #e2e8f0;
+    --sifit-text-dark: #1e293b;
+    --sifit-text-muted: #64748b;
+    --sifit-success: #10b981;
+    --sifit-warning: #f59e0b;
+    --sifit-danger: #ef4444;
+}
+
+/* Base Font & High Legibility */
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    color: #334155;
+    background-color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   OFFICIAL SIFIT PRELOADER / SPINNER (#115566 & #4db6ac)
+   ========================================================================== */
+.preloader { 
+    position: fixed; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    z-index: 999999999; 
+    background-color: #ffffff; 
+    background-image: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.preloader.loaded,
+.preloader[style*="display: none"],
+.preloader[style*="display:none"],
+.preloader.fade-out {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+.preloader::before {
+    content: '';
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e2e8f0;
+    border-top: 4px solid #115566;
+    border-right: 4px solid #4db6ac;
+    border-radius: 50%;
+    animation: sifit-preloader-spin 0.75s linear infinite;
+    -webkit-animation: sifit-preloader-spin 0.75s linear infinite;
+    box-sizing: border-box;
+    display: block;
+}
+
+.preloader::after {
+    content: 'SIFIT RIAU';
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #115566;
+    text-transform: uppercase;
+    display: block;
+}
+
+@keyframes sifit-preloader-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@-webkit-keyframes sifit-preloader-spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   TOP BAR - PORTAL RESMI PEMERINTAH
+   ========================================================================== */
+.top-bar-area {
+    background: #07252c !important;
+    border-bottom: 2px solid var(--sifit-accent);
+    padding: 7px 0 !important;
+    color: #e2e8f0;
+    font-size: 13px;
+    position: relative;
+    z-index: 1000;
+}
+
+.sifit-top-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.top-bar-area .top-left p {
+    color: #e2e8f0 !important;
+    margin: 0;
+    font-size: 12.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.top-bar-area .top-left p i {
+    color: var(--sifit-accent);
+    font-size: 13px;
+}
+
+.gov-badge {
+    background: rgba(77, 182, 172, 0.2);
+    border: 1px solid rgba(77, 182, 172, 0.45);
+    color: #a7f3d0;
+    padding: 2px 9px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.gov-subtitle {
+    color: #cbd5e1;
+    font-size: 12px;
+}
+
+/* Top Right Flex Container */
+.sifit-top-right {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 12px !important;
+    float: none !important;
+}
+
+.sifit-top-social {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    float: none !important;
+}
+
+.sifit-top-social li {
+    display: inline-block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+}
+
+.sifit-top-social li a {
+    color: #cbd5e1 !important;
+    width: 28px !important;
+    height: 28px !important;
+    line-height: 28px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+}
+
+.sifit-top-social li a:hover {
+    background: var(--sifit-accent) !important;
+    color: #0b3a46 !important;
+}
+
+.top-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.sifit-top-actions {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    float: none !important;
+}
+
+.sifit-top-actions > li {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+}
+
+/* Top Right Cart & Auth Buttons */
+.top-cart-btn {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(77, 182, 172, 0.4) !important;
+    color: #ffffff !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    line-height: normal !important;
+}
+
+.top-cart-btn:hover {
+    background: var(--sifit-accent) !important;
+    color: #0b3a46 !important;
+    border-color: var(--sifit-accent) !important;
+    box-shadow: 0 2px 10px rgba(77, 182, 172, 0.4);
+}
+
+.top-cart-count {
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+    margin-left: 2px;
+}
+
+.btn-top-login {
+    background: var(--sifit-primary) !important;
+    border: 1px solid rgba(77, 182, 172, 0.6) !important;
+    color: #ffffff !important;
+    padding: 4px 12px !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    text-decoration: none !important;
+    line-height: normal !important;
+}
+
+.btn-top-login:hover {
+    background: var(--sifit-primary-dark) !important;
+    border-color: var(--sifit-accent) !important;
+    color: #ffffff !important;
+}
+
+.btn-top-register {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    padding: 4px 12px !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    text-decoration: none !important;
+    line-height: normal !important;
+}
+
+.btn-top-register:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* Top User Badge & Dropdown */
+.sifit-user-dropdown {
+    position: relative !important;
+}
+
+.user-top-badge {
+    background: rgba(77, 182, 172, 0.15) !important;
+    border: 1px solid rgba(77, 182, 172, 0.45) !important;
+    color: #ffffff !important;
+    padding: 3px 10px !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    line-height: normal !important;
+    cursor: pointer !important;
+}
+
+.user-top-badge:hover,
+.user-top-badge:focus,
+.sifit-top-actions .open > .user-top-badge {
+    background: rgba(77, 182, 172, 0.3) !important;
+    border-color: #4db6ac !important;
+    color: #ffffff !important;
+}
+
+.user-top-name {
+    max-width: 130px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+.user-top-caret {
+    font-size: 10px !important;
+    transition: transform 0.2s ease !important;
+    margin-left: 2px !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.sifit-top-actions .open > .user-top-badge .user-top-caret {
+    transform: rotate(180deg) !important;
+}
+
+/* User Dropdown Menu - Compact & Rapi */
+.sifit-top-actions .dropdown-menu.sifit-user-menu {
+    position: absolute !important;
+    top: calc(100% + 5px) !important;
+    right: 0 !important;
+    left: auto !important;
+    min-width: 195px !important;
+    width: max-content !important;
+    max-width: 230px !important;
+    padding: 5px !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+    list-style: none !important;
+    z-index: 1050 !important;
+    animation: sifitDropdownFade 0.18s ease-out !important;
+}
+
+@keyframes sifitDropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sifit-user-menu > li {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+}
+
+
+.sifit-user-menu .dropdown-divider-custom {
+    height: 1px !important;
+    background-color: #f1f5f9 !important;
+    margin: 4px 6px !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+/* Dropdown Menu Items */
+.sifit-user-menu > li > a.sifit-dropdown-item {
+    display: flex !important;
+    align-items: center !important;
+    padding: 7px 10px !important;
+    border-radius: 6px !important;
+    font-size: 12.5px !important;
+    font-weight: 500 !important;
+    color: #334155 !important;
+    text-decoration: none !important;
+    transition: background 0.15s ease, color 0.15s ease !important;
+    margin: 1px 0 !important;
+    line-height: 1.4 !important;
+    box-sizing: border-box !important;
+}
+
+.sifit-user-menu > li > a.sifit-dropdown-item:hover,
+.sifit-user-menu > li > a.sifit-dropdown-item:focus {
+    background: #f1f5f9 !important;
+    color: #115566 !important;
+}
+
+.sifit-item-icon {
+    width: 18px !important;
+    text-align: center !important;
+    margin-right: 10px !important;
+    font-size: 13px !important;
+    color: #115566 !important;
+    flex-shrink: 0 !important;
+    display: inline-block !important;
+}
+
+.sifit-item-label {
+    flex-grow: 1 !important;
+    font-size: 12.5px !important;
+    font-weight: 500 !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+}
+
+.sifit-item-badge {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    padding: 1px 6px !important;
+    border-radius: 10px !important;
+    line-height: 1.2 !important;
+    margin-left: auto !important;
+}
+
+/* Logout Item */
+.sifit-user-menu > li > a.sifit-dropdown-item.item-logout {
+    color: #dc2626 !important;
+}
+
+.sifit-user-menu > li > a.sifit-dropdown-item.item-logout .sifit-item-icon {
+    color: #dc2626 !important;
+}
+
+.sifit-user-menu > li > a.sifit-dropdown-item.item-logout:hover {
+    background: #fef2f2 !important;
+    color: #b91c1c !important;
+}
+
+
+/* ==========================================================================
+   HEADER AREA & OFFICIAL LOGO
+   ========================================================================== */
+.sifit-main-header {
+    background: #ffffff !important;
+    padding: 16px 0 !important;
+    border-bottom: 1px solid var(--sifit-border) !important;
+}
+
+.sifit-header-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+    gap: 20px !important;
+}
+
+.sifit-header-brand {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.sifit-brand-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none !important;
+}
+
+.sifit-brand-logos {
+    display: flex;
+    align-items: center;
+}
+
+.sifit-brand-logos .logo-sifit {
+    height: 52px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.25s ease;
+}
+
+.sifit-brand-link:hover .logo-sifit,
+.sifit-brand-wrapper:hover .logo-sifit {
+    transform: scale(1.03);
+}
+
+.sifit-brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.sifit-brand-text .title-gov {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 14px;
+}
+
+.sifit-brand-text .title-app {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--sifit-primary);
+    margin: 2px 0 0;
+    line-height: 22px;
+    letter-spacing: 0.3px;
+}
+
+.sifit-brand-text .title-desc {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--sifit-text-muted);
+    margin: 0;
+    line-height: 14px;
+}
+
+/* Header Official Institutional Info Widgets */
+.sifit-header-widgets {
+    display: flex !important;
+    align-items: center !important;
+    gap: 24px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sifit-header-widget-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.sifit-header-widget-item .widget-icon {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50% !important;
+    background: #f0fdfa !important;
+    border: 1px solid rgba(77, 182, 172, 0.4) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--sifit-primary) !important;
+    font-size: 18px !important;
+    flex-shrink: 0 !important;
+    transition: all 0.25s ease;
+}
+
+.sifit-header-widget-item:hover .widget-icon {
+    background: var(--sifit-primary) !important;
+    color: #ffffff !important;
+    border-color: var(--sifit-primary) !important;
+}
+
+.sifit-header-widget-item .widget-text {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.sifit-header-widget-item .widget-text .widget-label {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: var(--sifit-primary) !important;
+    line-height: 1.3 !important;
+    margin: 0 0 2px !important;
+}
+
+.sifit-header-widget-item .widget-text .widget-value {
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    color: #64748b !important;
+    line-height: 1.3 !important;
+    margin: 0 !important;
+}
+
+.sifit-header-widget-divider {
+    width: 1px !important;
+    height: 36px !important;
+    background: #e2e8f0 !important;
+}
+
+@media (max-width: 991px) {
+    .sifit-header-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    .sifit-header-widgets {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 14px !important;
+    }
+    .sifit-header-widget-divider {
+        display: none !important;
+    }
+}
+
+/* ==========================================================================
+   NAVIGATION MENU (DEEP TEAL #115566 & FORMAL ACCENT)
+   ========================================================================== */
+/* Master Reset for any legacy consultation-button & right box */
+.mainmenu-right-box,
+.consultation-button,
+.consultation-button a {
+    width: auto !important;
+    height: auto !important;
+    line-height: normal !important;
+    float: none !important;
+    box-sizing: border-box !important;
+}
+
+.mainmenu-area {
+    background: var(--sifit-primary) !important;
+    min-height: 60px;
+    border-bottom: 3px solid var(--sifit-accent);
+    box-shadow: 0 4px 20px rgba(11, 58, 70, 0.25) !important;
+    position: relative;
+    z-index: 999;
+}
+
+.mainmenu-area .container > .row > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.mainmenu-area .main-menu {
+    float: left !important;
+}
+
+.mainmenu-area .main-menu .navigation > li > a {
+    color: #ffffff !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    height: 60px !important;
+    line-height: 60px !important;
+    padding: 0 16px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: all 0.2s ease !important;
+    display: block !important;
+    position: relative;
+}
+
+.mainmenu-area .main-menu .navigation > li > a:before {
+    display: none !important;
+}
+
+.mainmenu-area.stricky-fixed {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    background: #115566 !important;
+    border-bottom: 3px solid #4db6ac !important;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2) !important;
+    -webkit-animation: none !important;
+    animation: none !important;
+    transition: all 0.3s ease !important;
+    z-index: 99999 !important;
+}
+
+.mainmenu-area.stricky-fixed .main-menu .navigation > li > a {
+    height: 56px !important;
+    line-height: 56px !important;
+}
+
+.mainmenu-area.stricky-fixed .sifit-navbar-actions {
+    height: 56px !important;
+}
+
+/* Dropdown Menus */
+.mainmenu-area .main-menu .navigation > li > ul {
+    background: #ffffff !important;
+    border-top: 3px solid var(--sifit-accent) !important;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
+    padding: 8px 0 !important;
+    min-width: 230px !important;
+}
+
+.mainmenu-area .main-menu .navigation > li > ul > li {
+    border-bottom: 1px solid #f1f5f9 !important;
+    padding: 0 !important;
+}
+
+.mainmenu-area .main-menu .navigation > li > ul > li:last-child {
+    border-bottom: none !important;
+}
+
+.mainmenu-area .main-menu .navigation > li > ul > li > a {
+    color: #1e293b !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 10px 20px !important;
+    line-height: 20px !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    text-transform: none !important;
+}
+
+.mainmenu-area .main-menu .navigation > li > ul > li:hover > a {
+    background: #f0fdfa !important;
+    color: var(--sifit-primary) !important;
+    padding-left: 24px !important;
+}
+
+/* Navbar Action Container on Right */
+.sifit-navbar-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    height: 60px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sifit-nav-cart-btn {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(77, 182, 172, 0.45) !important;
+    color: #ffffff !important;
+    padding: 7px 16px !important;
+    border-radius: 20px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    line-height: normal !important;
+}
+
+.sifit-nav-cart-btn:hover {
+    background: var(--sifit-accent) !important;
+    color: #0b3a46 !important;
+    border-color: var(--sifit-accent) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(77, 182, 172, 0.35);
+}
+
+.sifit-nav-cart-badge {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    padding: 2px 7px !important;
+    border-radius: 10px !important;
+    line-height: 1 !important;
+}
+
+.sifit-nav-search-btn {
+    background: var(--sifit-accent) !important;
+    border: 1px solid var(--sifit-accent) !important;
+    color: #0b3a46 !important;
+    padding: 7px 18px !important;
+    border-radius: 20px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    line-height: normal !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sifit-nav-search-btn:hover {
+    background: #ffffff !important;
+    border-color: #ffffff !important;
+    color: var(--sifit-primary) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+@media (max-width: 991px) {
+    .mainmenu-area .container > .row > div {
+        display: block;
+    }
+    .sifit-navbar-actions {
+        float: none !important;
+        height: auto !important;
+        padding: 8px 15px 12px !important;
+        justify-content: flex-start !important;
+    }
+}
+
+/* ==========================================================================
+   BREADCRUMBS & SECTION TITLES (COMPACT & UNIFIED)
+   ========================================================================== */
+.breadcrumb-area {
+    background: linear-gradient(135deg, #07252c 0%, #0b3a46 55%, #115566 100%) !important;
+    position: relative !important;
+    padding: 24px 0 !important;
+    border-bottom: 3px solid var(--sifit-accent) !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+}
+
+.breadcrumb-area::before {
+    display: none !important;
+}
+
+.breadcrumb-area .container {
+    position: relative;
+    z-index: 2;
+}
+
+.sifit-breadcrumb-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+    gap: 14px !important;
+}
+
+.sifit-breadcrumb-left h1,
+.breadcrumb-area .breadcrumbs h1 {
+    color: #ffffff !important;
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    margin: 0 !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.3px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.sifit-breadcrumb-left p {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 13px !important;
+    margin: 4px 0 0 0 !important;
+    line-height: 1.4 !important;
+}
+
+.sifit-breadcrumb-list {
+    margin: 0 !important;
+    padding: 6px 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 7px !important;
+    list-style: none !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: 30px !important;
+}
+
+.sifit-breadcrumb-list li {
+    font-size: 12.5px !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+}
+
+.sifit-breadcrumb-list li a {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease !important;
+}
+
+.sifit-breadcrumb-list li a:hover {
+    color: var(--sifit-accent) !important;
+}
+
+.sifit-breadcrumb-list li i {
+    color: var(--sifit-accent) !important;
+    font-size: 11px !important;
+}
+
+.sifit-breadcrumb-list li.active {
+    color: #a7f3d0 !important;
+    font-weight: 700 !important;
+}
+
+/* Fallback for legacy breadcrumb-bottom */
+.breadcrumb-bottom {
+    position: relative !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    background: transparent !important;
+    border-bottom: none !important;
+    padding: 8px 0 0 0 !important;
+    margin: 0 !important;
+}
+
+.breadcrumb-bottom .left ul {
+    margin: 0 !important;
+    padding: 6px 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 7px !important;
+    list-style: none !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: 30px !important;
+}
+
+.breadcrumb-bottom .left ul li {
+    font-size: 12.5px !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+}
+
+.breadcrumb-bottom .left ul li a {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease !important;
+}
+
+.breadcrumb-bottom .left ul li a:hover {
+    color: var(--sifit-accent) !important;
+}
+
+.breadcrumb-bottom .left ul li i {
+    color: var(--sifit-accent) !important;
+    font-size: 11px !important;
+}
+
+.breadcrumb-bottom .left ul li.active {
+    color: #a7f3d0 !important;
+    font-weight: 700 !important;
+}
+
+/* Section Title Government Style - Compact & Neat */
+.sec-title {
+    margin-bottom: 28px !important;
+}
+
+.sec-title h1, .sec-title h2, .sec-title h3 {
+    color: var(--sifit-primary) !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.3px;
+    margin-top: 0 !important;
+    margin-bottom: 6px !important;
+}
+
+.sec-title .border {
+    background: var(--sifit-accent) !important;
+    width: 50px !important;
+    height: 3px !important;
+    margin: 8px auto 12px auto !important;
+}
+
+.sec-title.text-left .border,
+.text-left .sec-title .border {
+    margin: 8px 0 12px 0 !important;
+}
+
+.sec-title .border::before {
+    background: var(--sifit-primary) !important;
+}
+
+.sec-title p {
+    font-size: 13.5px !important;
+    color: #64748b !important;
+    line-height: 1.5 !important;
+    margin-bottom: 0 !important;
+}
+
+/* Compact Section Paddings (Eliminate Wasted Space / Boros Tempat) */
+.welcome-area,
+.about-area,
+.faq-area,
+.doctor-section,
+.team-area,
+.gallery-area,
+.contact-form-area,
+.contact-info-area {
+    padding: 38px 0 !important;
+}
+
+/* Medical Departments & Feature Cards (Tujuan SIFIT & Services) */
+.medical-departments-area {
+    padding: 36px 0 42px !important;
+    background: #ffffff;
+}
+
+.medical-departments-area .single-item,
+.medical-departments-carousel .single-item {
+    background: #ffffff !important;
+    border: 1px solid var(--sifit-border) !important;
+    border-radius: 12px !important;
+    padding: 24px 18px 22px !important;
+    box-shadow: 0 3px 12px rgba(17, 85, 102, 0.04) !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    margin-bottom: 20px !important;
+    height: calc(100% - 20px) !important;
+}
+
+.medical-departments-area .single-item::before,
+.medical-departments-carousel .single-item::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 4px !important;
+    background: linear-gradient(90deg, var(--sifit-primary), var(--sifit-accent)) !important;
+    opacity: 0.85 !important;
+    transition: height 0.3s ease !important;
+}
+
+.medical-departments-area .single-item:hover,
+.medical-departments-carousel .single-item:hover {
+    transform: translateY(-6px) !important;
+    box-shadow: 0 12px 28px rgba(17, 85, 102, 0.12) !important;
+    border-color: rgba(77, 182, 172, 0.6) !important;
+}
+
+.medical-departments-area .single-item:hover::before,
+.medical-departments-carousel .single-item:hover::before {
+    height: 5px !important;
+}
+
+/* Icon Holder Inside Department & Purpose Cards */
+.medical-departments-area .single-item .iocn-holder,
+.medical-departments-carousel .single-item .iocn-holder {
+    background: rgba(17, 85, 102, 0.06) !important;
+    width: 72px !important;
+    height: 72px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 16px auto !important;
+    padding: 0 !important;
+    border: 1px solid rgba(77, 182, 172, 0.25) !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Completely remove the legacy #2098D1 blue square box animation! */
+.medical-departments-area .single-item .iocn-holder::after,
+.medical-departments-area .single-item:hover .iocn-holder::after,
+.medical-departments-carousel .single-item .iocn-holder::after,
+.medical-departments-carousel .single-item:hover .iocn-holder::after {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    content: none !important;
+}
+
+.medical-departments-area .single-item:hover .iocn-holder,
+.medical-departments-carousel .single-item:hover .iocn-holder {
+    background: var(--sifit-primary) !important;
+    transform: scale(1.08) !important;
+    border-color: var(--sifit-accent) !important;
+    box-shadow: 0 6px 16px rgba(17, 85, 102, 0.25) !important;
+}
+
+.medical-departments-area .single-item .iocn-holder span:before,
+.medical-departments-carousel .single-item .iocn-holder span:before {
+    color: var(--sifit-primary) !important;
+    font-size: 36px !important;
+    line-height: 1 !important;
+    transition: all 0.3s ease !important;
+}
+
+.medical-departments-area .single-item:hover .iocn-holder span:before,
+.medical-departments-carousel .single-item:hover .iocn-holder span:before {
+    color: #ffffff !important;
+}
+
+.medical-departments-area .single-item .text-holder,
+.medical-departments-carousel .single-item .text-holder {
+    padding: 0 !important;
+    border: none !important;
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+.medical-departments-area .single-item .text-holder h3,
+.medical-departments-carousel .single-item .text-holder h3 {
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    color: var(--sifit-text-dark) !important;
+    margin: 0 0 8px 0 !important;
+    transition: color 0.2s ease !important;
+}
+
+.medical-departments-area .single-item:hover .text-holder h3,
+.medical-departments-carousel .single-item:hover .text-holder h3 {
+    color: var(--sifit-primary) !important;
+}
+
+.medical-departments-area .single-item .text-holder p,
+.medical-departments-carousel .single-item .text-holder p {
+    font-size: 13.5px !important;
+    color: var(--sifit-text-muted) !important;
+    line-height: 1.55 !important;
+    margin: 0 !important;
+}
+
+/* ==========================================================================
+   UNIVERSAL THEME OVERRIDES (Replacing #0392ce & #0b98d1)
+   ========================================================================== */
+a {
+    color: var(--sifit-primary);
+}
+
+a:hover, a:focus {
+    color: var(--sifit-primary-dark);
+}
+
+.thm-btn {
+    background: var(--sifit-primary) !important;
+    border-color: var(--sifit-primary) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease !important;
+}
+
+.thm-btn:hover {
+    background: var(--sifit-primary-dark) !important;
+    border-color: var(--sifit-primary-dark) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(17, 85, 102, 0.3) !important;
+}
+
+.btn-style-two {
+    background: var(--sifit-accent) !important;
+    border-color: var(--sifit-accent) !important;
+    color: #0b3a46 !important;
+    font-weight: 700 !important;
+    border-radius: 6px !important;
+}
+
+.btn-style-two:hover {
+    background: #38a399 !important;
+    color: #ffffff !important;
+}
+
+/* Form Controls */
+.form-control:focus, input:focus, textarea:focus, select:focus {
+    border-color: var(--sifit-accent) !important;
+    box-shadow: 0 0 0 3px rgba(77, 182, 172, 0.25) !important;
+    outline: none !important;
+}
+
+/* Pagination Overrides */
+.post-pagination li.active a,
+.post-pagination li a:hover,
+.pagination > .active > a,
+.pagination > .active > a:hover {
+    background-color: var(--sifit-primary) !important;
+    border-color: var(--sifit-primary) !important;
+    color: #ffffff !important;
+}
+
+/* ==========================================================================
+   GOVERNMENT BADGES & CARDS
+   ========================================================================== */
+.sifit-badge-prescription {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.sifit-badge-otc {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.sifit-badge-cat {
+    background: rgba(17, 85, 102, 0.08);
+    color: var(--sifit-primary);
+    border: 1px solid rgba(17, 85, 102, 0.2);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+/* Product & Article Cards */
+.sifit-card {
+    background: #ffffff;
+    border: 1px solid var(--sifit-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.sifit-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(17, 85, 102, 0.12);
+    border-color: var(--sifit-accent);
+}
+
+/* Add to Cart Quick Button */
+.btn-add-cart {
+    background: var(--sifit-primary);
+    color: #ffffff;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none !important;
+}
+
+.btn-add-cart:hover {
+    background: var(--sifit-primary-dark);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(17, 85, 102, 0.3);
+}
+
+.btn-add-cart i {
+    font-size: 13px;
+    color: var(--sifit-accent);
+}
+
+/* ==========================================================================
+   CART TABLE & SUMMARY STYLING
+   ========================================================================== */
+.sifit-cart-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #ffffff;
+    border: 1px solid var(--sifit-border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.sifit-cart-table th {
+    background: #f1f5f9;
+    color: var(--sifit-primary);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 14px 16px;
+    border-bottom: 2px solid var(--sifit-border);
+}
+
+.sifit-cart-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--sifit-border);
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.sifit-cart-table tr:last-child td {
+    border-bottom: none;
+}
+
+.cart-qty-input {
+    width: 65px;
+    height: 36px;
+    text-align: center;
+    border: 1px solid var(--sifit-border);
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.btn-remove-item {
+    color: #ef4444;
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-remove-item:hover {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+.cart-summary-card {
+    background: #f8fafc;
+    border: 1px solid var(--sifit-border);
+    border-radius: 8px;
+    padding: 22px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.cart-summary-card h4 {
+    color: var(--sifit-primary);
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--sifit-accent);
+}
+
+/* ==========================================================================
+   OFFICIAL FOOTER
+   ========================================================================== */
+.footer-area {
+    background: #092a33 !important;
+    color: #cbd5e1;
+    padding: 60px 0 40px !important;
+    border-top: 4px solid var(--sifit-accent);
+}
+
+.footer-area .title h3 {
+    color: #ffffff !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    margin-bottom: 15px;
+}
+
+.footer-area .title .border {
+    background: var(--sifit-accent) !important;
+    width: 45px !important;
+    height: 2px !important;
+}
+
+.footer-area .our-info p,
+.footer-area .usefull-links li a,
+.footer-area .footer-contact-info li .text-holder h5 {
+    color: #94a3b8 !important;
+    font-size: 13.5px;
+}
+
+.footer-area .usefull-links li a:hover {
+    color: var(--sifit-accent) !important;
+    padding-left: 5px;
+}
+
+.footer-area .footer-contact-info li .icon-holder span,
+.footer-area .footer-contact-info li .icon-holder i {
+    color: var(--sifit-accent) !important;
+    font-size: 18px;
+}
+
+.footer-bottom-area {
+    background: #05191f !important;
+    padding: 16px 0 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 12.5px;
+    color: #64748b;
+}
+
+.footer-bottom-area a {
+    color: var(--sifit-accent) !important;
+    font-weight: 600;
+}
+
+/* Alerts and Notices */
+.sifit-alert-prescription {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-left: 4px solid #f59e0b;
+    color: #92400e;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 13.5px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.sifit-alert-prescription i {
+    color: #f59e0b;
+    font-size: 18px;
+    margin-top: 2px;
+}
+
+/* ==========================================================================
+   INSTITUTIONAL SEAL & BADGE CARD (For About & Visi-Misi)
+   ========================================================================== */
+.sifit-official-badge-card {
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid var(--sifit-border);
+    border-top: 4px solid var(--sifit-accent);
+    border-radius: 12px;
+    padding: 30px 24px;
+    box-shadow: 0 10px 30px rgba(11, 58, 70, 0.08);
+    text-align: center;
+    position: relative;
+}
+
+.sifit-official-badge-card .card-crest {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px dashed var(--sifit-border);
+}
+
+.sifit-official-badge-card .emblem-sifit {
+    height: 64px;
+    width: auto;
+    object-fit: contain;
+}
+
+.sifit-official-badge-card .badge-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(77, 182, 172, 0.15);
+    color: var(--sifit-primary);
+    border: 1px solid rgba(77, 182, 172, 0.4);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.sifit-official-badge-card h3 {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--sifit-primary);
+    margin: 0 0 4px;
+    line-height: 1.3;
+}
+
+.sifit-official-badge-card .instansi {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    margin: 0 0 18px;
+}
+
+.sifit-official-badge-card .card-features {
+    text-align: left;
+    background: #ffffff;
+    border: 1px solid var(--sifit-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+}
+
+.sifit-official-badge-card .feat-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.sifit-official-badge-card .feat-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.sifit-official-badge-card .feat-item i {
+    color: var(--sifit-accent);
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.sifit-official-badge-card .card-footer-info .motto {
+    font-style: italic;
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   EXTENSIVE OVERRIDES FOR TEMPLATE LEGACY BLUE (#0392ce / #0084bb / #29a1d4)
+   ========================================================================== */
+/* Fact counter area overlay */
+.fact-counter-area {
+    background: linear-gradient(135deg, #07252c 0%, #115566 100%) !important;
+    position: relative !important;
+}
+
+.fact-counter-area::before {
+    background: rgba(11, 58, 70, 0.92) !important;
+}
+
+.fact-counter-area ul li {
+    border-right-color: rgba(77, 182, 172, 0.25) !important;
+}
+
+.fact-counter-area .single-item .icon-holder span:before {
+    color: var(--sifit-accent) !important;
+}
+
+/* Service / Tabs area */
+.service-area .tab-menu li.active a,
+.service-area .tab-menu li:hover a {
+    border-color: var(--sifit-accent) !important;
+}
+
+.service-area .tab-menu li a .img-holder .overlay-style-one {
+    background-color: rgba(17, 85, 102, 0.85) !important;
+}
+
+/* Medical Departments / Carousel icons & readmore */
+.medical-departments-carousel .single-item .iocn-holder span,
+.medical-departments-area .single-item .iocn-holder span {
+    color: var(--sifit-primary) !important;
+}
+
+.medical-departments-carousel .single-item a.readmore,
+.medical-departments-area .single-item a.readmore {
+    color: var(--sifit-primary) !important;
+}
+
+.medical-departments-carousel .single-item a.readmore:hover,
+.medical-departments-area .single-item a.readmore:hover {
+    color: var(--sifit-accent-hover) !important;
+}
+
+.medical-departments-carousel .single-item:hover,
+.medical-departments-area .single-item:hover {
+    border-color: var(--sifit-accent) !important;
+}
+
+/* Team members / Product cards hover overlay */
+.team-area .single-team-member .img-holder .overlay-style {
+    background-color: rgba(17, 85, 102, 0.85) !important;
+}
+
+.team-area .single-team-member .text-holder span {
+    color: var(--sifit-primary) !important;
+}
+
+/* ==========================================================================
+   OFFICIAL SIFIT FAQ ACCORDION (MODERN GOVTECH STYLE)
+   ========================================================================== */
+.accordion-box .accordion {
+    margin-bottom: 12px !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.accordion-box .accordion:hover {
+    border-color: rgba(77, 182, 172, 0.6) !important;
+    box-shadow: 0 4px 14px rgba(17, 85, 102, 0.05) !important;
+}
+
+/* Eliminate the legacy Flaticon square box completely! */
+.accordion-box .accordion .accord-btn::before,
+.accordion-box .accordion .accord-btn::after,
+.accordion-box .accordion .accord-btn.active::before,
+.accordion-box .accordion .accord-btn.active::after {
+    display: none !important;
+    content: none !important;
+    border: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.accordion-box .accordion .accord-btn {
+    padding: 16px 20px !important;
+    background: #ffffff !important;
+    border: none !important;
+    border-left: 4px solid transparent !important;
+    border-bottom: 1px solid transparent !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    transition: background-color 0.25s ease, border-left-color 0.25s ease, border-bottom-color 0.25s ease !important;
+    position: relative !important;
+    outline: none !important;
+    user-select: none !important;
+}
+
+.accordion-box .accordion .accord-btn:hover {
+    background: #f8fafc !important;
+}
+
+.accordion-box .accordion .accord-btn h4 {
+    margin: 0 !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    line-height: 1.4 !important;
+    transition: color 0.25s ease !important;
+}
+
+.accordion-box .accordion .accord-btn h4 i {
+    color: var(--sifit-primary) !important;
+    font-size: 17px !important;
+    flex-shrink: 0 !important;
+    transition: color 0.25s ease !important;
+}
+
+/* Active State: Clean soft mint tint with Dark Teal Accent */
+.accordion-box .accordion .accord-btn.active {
+    background: #f0fdfa !important;
+    border-left-color: var(--sifit-primary) !important;
+    border-bottom-color: #f1f5f9 !important;
+}
+
+.accordion-box .accordion .accord-btn.active h4 {
+    color: var(--sifit-primary) !important;
+}
+
+.accordion-box .accordion .accord-btn.active h4 i {
+    color: var(--sifit-accent) !important;
+}
+
+.sifit-faq-indicator {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    background: #f1f5f9 !important;
+    color: #64748b !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 11px !important;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s ease, color 0.25s ease !important;
+    flex-shrink: 0 !important;
+}
+
+.accordion-box .accordion .accord-btn.active .sifit-faq-indicator {
+    transform: rotate(180deg) !important;
+    background: var(--sifit-primary) !important;
+    color: #ffffff !important;
+}
+
+/* Accordion Outer Content: Zero padding & overflow hidden to guarantee 100% smooth slideUp/slideDown */
+.accordion-box .accordion .accord-content {
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
+}
+
+/* Accordion Inner Content: Handles real padding safely */
+.accordion-box .accordion .accord-content-inner {
+    padding: 16px 22px 20px 48px !important;
+    border-top: 1px solid #f1f5f9 !important;
+    animation: sifitFadeIn 0.28s ease !important;
+}
+
+@keyframes sifitFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.accordion-box .accordion .accord-content p {
+    margin: 0 !important;
+    font-size: 13.5px !important;
+    color: #475569 !important;
+    line-height: 1.7 !important;
+}
+
+/* Blog metadata & sidebar */
+.single-blog-item .text-holder .meta-info li a:hover,
+.single-blog-item .text-holder h3.blog-title a:hover {
+    color: var(--sifit-primary) !important;
+}
+
+.single-blog-item .img-holder .date {
+    background: var(--sifit-primary) !important;
+    color: #ffffff !important;
+}
+
+.sidebar-wrapper .single-sidebar .categories li a:hover {
+    color: var(--sifit-primary) !important;
+}
+
+.sidebar-wrapper .single-sidebar .popular-tag li a:hover {
+    background: var(--sifit-primary) !important;
+    border-color: var(--sifit-primary) !important;
+    color: #ffffff !important;
+}
+
+/* Search Toggles */
+.toggle-search button:hover {
+    color: var(--sifit-primary) !important;
+}
+
+.header-search .search button {
+    background: var(--sifit-primary) !important;
+}
+
+.header-search .search button:hover {
+    background: var(--sifit-primary-dark) !important;
+}
+
+/* ==========================================================================
+   ADDITIONAL COMPREHENSIVE OVERRIDES FOR ALL TEMPLATE LEGACY ELEMENTS
+   ========================================================================== */
+.welcome-area .text-holder .single-item .iocn-box span:before,
+.welcome-area .text-holder .single-item .text-box .text p i {
+    color: var(--sifit-accent) !important;
+}
+
+.welcome-area .text-holder .button a:hover {
+    background: var(--sifit-primary) !important;
+    border-color: var(--sifit-primary) !important;
+    color: #ffffff !important;
+}
+
+.special-features-area .single-item .icon-box span:before {
+    color: var(--sifit-primary) !important;
+    border-color: rgba(77, 182, 172, 0.4) !important;
+}
+
+.special-features-area .single-item:hover .icon-box span:before {
+    background: var(--sifit-primary) !important;
+    border-color: var(--sifit-primary) !important;
+    color: #ffffff !important;
+}
+
+.slogan-area {
+    background: var(--sifit-primary) !important;
+}
+
+.slogan-area .button a {
+    background: var(--sifit-accent) !important;
+    border-color: var(--sifit-accent) !important;
+    color: #0b3a46 !important;
+}
+
+.slogan-area .button a:hover {
+    background: var(--sifit-primary-dark) !important;
+    border-color: var(--sifit-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+.doctor-page-area ul li.active a,
+.doctor-page-area ul li.active a:focus,
+.doctor-page-area ul li.active a:hover {
+    background-color: var(--sifit-primary) !important;
+    border-color: var(--sifit-primary) !important;
+    color: #ffffff !important;
+}
+
+#departments-single-area .service-plan .single-box .icon-holder span:before {
+    color: var(--sifit-primary) !important;
+}
+
+#departments-single-area .service-plan .single-box:hover .icon-holder {
+    background: var(--sifit-primary) !important;
+    border-color: var(--sifit-primary) !important;
+}
+
+#departments-single-area .service-plan .single-box:hover .icon-holder span:before {
+    color: #ffffff !important;
+}
+
+.sidebar-wrapper .single-sidebar .popular-product li .title-holder h5,
+.sidebar-wrapper .single-sidebar .popular-product li .title-holder .review-box li i,
+.sidebar-wrapper .single-sidebar .popular-product li .title-holder a:hover h4 {
+    color: var(--sifit-primary) !important;
+}
+
+.single-shop-content .content-box .review-box ul li i,
+.single-shop-content .content-box span.price,
+.single-shop-content .content-box .location-box form span {
+    color: var(--sifit-primary) !important;
+}
+
+.single-shop-content .content-box .location-box form button:hover {
+    background: var(--sifit-primary) !important;
+    color: #ffffff !important;
+}
+
+.product-tab-box .tab-menu li.active a,
+.product-tab-box .tab-menu li:hover a {
+    color: var(--sifit-primary) !important;
+    border-top-color: var(--sifit-accent) !important;
+}
+
+.product-tab-box .tab-content .review-box .single-review-box .text-holder .top .review-box ul li i,
+.product-tab-box .tab-content .review-form .add-rating-box ul li:hover a i {
+    color: var(--sifit-gold) !important;
+}
+
+.checkout-area .exisitng-customer:before,
+.checkout-area .coupon:before {
+    background: var(--sifit-accent) !important;
+}
+
+.checkout-area .exisitng-customer h5 a,
+.checkout-area .coupon h5 a,
+.checkout-area .create-acc .checkbox label,
+.checkout-area .table .cart-table tbody tr td.price {
+    color: var(--sifit-primary) !important;
+}
+
+.checkout-area .table .cart-table tbody tr .qty .btn-default {
+    background-color: var(--sifit-primary) !important;
+    border-color: var(--sifit-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+.cart-area .cart-table tbody .available-info .icon {
+    background: var(--sifit-primary) !important;
+}
+
+.cart-area .cart-table tbody tr .sub-total {
+    color: var(--sifit-primary) !important;
+    font-weight: 700 !important;
+}
+
+.cart-middle .update-cart button:hover {
+    background: var(--sifit-primary) !important;
+    color: #ffffff !important;
+}
+
+.login-register-area .form a.forgot-password {
+    color: var(--sifit-primary) !important;
+}
+
+.single-footer-widget .our-info a {
+    color: var(--sifit-accent) !important;
+}
+
+.single-footer-widget .usefull-links li a:before {
+    background: var(--sifit-accent) !important;
+}
+
+.single-footer-widget .usefull-links li a:hover {
+    color: var(--sifit-accent) !important;
+}
+
+.single-footer-widget .footer-contact-info li .icon-holder span:before {
+    color: var(--sifit-accent) !important;
+}
+
+.single-footer-widget form.appointment-form button:hover {
+    background: var(--sifit-accent) !important;
+    border-color: var(--sifit-accent) !important;
+    color: #0b3a46 !important;
+}
+
+.certificates-area .owl-dots .owl-dot.active {
+    background: var(--sifit-accent) !important;
+    border-color: var(--sifit-accent) !important;
+}
+
+/* ==========================================================================
+   HOMEPAGE FORMAL GOVERNMENT PORTAL STYLING (SIFIT OFFICIAL)
+   ========================================================================== */
+
+/* Hero Banner */
+.sifit-hero-banner {
+    background: linear-gradient(135deg, #07252c 0%, #0b3a46 55%, #115566 100%);
+    position: relative;
+    padding: 60px 0 70px;
+    color: #ffffff;
+    overflow: hidden;
+    border-bottom: 3px solid var(--sifit-accent);
+}
+
+.sifit-hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: radial-gradient(circle at 85% 20%, rgba(77, 182, 172, 0.18) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.sifit-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(77, 182, 172, 0.18);
+    border: 1px solid rgba(77, 182, 172, 0.45);
+    color: #a7f3d0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.sifit-hero-title {
+    font-size: 38px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.25;
+    margin: 0 0 16px;
+    letter-spacing: -0.5px;
+}
+
+.sifit-hero-title .highlight {
+    color: var(--sifit-accent);
+    position: relative;
+}
+
+.sifit-hero-desc {
+    font-size: 15.5px;
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin-bottom: 28px;
+    max-width: 580px;
+}
+
+/* Hero Quick Search */
+.sifit-hero-search-wrapper {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 8px;
+    max-width: 620px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.sifit-hero-search-box {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 4px;
+}
+
+.sifit-hero-search-box .search-icon {
+    padding-left: 14px;
+    color: #94a3b8;
+    font-size: 16px;
+}
+
+.sifit-hero-search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.sifit-hero-search-box input::placeholder {
+    color: #94a3b8;
+}
+
+.sifit-hero-search-btn {
+    background: var(--sifit-primary) !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 11px 22px !important;
+    border-radius: 6px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    white-space: nowrap !important;
+}
+
+.sifit-hero-search-btn:hover {
+    background: var(--sifit-primary-dark) !important;
+    box-shadow: 0 4px 12px rgba(11, 58, 70, 0.3) !important;
+}
+
+.sifit-hero-tags {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    font-size: 12px;
+    color: #cbd5e1;
+}
+
+.sifit-hero-tag {
+    background: rgba(255, 255, 255, 0.12);
+    color: #e2e8f0;
+    padding: 3px 10px;
+    border-radius: 12px;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+}
+
+.sifit-hero-tag:hover {
+    background: var(--sifit-accent);
+    color: #0b3a46;
+}
+
+/* Hero Right Institutional Card */
+.sifit-hero-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(77, 182, 172, 0.35);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.sifit-hero-card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    margin-bottom: 18px;
+}
+
+.sifit-hero-card-logo-badge {
+    background: #ffffff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.sifit-hero-card-logo-badge .sifit-hero-card-logo {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+}
+
+.sifit-hero-card-title h3 {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0 0 4px;
+    letter-spacing: 0.3px;
+}
+
+.sifit-hero-card-title span {
+    color: var(--sifit-accent);
+    font-size: 12px;
+    font-weight: 600;
+    display: block;
+}
+
+.sifit-hero-stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.sifit-hero-stat-pill {
+    background: rgba(11, 58, 70, 0.5);
+    border: 1px solid rgba(77, 182, 172, 0.25);
+    border-radius: 10px;
+    padding: 12px 8px;
+    text-align: center;
+}
+
+.sifit-hero-stat-num {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--sifit-accent);
+    display: block;
+    line-height: 1.2;
+}
+
+.sifit-hero-stat-label {
+    font-size: 11px;
+    color: #cbd5e1;
+    display: block;
+    margin-top: 2px;
+}
+
+.sifit-hero-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sifit-btn-hero-primary {
+    background: var(--sifit-accent) !important;
+    color: #07252c !important;
+    padding: 11px 18px !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.sifit-btn-hero-primary:hover {
+    background: #ffffff !important;
+    color: var(--sifit-primary) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
+}
+
+.sifit-btn-hero-outline {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    color: #ffffff !important;
+    padding: 10px 18px !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.sifit-btn-hero-outline:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+}
+
+.sifit-hero-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 11.5px;
+    color: #94a3b8;
+}
+
+.sifit-hero-card-footer i {
+    color: var(--sifit-accent);
+}
+
+/* Formal Section Headers */
+.sifit-section-header {
+    text-align: center;
+    margin-bottom: 35px;
+    position: relative;
+}
+
+.sifit-section-tag {
+    display: inline-block;
+    color: var(--sifit-primary);
+    background: #f0fdfa;
+    border: 1px solid rgba(77, 182, 172, 0.4);
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.sifit-section-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 8px;
+    letter-spacing: -0.3px;
+}
+
+.sifit-section-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    max-width: 650px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+.sifit-section-divider {
+    width: 50px;
+    height: 3px;
+    background: var(--sifit-accent);
+    margin: 12px auto 0;
+    border-radius: 2px;
+}
+
+/* Core Services 4-Pillar Grid */
+.sifit-service-card {
+    background: #ffffff;
+    border: 1px solid var(--sifit-border);
+    border-radius: 12px;
+    padding: 26px 22px;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.sifit-service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(17, 85, 102, 0.12);
+    border-color: var(--sifit-accent);
+}
+
+.sifit-service-icon-box {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #f0fdfa;
+    border: 2px solid rgba(77, 182, 172, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    color: var(--sifit-primary);
+    font-size: 26px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.sifit-service-card:hover .sifit-service-icon-box {
+    background: var(--sifit-primary);
+    border-color: var(--sifit-primary);
+    color: #ffffff;
+    transform: scale(1.06);
+}
+
+.sifit-service-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.35;
+}
+
+.sifit-service-card p {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.55;
+    margin-bottom: 16px;
+    flex: 1 1 auto;
+}
+
+.sifit-service-card .service-link {
+    color: var(--sifit-primary);
+    font-size: 12.5px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    transition: all 0.2s ease;
+}
+
+.sifit-service-card:hover .service-link {
+    color: var(--sifit-accent-hover);
+    gap: 9px;
+}
+
+/* DAGUSIBU Interactive 4 Steps */
+.sifit-dagusibu-section {
+    background: #f8fafc;
+    border-top: 1px solid var(--sifit-border);
+    border-bottom: 1px solid var(--sifit-border);
+    padding: 55px 0;
+}
+
+.sifit-step-card {
+    background: #ffffff;
+    border: 1px solid var(--sifit-border);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    height: 100%;
+    transition: all 0.25s ease;
+}
+
+.sifit-step-card:hover {
+    border-color: var(--sifit-accent);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.sifit-step-num {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-size: 18px;
+    font-weight: 800;
+    color: rgba(77, 182, 172, 0.4);
+}
+
+.sifit-step-badge {
+    display: inline-block;
+    background: var(--sifit-primary);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.sifit-step-card h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 6px;
+}
+
+.sifit-step-card p {
+    font-size: 12.5px;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Formal Helpdesk / Emergency Banner (Replaces Awards) */
+.sifit-helpdesk-banner {
+    background: linear-gradient(135deg, #07252c 0%, #0b3a46 60%, #115566 100%);
+    padding: 45px 0;
+    color: #ffffff;
+    border-top: 3px solid var(--sifit-accent);
+}
+
+.sifit-helpdesk-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.sifit-helpdesk-info h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 8px;
+}
+
+.sifit-helpdesk-info p {
+    font-size: 13.5px;
+    color: #cbd5e1;
+    margin: 0;
+    max-width: 620px;
+}
+
+.sifit-helpdesk-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.sifit-btn-helpdesk-primary {
+    background: var(--sifit-accent) !important;
+    color: #07252c !important;
+    padding: 10px 22px !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.sifit-btn-helpdesk-primary:hover {
+    background: #ffffff !important;
+    color: var(--sifit-primary) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
+}
+
+.sifit-btn-helpdesk-outline {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    padding: 9px 20px !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.sifit-btn-helpdesk-outline:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+}
+
+@media (max-width: 991px) {
+    .sifit-hero-title {
+        font-size: 28px;
+    }
+    .sifit-hero-card {
+        margin-top: 30px;
+    }
+    .sifit-helpdesk-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ==========================================================================
+   SMOOTH MODERN INTERACTIVE ANIMATIONS & HOVER EFFECTS (SIFIT PREMIUM)
+   ========================================================================== */
+
+/* 1. Hero Card Gentle Floating Animation */
+@keyframes sifitFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.sifit-hero-card {
+    animation: sifitFloat 5s ease-in-out infinite;
+    will-change: transform;
+}
+
+/* 2. Government Badge Pulse Glow */
+@keyframes sifitPulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(77, 182, 172, 0.45);
+    }
+    50% {
+        box-shadow: 0 0 0 7px rgba(77, 182, 172, 0);
+    }
+}
+
+.sifit-hero-badge,
+.gov-badge {
+    animation: sifitPulseGlow 3.5s infinite;
+}
+
+/* 3. Live Cart Pulse */
+@keyframes sifitCartBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.18); }
+}
+
+.sifit-nav-cart-badge,
+.top-cart-count {
+    animation: sifitCartBounce 2.5s infinite ease-in-out;
+}
+
+/* 4. Enhanced Smooth Card Lift & Shadow Transitions */
+.sifit-service-card,
+.sifit-step-card,
+.sifit-card,
+.single-blog-item,
+.sifit-official-badge-card {
+    transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.35s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.3s ease !important;
+}
+
+.sifit-service-card:hover,
+.sifit-step-card:hover,
+.sifit-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 18px 38px rgba(17, 85, 102, 0.13) !important;
+    border-color: var(--sifit-accent) !important;
+}
+
+/* 5. Icon Hover Zoom & Rotation */
+.sifit-service-icon-box,
+.sifit-service-icon-box i,
+.sifit-header-widget-item .widget-icon i {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.sifit-service-card:hover .sifit-service-icon-box i {
+    transform: scale(1.22) rotate(6deg) !important;
+}
+
+.sifit-header-widget-item:hover .widget-icon i {
+    transform: scale(1.18) rotate(-8deg) !important;
+}
+
+/* 6. Interactive Shimmer Light on Action Buttons */
+.thm-btn,
+.sifit-btn-hero-primary,
+.sifit-hero-search-btn,
+.btn-add-cart,
+.sifit-btn-helpdesk-primary {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+.thm-btn::after,
+.sifit-btn-hero-primary::after,
+.sifit-hero-search-btn::after,
+.btn-add-cart::after,
+.sifit-btn-helpdesk-primary::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(60deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
+    transform: rotate(30deg) translateX(-100%);
+    transition: transform 0.75s ease-out;
+    pointer-events: none;
+}
+
+.thm-btn:hover::after,
+.sifit-btn-hero-primary:hover::after,
+.sifit-hero-search-btn:hover::after,
+.btn-add-cart:hover::after,
+.sifit-btn-helpdesk-primary:hover::after {
+    transform: rotate(30deg) translateX(100%);
+}
+
+.thm-btn:hover,
+.sifit-btn-hero-primary:hover,
+.sifit-hero-search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(17, 85, 102, 0.25) !important;
+}
+
+/* 7. Image Smooth Zoom on News & Catalog Cards */
+.single-blog-item .img-holder img,
+.sifit-card img {
+    transition: transform 0.45s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+}
+
+.single-blog-item:hover .img-holder img {
+    transform: scale(1.08) !important;
+}
+
+.sifit-card:hover img {
+    transform: scale(1.06) !important;
+}
+
+/* ==========================================================================
+   SCROLL TO TOP BUTTON (SIFIT THEME)
+   ========================================================================== */
+.scroll-to-top {
+    background: var(--sifit-primary) !important;
+    border: 2px solid var(--sifit-accent) !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 15px rgba(17, 85, 102, 0.3) !important;
+    transition: all 0.3s ease !important;
+    width: 44px !important;
+    height: 44px !important;
+    line-height: 40px !important;
+    text-align: center !important;
+    right: 25px !important;
+    bottom: 25px !important;
+    z-index: 9999 !important;
+}
+
+.scroll-to-top:hover {
+    background: var(--sifit-primary-dark) !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 22px rgba(17, 85, 102, 0.45) !important;
+}
+
+.scroll-to-top span,
+.scroll-to-top i,
+.scroll-to-top .fa {
+    color: #ffffff !important;
+    font-size: 16px !important;
+    line-height: 40px !important;
+}
+
+
+

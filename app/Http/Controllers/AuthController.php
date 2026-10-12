@@ -48,7 +48,7 @@ class AuthController extends Controller
             RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
-            return redirect()->intended('/dashboard');
+            return $this->redirectBasedOnRole($request);
         }
 
         RateLimiter::hit($throttleKey, 60);
@@ -130,7 +130,7 @@ class AuthController extends Controller
         RateLimiter::clear($throttleKey);
         Auth::login($user);
 
-        return redirect('/dashboard');
+        return $this->redirectBasedOnRole($request);
     }
 
     /**
@@ -165,7 +165,7 @@ class AuthController extends Controller
             RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
-            return redirect()->intended(route('frontend.home'));
+            return $this->redirectBasedOnRole($request);
         }
 
         RateLimiter::hit($throttleKey, 60);
@@ -217,5 +217,27 @@ class AuthController extends Controller
         Auth::login($user);
 
         return redirect()->route('frontend.home')->with('success', 'Pendaftaran akun berhasil! Selamat datang di SIFIT.');
+    }
+
+    /**
+     * Redirect user based on their role after successful authentication.
+     */
+    protected function redirectBasedOnRole(Request $request): RedirectResponse
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        // Jika user adalah admin atau staf/petugas backend
+        if ($user && ($user->isAdmin() || $user->isStaff())) {
+            return redirect()->intended(route('dashboard'));
+        }
+
+        // Jika user adalah pengunjung / viewer / pelanggan umum
+        $intended = session()->get('url.intended');
+        if ($intended && (str_contains($intended, '/dashboard') || str_contains($intended, '/admin') || str_contains($intended, '/backend'))) {
+            session()->forget('url.intended');
+        }
+
+        return redirect()->intended(route('frontend.home'));
     }
 }

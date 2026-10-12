@@ -21,4 +21,10 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    // Relasi: Satu Kategori bisa memiliki banyak Berita
+    public function news()
+    {
+        return $this->hasMany(News::class);
+    }
 }

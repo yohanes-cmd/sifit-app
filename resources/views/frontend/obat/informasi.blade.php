@@ -1,487 +1,340 @@
 @extends('frontend.layouts.app')
-@section('title', 'Informasi Obat - SIFIT')
+@section('title', 'Informasi Obat & Pedoman DAGUSIBU - SIFIT')
 
 @section('content')
 <style>
-    .sifit-info-intro {
-        padding: 38px 0 32px;
+    .sifit-info-section {
+        padding: 24px 0 45px;
+        background: #f8fafc;
     }
-
-    .sifit-info-intro .sec-title {
-        margin-bottom: 20px;
-    }
-
-    .sifit-info-intro .sec-title p {
-        margin-top: 8px;
-        line-height: 24px;
-    }
-
-    .sifit-info-intro .img-holder {
-        height: 270px;
-        overflow: hidden;
-        border-radius: 6px;
-    }
-
-    .sifit-info-intro .img-holder img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-    .sifit-info-intro .text-holder {
-        padding-left: 15px;
-    }
-
-    .sifit-info-intro .text-holder h2 {
-        margin: 0 0 10px;
-    }
-
-    .sifit-info-intro .text-holder p {
-        line-height: 24px;
-        margin-bottom: 10px;
-    }
-
-    .sifit-information-area {
-        padding: 35px 0 25px;
-    }
-
-    .sifit-information-area .sec-title {
-        margin-bottom: 20px;
-    }
-
-    .sifit-information-area .sec-title p {
-        margin-top: 8px;
-        line-height: 24px;
-    }
-
-    .sifit-information-row {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    .sifit-information-wrapper {
-        display: flex;
-        margin-bottom: 18px;
-    }
-
-    .sifit-information-card {
-        width: 100%;
-        min-height: 170px;
-        margin-bottom: 0 !important;
-        padding: 14px 12px;
-        border: 1px solid #eeeeee;
-        border-radius: 6px;
+    .sifit-info-intro-card {
         background: #ffffff;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 22px 24px;
+        box-shadow: 0 4px 14px rgba(17, 85, 102, 0.04);
+        margin-bottom: 20px;
     }
-
-    .sifit-information-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+    .sifit-feature-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 14px 16px;
+        height: 100%;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        box-shadow: 0 2px 10px rgba(17, 85, 102, 0.03);
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
-
-    .sifit-information-card .iocn-holder {
-        margin-bottom: 8px;
+    .sifit-feature-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(17, 85, 102, 0.08);
+        border-color: var(--sifit-accent);
     }
-
-    .sifit-information-card .iocn-holder span {
-        font-size: 40px;
-    }
-
-    .sifit-information-card .text-holder {
-        padding: 8px 5px 0 !important;
-    }
-
-    .sifit-information-card .text-holder h3 {
-        margin-bottom: 6px;
+    .sifit-feature-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        background: #f0fdfa;
+        border: 1px solid rgba(77, 182, 172, 0.4);
+        color: var(--sifit-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-size: 18px;
-        line-height: 24px;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
     }
-
-    .sifit-information-card .text-holder p {
-        line-height: 22px;
-        margin: 0;
+    .sifit-feature-card:hover .sifit-feature-icon {
+        background: var(--sifit-primary);
+        color: #ffffff;
+        border-color: var(--sifit-primary);
     }
-
-    .sifit-guide-area {
-        padding: 38px 0 45px;
+    .sifit-guide-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 22px 24px;
+        height: 100%;
+        box-shadow: 0 4px 14px rgba(17, 85, 102, 0.04);
     }
-
-    .sifit-guide-area .sec-title {
-        margin-bottom: 12px;
+    .sifit-step-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 18px 0;
     }
-
-    .sifit-guide-area .sec-title h2 {
-        margin-bottom: 6px;
-    }
-
-    .sifit-guide-area p {
-        line-height: 24px;
-        margin-bottom: 10px;
-    }
-
-    .sifit-guide-list {
-        margin-top: 12px;
-    }
-
-    .sifit-guide-list li {
+    .sifit-step-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
         margin-bottom: 8px;
-        line-height: 22px;
-    }
-
-    .sifit-guide-list li i {
-        margin-right: 7px;
-    }
-
-    .sifit-guide-button {
-        margin-top: 15px;
-    }
-
-    .sifit-guide-button .thm-btn {
-        padding: 9px 14px;
         font-size: 13px;
+        color: #334155;
+        line-height: 1.5;
     }
-
-    .sifit-warning-box {
-        padding-left: 18px;
+    .sifit-step-list li i {
+        color: var(--sifit-accent);
+        font-size: 14px;
+        margin-top: 3px;
+        flex-shrink: 0;
     }
-
-    .sifit-warning-box .text {
-        padding: 12px 14px;
-        background: #f8f8f8;
-        border-left: 3px solid #0b98d1;
+    .sifit-notice-box {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-left: 4px solid #f59e0b;
+        border-radius: 6px;
+        padding: 14px 16px;
+        font-size: 12.5px;
+        color: #92400e;
+        line-height: 1.55;
     }
-
-    .sifit-warning-box .text p:last-child {
-        margin-bottom: 0;
-    }
-
-    @media (max-width: 991px) {
-        .sifit-info-intro .text-holder {
-            padding-left: 0;
-            margin-top: 20px;
-        }
-
-        .sifit-warning-box {
-            padding-left: 0;
-            margin-top: 25px;
-        }
-
-        .sifit-info-intro .img-holder {
-            height: 240px;
-        }
-    }
-
     @media (max-width: 767px) {
-        .sifit-info-intro,
-        .sifit-information-area,
-        .sifit-guide-area {
-            padding: 30px 0;
-        }
-
-        .sifit-information-row {
-            display: block;
-        }
-
-        .sifit-information-wrapper {
-            display: block;
-        }
-
-        .sifit-information-card {
-            min-height: auto;
-        }
-
-        .sifit-info-intro .img-holder {
-            height: 220px;
+        .sifit-info-intro-card,
+        .sifit-guide-card {
+            padding: 16px 14px;
         }
     }
 </style>
 
-{{-- BREADCRUMB --}}
-<section class="breadcrumb-area" style="background-image: url('/frontend/images/resources/breadcrumb-bg.jpg');">
+{{-- BREADCRUMB COMPACT --}}
+<section class="breadcrumb-area">
     <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="breadcrumbs wow fadeInUp" data-wow-delay="0.2s">
-                    <h1>Informasi Obat</h1>
-                </div>
+        <div class="sifit-breadcrumb-wrapper">
+            <div class="sifit-breadcrumb-left wow fadeInLeft" data-wow-delay="0.1s">
+                <h1><i class="fa fa-info-circle" style="color: var(--sifit-accent);"></i> Panduan Informasi Obat & DAGUSIBU</h1>
+                <p>Pedoman resmi penggunaan, ketersediaan, dan regulasi kefarmasian Provinsi Riau</p>
             </div>
-        </div>
-    </div>
-
-    <div class="breadcrumb-bottom">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="left pull-left">
-                        <ul>
-                            <li><a href="{{ route('frontend.home') }}">Beranda</a></li>
-                            <li><i class="fa fa-angle-right" aria-hidden="true"></i></li>
-                            <li><a href="{{ route('frontend.obat') }}">Data Obat</a></li>
-                            <li><i class="fa fa-angle-right" aria-hidden="true"></i></li>
-                            <li class="active">Informasi Obat</li>
-                        </ul>
-                    </div>
-                </div>
+            <div class="sifit-breadcrumb-right wow fadeInRight" data-wow-delay="0.1s">
+                <ul class="sifit-breadcrumb-list">
+                    <li><a href="{{ route('frontend.home') }}"><i class="fa fa-home"></i> Beranda</a></li>
+                    <li><i class="fa fa-angle-right"></i></li>
+                    <li><a href="{{ route('frontend.obat') }}">Data Obat</a></li>
+                    <li><i class="fa fa-angle-right"></i></li>
+                    <li class="active">Informasi Obat</li>
+                </ul>
             </div>
         </div>
     </div>
 </section>
 
-{{-- INTRO --}}
-<section class="welcome-area sifit-info-intro">
+{{-- KONTEN UTAMA --}}
+<section class="sifit-info-section">
     <div class="container">
 
-        <div class="sec-title wow fadeInUp" data-wow-delay="0.2s">
-            <h1>Informasi Obat di SIFIT</h1>
-            <span class="border"></span>
-            <p>
-                SIFIT menyediakan informasi obat untuk membantu masyarakat
-                memperoleh data obat secara lebih mudah dan terstruktur.
-            </p>
-        </div>
-
-        <div class="row">
-
-            <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
-                <div class="img-holder wow fadeInLeft" data-wow-delay="0.3s">
-                    <img
-                        src="{{ asset('frontend/images/resources/welcome.jpg') }}"
-                        alt="Informasi Obat SIFIT"
-                    >
-                </div>
-            </div>
-
-            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
-                <div class="text-holder wow fadeInRight" data-wow-delay="0.3s">
-
-                    <h2>Tentang Informasi Obat</h2>
-
-                    <p>
-                        Informasi obat pada SIFIT menampilkan data obat yang
-                        telah tersedia di dalam sistem seperti nama obat,
-                        kategori, harga, stok, satuan, dan ketentuan resep.
-                    </p>
-
-                    <p>
-                        Informasi tersebut membantu pengguna memahami data obat
-                        yang tersedia secara lebih ringkas dan terstruktur.
-                    </p>
-
-                    <p>
-                        Untuk melihat informasi masing-masing obat secara lengkap,
-                        pengguna dapat membuka halaman Data Obat lalu memilih obat
-                        yang ingin dilihat.
-                    </p>
-
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-</section>
-
-{{-- INFORMASI YANG TERSEDIA --}}
-<section class="medical-departments-area sifit-information-area">
-    <div class="container">
-
-        <div class="sec-title mar0auto text-center wow fadeInUp" data-wow-delay="0.2s">
-            <h1>Informasi yang Tersedia</h1>
-            <span class="border"></span>
-            <p>
-                Informasi utama yang dapat dilihat melalui data obat pada SIFIT.
-            </p>
-        </div>
-
-        <div class="row sifit-information-row">
-
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 sifit-information-wrapper">
-                <div class="single-item text-center sifit-information-card wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="iocn-holder">
-                        <span class="flaticon-medical"></span>
+        {{-- BAGIAN 1: PENGANTAR RESMI (Compact Unified Card) --}}
+        <div class="sifit-info-intro-card wow fadeInUp" data-wow-delay="0.05s">
+            <div class="row" style="display: flex; align-items: center; flex-wrap: wrap;">
+                
+                {{-- Kolom Kiri: Kredensial --}}
+                <div class="col-lg-5 col-md-5 col-sm-12" style="margin-bottom: 12px;">
+                    <div class="sifit-official-badge-card" style="margin: 0; width: 100%;">
+                        <div class="card-crest">
+                            <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="Logo SIFIT" class="emblem-sifit" style="height: 60px;">
+                        </div>
+                        <div class="card-body-text">
+                            <span class="badge-label"><i class="fa fa-heartbeat"></i> Edukasi Kefarmasian Resmi</span>
+                            <h3 style="font-size: 16px; margin: 0 0 2px;">Pedoman Obat SIFIT</h3>
+                            <p class="instansi" style="margin-bottom: 8px;">Dinas Kesehatan Pemerintah Provinsi Riau</p>
+                            <div class="card-features">
+                                <div class="feat-item">
+                                    <i class="fa fa-check-circle"></i>
+                                    <span>Informasi Indikasi & Kategori Obat</span>
+                                </div>
+                                <div class="feat-item">
+                                    <i class="fa fa-check-circle"></i>
+                                    <span>Ketentuan Resep Dokter & Obat Bebas</span>
+                                </div>
+                                <div class="feat-item">
+                                    <i class="fa fa-check-circle"></i>
+                                    <span>Prinsip Keamanan DAGUSIBU Kemenkes</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer-info" style="padding: 8px 14px;">
+                            <span class="motto" style="font-size: 11.5px;">"Gunakan Obat Secara Tepat, Aman, dan Rasional"</span>
+                        </div>
                     </div>
-                    <div class="text-holder">
-                        <h3>Nama Obat</h3>
-                        <p>
-                            Menampilkan nama obat yang telah tercatat
-                            dan dipublikasikan di dalam sistem.
+                </div>
+
+                {{-- Kolom Kanan: Narasi Ringkas --}}
+                <div class="col-lg-7 col-md-7 col-sm-12">
+                    <div style="padding-left: 10px;">
+                        <span class="sifit-section-tag" style="margin-bottom: 6px;">Transparansi Data</span>
+                        <h2 style="font-size: 20px; font-weight: 800; color: #1e293b; margin: 0 0 10px; line-height: 1.35;">
+                            Direktori & Standarisasi Data Obat SIFIT Riau
+                        </h2>
+                        <p style="font-size: 13.5px; color: #64748b; line-height: 1.6; margin-bottom: 12px;">
+                            SIFIT menyajikan data obat yang dikelola langsung oleh instalasi farmasi Dinas Kesehatan Provinsi Riau. Melalui sistem ini, masyarakat dan fasilitas kesehatan dapat mengetahui informasi nama obat, indikasi terapi, harga resmi, stok ketersediaan, serta ketentuan resep dokter secara transparan.
                         </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 sifit-information-wrapper">
-                <div class="single-item text-center sifit-information-card wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="iocn-holder">
-                        <span class="flaticon-agenda"></span>
-                    </div>
-                    <div class="text-holder">
-                        <h3>Kategori Obat</h3>
-                        <p>
-                            Mengelompokkan obat berdasarkan kategori
-                            agar informasi lebih mudah ditemukan.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 sifit-information-wrapper">
-                <div class="single-item text-center sifit-information-card wow fadeInUp" data-wow-delay="0.4s">
-                    <div class="iocn-holder">
-                        <span class="flaticon-technology"></span>
-                    </div>
-                    <div class="text-holder">
-                        <h3>Harga Obat</h3>
-                        <p>
-                            Menampilkan informasi harga berdasarkan
-                            data obat yang tersimpan di dalam SIFIT.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 sifit-information-wrapper">
-                <div class="single-item text-center sifit-information-card wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="iocn-holder">
-                        <span class="flaticon-plus-symbol"></span>
-                    </div>
-                    <div class="text-holder">
-                        <h3>Stok Obat</h3>
-                        <p>
-                            Memberikan informasi jumlah stok obat
-                            yang tercatat pada sistem.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 sifit-information-wrapper">
-                <div class="single-item text-center sifit-information-card wow fadeInUp" data-wow-delay="0.6s">
-                    <div class="iocn-holder">
-                        <span class="flaticon-ribbon"></span>
-                    </div>
-                    <div class="text-holder">
-                        <h3>Satuan Obat</h3>
-                        <p>
-                            Menampilkan satuan obat seperti tablet,
-                            strip, botol, atau satuan lainnya.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 sifit-information-wrapper">
-                <div class="single-item text-center sifit-information-card wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="iocn-holder">
-                        <span class="flaticon-medical-1"></span>
-                    </div>
-                    <div class="text-holder">
-                        <h3>Ketentuan Resep</h3>
-                        <p>
-                            Memberikan keterangan apakah obat
-                            memerlukan resep dokter atau tidak.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-</section>
-
-{{-- CARA MENCARI --}}
-<section class="service-area sifit-guide-area">
-    <div class="container">
-        <div class="row">
-
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <div class="wow fadeInLeft" data-wow-delay="0.3s">
-
-                    <div class="sec-title">
-                        <h2>Cara Mencari Informasi Obat</h2>
-                        <span class="border"></span>
-                    </div>
-
-                    <div class="text">
-
-                        <p>
-                            Pengguna dapat mencari obat melalui halaman Data Obat
-                            dengan memasukkan nama obat atau memilih kategori yang tersedia.
+                        <p style="font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 16px;">
+                            Setiap data obat yang terdaftar telah melalui proses verifikasi kefarmasian guna menjamin keaslian, kepatuhan regulasi, serta keselamatan penggunaan oleh pasien.
                         </p>
 
-                        <ul class="sifit-guide-list">
-
-                            <li>
-                                <i class="fa fa-check" aria-hidden="true"></i>
-                                Buka halaman Data Obat.
-                            </li>
-
-                            <li>
-                                <i class="fa fa-check" aria-hidden="true"></i>
-                                Masukkan nama obat pada kolom pencarian.
-                            </li>
-
-                            <li>
-                                <i class="fa fa-check" aria-hidden="true"></i>
-                                Gunakan kategori untuk mempersempit pencarian.
-                            </li>
-
-                            <li>
-                                <i class="fa fa-check" aria-hidden="true"></i>
-                                Klik nama atau gambar obat untuk melihat detail.
-                            </li>
-
-                        </ul>
-
-                        <div class="sifit-guide-button">
-                            <a href="{{ route('frontend.obat') }}" class="thm-btn bgclr-1">
-                                Lihat Data Obat
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <a href="{{ route('frontend.obat') }}" class="thm-btn" style="padding: 8px 18px; font-size: 12.5px; border-radius: 4px;">
+                                <i class="fa fa-medkit"></i> Buka Katalog Obat
+                            </a>
+                            <a href="{{ route('frontend.contact') }}" class="btn-style-two" style="padding: 8px 16px; font-size: 12.5px; text-decoration: none; border-radius: 4px;">
+                                <i class="fa fa-phone"></i> Konsultasi Farmasi
                             </a>
                         </div>
-
                     </div>
+                </div>
 
+            </div>
+        </div>
+
+        {{-- BAGIAN 2: 6 INFORMASI YANG TERSEDIA (Compact 3x2 Grid) --}}
+        <div style="margin-bottom: 20px;">
+            <div style="margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                <div>
+                    <h3 style="font-size: 17px; font-weight: 800; color: var(--sifit-primary); margin: 0;">
+                        Komponen Informasi Obat Terdaftar
+                    </h3>
+                    <span style="font-size: 12px; color: #64748b;">Parameter data utama yang dapat diakses pengguna pada setiap rincian obat</span>
                 </div>
             </div>
 
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-
-                <div class="sifit-warning-box wow fadeInRight" data-wow-delay="0.3s">
-
-                    <div class="sec-title">
-                        <h2>Perhatian</h2>
-                        <span class="border"></span>
+            <div class="row" style="display: flex; flex-wrap: wrap;">
+                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="0.05s" style="display: flex; margin-bottom: 12px;">
+                    <div class="sifit-feature-card" style="width: 100%;">
+                        <div class="sifit-feature-icon">
+                            <i class="fa fa-medkit"></i>
+                        </div>
+                        <div>
+                            <strong style="color: #1e293b; font-size: 13.5px; display: block; margin-bottom: 2px;">Nama Obat & Zat Aktif</strong>
+                            <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.45;">Nama dagang, bentuk generik, dan komposisi zat aktif terdaftar.</p>
+                        </div>
                     </div>
-
-                    <div class="text">
-
-                        <p>
-                            Informasi obat yang tersedia pada SIFIT bersifat informatif
-                            dan bukan sebagai pengganti konsultasi dengan dokter,
-                            apoteker, atau tenaga kesehatan.
-                        </p>
-
-                        <p>
-                            Penggunaan obat harus tetap mengikuti petunjuk pada kemasan,
-                            resep dokter, serta arahan tenaga kesehatan yang berwenang.
-                        </p>
-
-                        <p>
-                            Jangan menggunakan obat hanya berdasarkan informasi pada
-                            website apabila obat tersebut membutuhkan pemeriksaan
-                            atau resep dari tenaga kesehatan.
-                        </p>
-
-                    </div>
-
                 </div>
 
+                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="0.1s" style="display: flex; margin-bottom: 12px;">
+                    <div class="sifit-feature-card" style="width: 100%;">
+                        <div class="sifit-feature-icon">
+                            <i class="fa fa-th-list"></i>
+                        </div>
+                        <div>
+                            <strong style="color: #1e293b; font-size: 13.5px; display: block; margin-bottom: 2px;">Kategori & Golongan</strong>
+                            <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.45;">Pengelompokan indikasi terapi seperti analgesik, antibiotik, dsb.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="0.15s" style="display: flex; margin-bottom: 12px;">
+                    <div class="sifit-feature-card" style="width: 100%;">
+                        <div class="sifit-feature-icon">
+                            <i class="fa fa-tag"></i>
+                        </div>
+                        <div>
+                            <strong style="color: #1e293b; font-size: 13.5px; display: block; margin-bottom: 2px;">Harga Terstandar</strong>
+                            <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.45;">Transparansi harga satuan resmi farmasi Dinas Kesehatan Riau.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="0.2s" style="display: flex; margin-bottom: 12px;">
+                    <div class="sifit-feature-card" style="width: 100%;">
+                        <div class="sifit-feature-icon">
+                            <i class="fa fa-cubes"></i>
+                        </div>
+                        <div>
+                            <strong style="color: #1e293b; font-size: 13.5px; display: block; margin-bottom: 2px;">Stok Ketersediaan</strong>
+                            <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.45;">Kuantitas stok riil pada fasilitas instalasi farmasi penyedia.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="0.25s" style="display: flex; margin-bottom: 12px;">
+                    <div class="sifit-feature-card" style="width: 100%;">
+                        <div class="sifit-feature-icon">
+                            <i class="fa fa-balance-scale"></i>
+                        </div>
+                        <div>
+                            <strong style="color: #1e293b; font-size: 13.5px; display: block; margin-bottom: 2px;">Bentuk & Satuan Kemasan</strong>
+                            <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.45;">Bentuk sediaan seperti tablet, strip, botol, ampul, atau blister.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="0.3s" style="display: flex; margin-bottom: 12px;">
+                    <div class="sifit-feature-card" style="width: 100%;">
+                        <div class="sifit-feature-icon">
+                            <i class="fa fa-file-text-o"></i>
+                        </div>
+                        <div>
+                            <strong style="color: #1e293b; font-size: 13.5px; display: block; margin-bottom: 2px;">Ketentuan Regulasi Resep</strong>
+                            <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.45;">Klasifikasi obat bebas, bebas terbatas, atau wajib resep dokter.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- BAGIAN 3: PANDUAN PENCARIAN & PERHATIAN (Side-by-Side Balanced Cards) --}}
+        <div class="row">
+            
+            {{-- Panduan Cara Mencari --}}
+            <div class="col-lg-6 col-md-6 col-sm-12 wow fadeInLeft" data-wow-delay="0.1s" style="margin-bottom: 16px;">
+                <div class="sifit-guide-card">
+                    <h3 style="font-size: 16px; font-weight: 800; color: var(--sifit-primary); margin: 0 0 8px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa fa-search" style="color: var(--sifit-accent);"></i> Cara Mencari Informasi Obat
+                    </h3>
+                    <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin-bottom: 14px;">
+                        Ikuti langkah mudah berikut untuk menemukan informasi obat yang Anda perlukan:
+                    </p>
+
+                    <ul class="sifit-step-list">
+                        <li>
+                            <i class="fa fa-check-circle"></i>
+                            <span>Buka halaman <strong>Data Obat</strong> melalui menu navigasi utama.</span>
+                        </li>
+                        <li>
+                            <i class="fa fa-check-circle"></i>
+                            <span>Ketikkan nama obat, merk dagang, atau zat aktif pada kolom pencarian.</span>
+                        </li>
+                        <li>
+                            <i class="fa fa-check-circle"></i>
+                            <span>Gunakan filter kategori di sebelah kiri untuk mempersempit daftar.</span>
+                        </li>
+                        <li>
+                            <i class="fa fa-check-circle"></i>
+                            <span>Klik kartu obat untuk melihat keterangan lengkap dan aturan pemakaian.</span>
+                        </li>
+                    </ul>
+
+                    <a href="{{ route('frontend.obat') }}" class="thm-btn" style="padding: 8px 18px; font-size: 12.5px; border-radius: 4px; text-decoration: none;">
+                        <i class="fa fa-arrow-right" style="margin-right: 4px;"></i> Telusuri Katalog Obat Sekarang
+                    </a>
+                </div>
+            </div>
+
+            {{-- Perhatian & Ketentuan Keamanan --}}
+            <div class="col-lg-6 col-md-6 col-sm-12 wow fadeInRight" data-wow-delay="0.15s" style="margin-bottom: 16px;">
+                <div class="sifit-guide-card">
+                    <h3 style="font-size: 16px; font-weight: 800; color: #991b1b; margin: 0 0 8px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa fa-exclamation-triangle" style="color: #dc2626;"></i> Perhatian & Keamanan Pasien
+                    </h3>
+                    <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin-bottom: 12px;">
+                        Harap perhatikan ketentuan penting dalam penggunaan informasi kefarmasian:
+                    </p>
+
+                    <div class="sifit-notice-box">
+                        <div style="margin-bottom: 8px;">
+                            <strong>1. Bukan Pengganti Konsultasi Medis:</strong> Informasi obat pada portal ini bersifat edukatif dan tidak menggantikan anjuran dokter atau apoteker.
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <strong>2. Kepatuhan Resep Dokter:</strong> Obat bertanda resep dokter wajib disertai instruksi sah dari tenaga medis berwenang sebelum penyerahan.
+                        </div>
+                        <div>
+                            <strong>3. Prinsip DAGUSIBU:</strong> Pastikan Anda selalu <em>Dapatkan, Gunakan, Simpan, dan Buang</em> obat sesuai tata cara baku Kementerian Kesehatan.
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
+
     </div>
 </section>
 @endsection

@@ -10,6 +10,7 @@ use App\Models\Opd;
 use App\Models\StokObat;
 use App\Models\Transaksi;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
@@ -18,8 +19,14 @@ class DashboardController extends Controller
     /**
      * Display admin dashboard overview.
      */
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
+        /** @var User|null $user */
+        $user = auth()->user();
+        if ($user && ! $user->isAdmin() && ! $user->isStaff()) {
+            return redirect()->route('frontend.home')->with('error', 'Halaman panel admin hanya diperuntukkan bagi petugas.');
+        }
+
         // 1. Metrik Utama
         $totalMasterObat = MasterObat::count();
         $totalStokObat = (int) StokObat::sum('jumlah');

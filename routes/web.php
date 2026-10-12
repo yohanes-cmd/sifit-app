@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontendProfileController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\StokObatController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
 use App\Models\Category;
+use App\Models\GaleriAlbum;
 use App\Models\News;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +43,9 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/admin', fn () => redirect()->route('dashboard'))->name('admin');
+    Route::get('/backend', fn () => redirect()->route('dashboard'))->name('backend');
+    Route::get('/backend/admin', fn () => redirect()->route('dashboard'))->name('backend.admin');
 
     // Profil Pengguna (Backend & Frontend)
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
@@ -134,7 +139,7 @@ Route::get('/about/faq', function () {
 })->name('frontend.about.faq');
 
 Route::get('/about/galeri', function () {
-    $galeri = collect();
+    $galeri = GaleriAlbum::latest('id_album')->paginate(12);
 
     return view('frontend.about.galeri', compact('galeri'));
 })->name('frontend.about.galeri');
@@ -157,6 +162,13 @@ Route::get('/obat/informasi', function () {
 
 Route::get('/obat/{slug}', [ProductController::class, 'frontendShow'])
     ->name('frontend.obat.detail');
+
+// Fitur Keranjang Belanja / Permintaan Obat
+Route::get('/keranjang', [CartController::class, 'index'])->name('frontend.cart.index');
+Route::post('/keranjang/tambah/{id}', [CartController::class, 'add'])->name('frontend.cart.add');
+Route::post('/keranjang/update', [CartController::class, 'update'])->name('frontend.cart.update');
+Route::delete('/keranjang/hapus/{id}', [CartController::class, 'remove'])->name('frontend.cart.remove');
+Route::get('/keranjang/kosongkan', [CartController::class, 'clear'])->name('frontend.cart.clear');
 
 Route::get('/kontak', function () {
     return view('frontend.contact.index');

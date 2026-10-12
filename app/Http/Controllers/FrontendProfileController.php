@@ -4,21 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\View\View;
 
 class FrontendProfileController extends Controller
 {
     /**
      * Display the frontend user profile page.
      */
-    public function index(): View
+    public function index(): Response
     {
         $user = Auth::user()->load('roles');
 
-        return view('frontend.profile.index', compact('user'));
+        return response()
+            ->view('frontend.profile.index', compact('user'))
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
     /**
