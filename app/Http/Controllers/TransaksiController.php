@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\DetailTransaksi;
 use App\Models\Gudang;
 use App\Models\MasterObat;
+use App\Models\Opd;
 use App\Models\Pemasok;
+use App\Models\Pengangkut;
+use App\Models\Program;
+use App\Models\StokObat;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -171,7 +175,6 @@ class TransaksiController extends Controller
             $currentTransaksi = null;
 
             while (($row = fgetcsv($file)) !== false) {
-                // Skip baris yang terlalu pendek
                 if (count($row) < 7) {
                     $skippedRows++;
 
@@ -188,15 +191,13 @@ class TransaksiController extends Controller
                 $jumlah = isset($row[7]) ? (int) trim($row[7]) : 1;
                 $catatan = isset($row[8]) ? trim($row[8]) : null;
 
-                // Cari master obat berdasarkan kode_obat
                 $masterObat = MasterObat::where('kode_obat', $kodeObat)->first();
                 if (! $masterObat) {
                     $skippedRows++;
 
-                    continue; // Lewati baris jika kode_obat tidak ditemukan
+                    continue;
                 }
 
-                // Buat transaksi baru hanya jika nomor_surat berbeda
                 if ($currentNomorSurat !== $nomorSurat) {
                     $currentNomorSurat = $nomorSurat;
                     $currentTransaksi = Transaksi::create([
@@ -245,8 +246,11 @@ class TransaksiController extends Controller
     {
         $masterObats = MasterObat::all();
         $gudangs = Gudang::all();
+        $programs = Program::all();
+        $pengangkuts = Pengangkut::all();
+        $instansis = Opd::all(); // Menggunakan Model Opd untuk tabel opds
 
-        return view('transaksi.pengeluaran.create', compact('masterObats', 'gudangs'));
+        return view('transaksi.pengeluaran.create', compact('masterObats', 'gudangs', 'programs', 'pengangkuts', 'instansis'));
     }
 
     public function storePengeluaran(Request $request)
@@ -254,10 +258,21 @@ class TransaksiController extends Controller
         $request->validate([
             'tanggal' => 'required|date',
             'nomor_surat' => 'required|string',
-            'gudang_asal_id' => 'required|exists:gudangs,id',
-            'master_obat_id' => 'required|exists:master_obats,id',
-            'no_batch' => 'required|string',
-            'jumlah' => 'required|integer|min:1',
+            'gudang_id' => 'required|exists:gudangs,id',
+            'program_id' => 'required|exists:programs,id',
+            'pengangkut_id' => 'required|exists:pengangkuts,id',
+            'instansi_id' => 'required|exists:opds,id',
+            'pajak_invoice' => 'required|string',
+            'biaya_kirim' => 'nullable|numeric',
+            'catatan' => 'nullable|string',
+            'master_obat_id' => 'required|array|min:1',
+            'master_obat_id.*' => 'required|exists:master_obats,id',
+            'no_batch' => 'nullable|array',
+            'no_batch.*' => 'nullable|string',
+            'jumlah' => 'required|array|min:1',
+            'jumlah.*' => 'required|integer|min:1',
+            'harga_satuan' => 'required|array|min:1',
+            'harga_satuan.*' => 'required|numeric|min:0',
         ]);
 
         DB::beginTransaction();
@@ -266,25 +281,47 @@ class TransaksiController extends Controller
                 'nomor_surat' => $request->nomor_surat,
                 'tanggal' => $request->tanggal,
                 'jenis_transaksi' => 'pengeluaran',
-                'gudang_asal_id' => $request->gudang_asal_id,
+                'gudang_asal_id' => $request->gudang_id,
                 'gudang_tujuan_id' => null,
+                'program_id' => $request->program_id,
+                'pengangkut_id' => $request->pengangkut_id,
+                'instansi_id' => $request->instansi_id,
+                'pajak_invoice' => $request->pajak_invoice,
+                'biaya_kirim' => $request->biaya_kirim ?? 0,
+                'catatan' => $request->catatan,
                 'user_id' => Auth::id(),
             ]);
 
-            DetailTransaksi::create([
-                'transaksi_id' => $transaksi->id,
-                'master_obat_id' => $request->master_obat_id,
-                'no_batch' => $request->no_batch,
-                'jumlah' => $request->jumlah,
-            ]);
+            foreach ($request->master_obat_id as $index => $obatId) {
+                $noBatch = ! empty($request->no_batch[$index]) ? $request->no_batch[$index] : null;
+                $stokTersedia = null;
+
+                if (! $noBatch) {
+                    $stokTersedia = StokObat::where('master_obat_id', $obatId)
+                        ->where('gudang_id', $request->gudang_id)
+                        ->where('jumlah', '>', 0)
+                        ->orderBy('exp_date', 'asc')
+                        ->first();
+                    $noBatch = $stokTersedia ? $stokTersedia->no_batch : '-';
+                }
+
+                DetailTransaksi::create([
+                    'transaksi_id' => $transaksi->id,
+                    'master_obat_id' => $obatId,
+                    'no_batch' => $noBatch,
+                    'exp_date' => $stokTersedia?->exp_date,
+                    'jumlah' => $request->jumlah[$index],
+                    'harga_satuan' => $request->harga_satuan[$index],
+                ]);
+            }
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'Pengeluaran berhasil! Silakan cek halaman Daftar Stok, pasti jumlahnya otomatis berkurang.');
+            return redirect()->back()->with('success', 'Pengeluaran berhasil disimpan dan diproses!');
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return redirect()->back()->with('error', 'Gagal menyimpan transaksi: '.$e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan transaksi: '.$e->getMessage());
         }
     }
 
@@ -371,9 +408,10 @@ class TransaksiController extends Controller
     {
         try {
             $transaksi->delete();
+
             return redirect()->route('pemindahan.index')->with('success', 'Data transaksi pemindahan berhasil dihapus. Stok terkait otomatis dikembalikan.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menghapus transaksi: '.$e->getMessage());
+        } catch (\Exception $eb) {
+            return redirect()->back()->with('error', 'Gagal menghapus transaksi: '.$eb->getMessage());
         }
     }
 }
