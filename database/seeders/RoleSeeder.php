@@ -21,6 +21,7 @@ class RoleSeeder extends Seeder
             'validator',
             'publisher',
             'operator',
+            'opd',
             'viewer',
         ];
 

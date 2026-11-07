@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\MasterObatExport;
 use App\Models\MasterObat;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,7 @@ class MasterObatController extends Controller
     {
         $search = $request->get('search');
 
-        $query = MasterObat::latest();
+        $query = MasterObat::withSum('stokObats as total_stok', 'jumlah')->latest();
 
         if (! empty($search)) {
             $query->where(function ($q) use ($search) {
@@ -79,6 +80,7 @@ class MasterObatController extends Controller
             'kode_obat' => 'required|string|max:100|unique:master_obats,kode_obat',
             'nama_obat' => 'required|string|max:255',
             'kode_kemkes' => 'nullable|string|max:100',
+            'batch_obat' => 'nullable|string|max:100',
             'kategori' => 'required|in:Obat,Logistik',
             'satuan' => 'nullable|string|max:50',
             'harga' => 'nullable|numeric|min:0',
@@ -93,10 +95,15 @@ class MasterObatController extends Controller
         ]);
 
         $validated['slug'] = Str::slug($validated['nama_obat']).'-'.time();
+        $validated['kode_kemkes'] = $request->input('kode_kemkes') ?: $request->input('batch_obat');
+        unset($validated['batch_obat']);
         $validated['satuan'] = $validated['satuan'] ?? 'Pcs';
         $validated['harga'] = $validated['harga'] ?? 0;
         $validated['status'] = $validated['status'] ?? 'published';
-        $validated['requires_prescription'] = $request->has('requires_prescription');
+
+        // Regulasi Kefarmasian: Jika jenis Obat Keras dipilih, mutlak wajib resep dokter
+        $isKeras = $request->input('golongan_obat') === 'Obat Keras' || $request->boolean('requires_prescription');
+        $validated['requires_prescription'] = $isKeras;
 
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
@@ -108,6 +115,14 @@ class MasterObatController extends Controller
         MasterObat::create($validated);
 
         return redirect()->route('master-obat.index')->with('success', 'Master Obat/Logistik berhasil ditambahkan ke katalog!');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(int $id): RedirectResponse
+    {
+        return redirect()->route('master-obat.edit', $id);
     }
 
     /**
@@ -146,6 +161,7 @@ class MasterObatController extends Controller
             'kode_obat' => 'required|string|max:100|unique:master_obats,kode_obat,'.$id,
             'nama_obat' => 'required|string|max:255',
             'kode_kemkes' => 'nullable|string|max:100',
+            'batch_obat' => 'nullable|string|max:100',
             'kategori' => 'required|in:Obat,Logistik',
             'satuan' => 'nullable|string|max:50',
             'harga' => 'nullable|numeric|min:0',
@@ -160,10 +176,15 @@ class MasterObatController extends Controller
         ]);
 
         $validated['slug'] = Str::slug($validated['nama_obat']).'-'.time();
+        $validated['kode_kemkes'] = $request->input('kode_kemkes') ?: $request->input('batch_obat');
+        unset($validated['batch_obat']);
         $validated['satuan'] = $validated['satuan'] ?? $masterObat->satuan ?? 'Pcs';
         $validated['harga'] = $validated['harga'] ?? $masterObat->harga ?? 0;
         $validated['status'] = $validated['status'] ?? $masterObat->status ?? 'published';
-        $validated['requires_prescription'] = $request->has('requires_prescription');
+
+        // Regulasi Kefarmasian: Jika jenis Obat Keras dipilih, mutlak wajib resep dokter
+        $isKeras = $request->input('golongan_obat') === 'Obat Keras' || $request->boolean('requires_prescription');
+        $validated['requires_prescription'] = $isKeras;
 
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
@@ -237,5 +258,26 @@ class MasterObatController extends Controller
         $masterObats = $query->get(); // Get all without pagination
 
         return view('master-obat.print', compact('masterObats'));
+    }
+
+    /**
+     * Saklar Cepat (1-Click Toggle): Ubah status publikasi etalase katalog.
+     */
+    public function toggleStatus(Request $request, int $id): JsonResponse|RedirectResponse
+    {
+        $masterObat = MasterObat::findOrFail($id);
+        $newStatus = ($masterObat->status === 'published') ? 'draft' : 'published';
+        $masterObat->update(['status' => $newStatus]);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'status' => $newStatus,
+                'is_published' => ($newStatus === 'published'),
+                'message' => 'Status etalase '.$masterObat->nama_obat.' berhasil diubah menjadi: '.($newStatus === 'published' ? 'Published (Tayang di Katalog Publik)' : 'Unpublished (Disembunyikan dari Publik)'),
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Status etalase obat '.$masterObat->nama_obat.' berhasil diubah menjadi: '.($newStatus === 'published' ? 'Published' : 'Draft / Unpublished'));
     }
 }

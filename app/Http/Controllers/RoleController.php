@@ -32,7 +32,62 @@ class RoleController extends Controller
                 ->make(true);
         }
 
-        return view('roles.index');
+        $permissionGroups = [
+            'Transaksi & Distribusi Farmasi' => [
+                'permohonan' => [
+                    'label' => 'Permohonan Obat (OPD)',
+                    'actions' => ['view' => 'Lihat', 'create' => 'Tambah', 'edit' => 'Edit', 'delete' => 'Hapus', 'verify' => 'Verifikasi', 'print' => 'Cetak'],
+                ],
+                'pengeluaran' => [
+                    'label' => 'Pengeluaran Obat (SBBK)',
+                    'actions' => ['view' => 'Lihat', 'create' => 'Realisasi / SBBK', 'delete' => 'Hapus', 'print' => 'Cetak SBBK'],
+                ],
+                'pemasukan' => [
+                    'label' => 'Pemasukan Obat (Gudang)',
+                    'actions' => ['view' => 'Lihat', 'create' => 'Tambah', 'delete' => 'Hapus', 'import' => 'Import', 'print' => 'Cetak'],
+                ],
+                'pemindahan' => [
+                    'label' => 'Pemindahan Antar Gudang',
+                    'actions' => ['view' => 'Lihat', 'create' => 'Tambah', 'delete' => 'Hapus', 'print' => 'Cetak'],
+                ],
+            ],
+            'Master & Stok Obat' => [
+                'master-obat' => [
+                    'label' => 'Master Obat & Alkes',
+                    'actions' => ['view' => 'Lihat', 'create' => 'Tambah', 'edit' => 'Edit', 'delete' => 'Hapus', 'export' => 'Export'],
+                ],
+                'stok-obat' => [
+                    'label' => 'Stok & Kartu Stok',
+                    'actions' => ['view' => 'Lihat', 'create' => 'Tambah', 'edit' => 'Edit', 'delete' => 'Hapus', 'export' => 'Export', 'print' => 'Cetak'],
+                ],
+            ],
+            'Master OPD & Wilayah' => [
+                'opd' => [
+                    'label' => 'Master OPD / Instansi',
+                    'actions' => ['view' => 'Lihat', 'create' => 'Tambah', 'edit' => 'Edit', 'delete' => 'Hapus', 'import' => 'Import'],
+                ],
+            ],
+            'Manajemen Pengguna & Sistem' => [
+                'user' => [
+                    'label' => 'Pengguna (User)',
+                    'actions' => ['view' => 'Lihat', 'create' => 'Tambah', 'edit' => 'Edit', 'delete' => 'Hapus'],
+                ],
+                'role' => [
+                    'label' => 'Manajemen Role & RBAC',
+                    'actions' => ['view' => 'Lihat', 'create' => 'Tambah', 'edit' => 'Edit', 'delete' => 'Hapus'],
+                ],
+                'pengaturan' => [
+                    'label' => 'Pengaturan Aplikasi',
+                    'actions' => ['view' => 'Lihat', 'manage' => 'Kelola'],
+                ],
+                'berita' => [
+                    'label' => 'Berita & Informasi Portal',
+                    'actions' => ['view' => 'Lihat', 'create' => 'Tambah', 'edit' => 'Edit', 'delete' => 'Hapus'],
+                ],
+            ],
+        ];
+
+        return view('roles.index', compact('permissionGroups'));
     }
 
     public function store(Request $request)

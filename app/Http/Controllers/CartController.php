@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\MasterObat;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -12,20 +12,11 @@ class CartController extends Controller
      */
     public function index()
     {
-        $cart = session()->get('cart', []);
-        $total = 0;
-        $totalItems = 0;
-        $hasPrescriptionItem = false;
-
-        foreach ($cart as $item) {
-            $total += $item['price'] * $item['quantity'];
-            $totalItems += $item['quantity'];
-            if (! empty($item['requires_prescription'])) {
-                $hasPrescriptionItem = true;
-            }
+        if (auth()->check()) {
+            return redirect()->route('permohonan.create')->with('info', 'Fitur etalase publik dan keranjang ritel telah dinonaktifkan. Pengajuan kebutuhan obat dilakukan melalui formulir Permohonan Logistik Obat resmi.');
         }
 
-        return view('frontend.cart.index', compact('cart', 'total', 'totalItems', 'hasPrescriptionItem'));
+        return redirect()->route('frontend.obat')->with('info', 'Fitur keranjang ritel telah dinonaktifkan. SIFIT berfokus pada distribusi logistik farmasi instansi.');
     }
 
     /**
@@ -33,44 +24,11 @@ class CartController extends Controller
      */
     public function add(Request $request, $id)
     {
-        $product = Product::with('category')->where('status', 'published')->findOrFail($id);
-
-        $quantity = (int) $request->input('quantity', 1);
-        if ($quantity < 1) {
-            $quantity = 1;
+        if (auth()->check()) {
+            return redirect()->route('permohonan.create')->with('info', 'Permohonan obat resmi diajukan langsung melalui menu Permohonan Obat.');
         }
 
-        // Cek batasan stok jika stok didefinisikan
-        if ($product->stock !== null && $product->stock < $quantity) {
-            return redirect()->back()->with('error', "Stok obat {$product->name} tidak mencukupi (tersedia: {$product->stock}).");
-        }
-
-        $cart = session()->get('cart', []);
-
-        if (isset($cart[$id])) {
-            $newQuantity = $cart[$id]['quantity'] + $quantity;
-            if ($product->stock !== null && $product->stock < $newQuantity) {
-                return redirect()->back()->with('error', "Jumlah melebihi stok yang tersedia (tersedia: {$product->stock}).");
-            }
-            $cart[$id]['quantity'] = $newQuantity;
-        } else {
-            $cart[$id] = [
-                'id' => $product->id,
-                'name' => $product->name,
-                'slug' => $product->slug,
-                'category' => $product->category ? $product->category->name : 'Umum',
-                'price' => (float) $product->price,
-                'unit' => $product->unit ?? 'Satuan',
-                'image' => $product->image,
-                'stock' => $product->stock,
-                'requires_prescription' => (bool) $product->requires_prescription,
-                'quantity' => $quantity,
-            ];
-        }
-
-        session()->put('cart', $cart);
-
-        return redirect()->back()->with('success', "{$product->name} berhasil ditambahkan ke keranjang!");
+        return redirect()->route('frontend.obat')->with('info', 'Fitur keranjang ritel telah dinonaktifkan. Sistem difokuskan pada distribusi logistik resmi.');
     }
 
     /**
@@ -92,8 +50,8 @@ class CartController extends Controller
             }
 
             // Validasi batas stok
-            $product = Product::find($id);
-            if ($product && $product->stock !== null && $product->stock < $quantity) {
+            $product = MasterObat::withSum('stokObats as total_stok', 'jumlah')->find($id);
+            if ($product && $product->stock > 0 && $product->stock < $quantity) {
                 return redirect()->back()->with('error', "Maksimum stok tersedia: {$product->stock}.");
             }
 

@@ -109,12 +109,12 @@
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="display: flex; margin-bottom: 25px;">
                 <div class="single-item text-center wow fadeInUp" data-wow-delay="0.7s" style="width: 100%; min-height: 300px; padding: 28px 22px; margin: 0; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; flex-direction: column; background: #ffffff;">
                     <div class="iocn-holder" style="height: 110px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; background: rgba(17, 85, 102, 0.05); border-radius: 8px;">
-                        <span class="fa fa-shopping-basket" style="font-size: 60px; line-height: 1; color: #115566;"></span>
+                        <span class="fa fa-clipboard-list" style="font-size: 60px; line-height: 1; color: #115566;"></span>
                     </div>
                     <div class="text-holder" style="padding: 0;">
-                        <h3 style="margin-bottom: 10px; color: #115566;">Keranjang Permintaan</h3>
+                        <h3 style="margin-bottom: 10px; color: #115566;">Permohonan Logistik Obat</h3>
                         <p style="margin: 0; line-height: 24px; color: #64748b;">
-                            Fitur pengumpulan obat ke dalam keranjang untuk mempermudah permohonan atau pemeriksaan data obat.
+                            Fitur pengajuan dan verifikasi permohonan obat logistik resmi bagi fasilitas pelayanan kesehatan dan OPD.
                         </p>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
                             </div>
                             <div class="feat-item">
                                 <i class="fa fa-check-circle"></i>
-                                <span>Sistem Keranjang & Pengajuan Kebutuhan Obat</span>
+                                <span>Permohonan Resmi Kebutuhan Logistik Farmasi</span>
                             </div>
                             <div class="feat-item">
                                 <i class="fa fa-check-circle"></i>

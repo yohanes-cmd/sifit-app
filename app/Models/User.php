@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'role',
         'opd',
+        'opd_id',
     ];
 
     protected $hidden = [
@@ -49,13 +50,53 @@ class User extends Authenticatable
         return asset('assets/images/users/avatar-1.jpg');
     }
 
+    public function opdInstansi()
+    {
+        return $this->belongsTo(Opd::class, 'opd_id');
+    }
+
+    public function permohonans()
+    {
+        return $this->hasMany(Permohonan::class, 'user_id');
+    }
+
     /**
-     * Check if user has admin privileges.
+     * Check if user is the Super Admin (Admin Gudang Pusat).
+     * Has full authority over central warehouse stock, supplier receipts, SBBK fulfillment, and system settings.
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole('super_admin')
+            || in_array(strtolower((string) $this->role), ['super_admin', 'superadmin', 'administrator']);
+    }
+
+    /**
+     * Check if user is an OPD Admin (Admin dari tiap-tiap OPD pemohon).
+     * Responsible for submitting drug requests, monitoring status, and printing receipts for their OPD.
+     */
+    public function isAdminOpd(): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return false;
+        }
+
+        return $this->hasAnyRole(['admin', 'opd']) || ! empty($this->opd_id);
+    }
+
+    /**
+     * Alias for isAdminOpd for consistency across permohonan views.
+     */
+    public function isOpd(): bool
+    {
+        return $this->isAdminOpd();
+    }
+
+    /**
+     * Check if user has administrative privileges (either Super Admin or Admin OPD).
      */
     public function isAdmin(): bool
     {
-        return $this->hasAnyRole(['admin', 'super_admin'])
-            || in_array(strtolower((string) $this->role), ['admin', 'super_admin', 'administrator']);
+        return $this->isSuperAdmin() || $this->isAdminOpd();
     }
 
     /**
@@ -63,7 +104,7 @@ class User extends Authenticatable
      */
     public function isStaff(): bool
     {
-        if ($this->isAdmin()) {
+        if ($this->isSuperAdmin()) {
             return true;
         }
 

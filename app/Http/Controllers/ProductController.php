@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\MasterObat;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -128,36 +129,80 @@ class ProductController extends Controller
      */
     public function frontendIndex(Request $request)
     {
-        $query = Product::with(['category', 'user'])
-            ->where('status', 'published')
+        $query = MasterObat::where(function ($q) {
+            $q->where('status', 'published')->orWhereNull('status');
+        })
+            ->withSum('stokObats as total_stok', 'jumlah')
             ->latest();
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%'.$request->search.'%');
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_obat', 'like', "%{$search}%")
+                    ->orWhere('kode_obat', 'like', "%{$search}%")
+                    ->orWhere('kode_kemkes', 'like', "%{$search}%")
+                    ->orWhere('deskripsi', 'like', "%{$search}%");
+            });
         }
 
         if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
+            $query->where('kategori', $request->category);
         }
 
         $products = $query->paginate(9)->withQueryString();
-        $categories = Category::where('type', 'product')->get();
+
+        $categories = MasterObat::whereNotNull('kategori')
+            ->where('kategori', '!=', '')
+            ->distinct()
+            ->pluck('kategori')
+            ->map(function ($kat) {
+                return (object) [
+                    'id' => $kat,
+                    'name' => $kat,
+                ];
+            });
 
         return view('frontend.obat.index', compact('products', 'categories'));
     }
 
     public function frontendShow($slug)
     {
-        $product = Product::with(['category', 'user'])
-            ->where('slug', $slug)
-            ->where('status', 'published')
-            ->firstOrFail();
+        $product = MasterObat::where(function ($q) use ($slug) {
+            $q->where('slug', $slug)->orWhere('id', $slug);
+        })
+            ->where(function ($q) {
+                $q->where('status', 'published')->orWhereNull('status');
+            })
+            ->withSum('stokObats as total_stok', 'jumlah')
+            ->first();
 
-        $relatedProducts = Product::with('category')
-            ->where('status', 'published')
+        if (! $product) {
+            $parts = explode('-', (string) $slug);
+            $lastPart = end($parts);
+            if (is_numeric($lastPart)) {
+                $product = MasterObat::where(function ($q) {
+                    $q->where('status', 'published')->orWhereNull('status');
+                })
+                    ->withSum('stokObats as total_stok', 'jumlah')
+                    ->find($lastPart);
+            }
+        }
+
+        if (! $product) {
+            abort(404);
+        }
+
+        $relatedQuery = MasterObat::where(function ($q) {
+            $q->where('status', 'published')->orWhereNull('status');
+        })
             ->where('id', '!=', $product->id)
-            ->where('category_id', $product->category_id)
-            ->latest()
+            ->withSum('stokObats as total_stok', 'jumlah');
+
+        if (! empty($product->kategori)) {
+            $relatedQuery->where('kategori', $product->kategori);
+        }
+
+        $relatedProducts = $relatedQuery->latest()
             ->take(4)
             ->get();
 

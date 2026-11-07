@@ -227,8 +227,12 @@ class AuthController extends Controller
         /** @var User|null $user */
         $user = Auth::user();
 
-        // Jika user adalah admin atau staf/petugas backend
-        if ($user && ($user->isAdmin() || $user->isStaff())) {
+        // Jika user adalah admin, staf, atau perwakilan OPD
+        if ($user && ($user->isAdmin() || $user->isStaff() || $user->isOpd())) {
+            if ($user->isOpd()) {
+                return redirect()->intended(route('permohonan.index'));
+            }
+
             return redirect()->intended(route('dashboard'));
         }
 

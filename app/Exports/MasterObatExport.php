@@ -34,7 +34,7 @@ class MasterObatExport implements FromCollection, WithHeadings, WithMapping
             'No',
             'Kode Obat/Logistik',
             'Nama Obat/Logistik',
-            'Kode Kemkes',
+            'Batch Obat / Kode Kemkes',
             'Kategori (Jenis)',
             'Satuan',
             'Harga (Rp)',

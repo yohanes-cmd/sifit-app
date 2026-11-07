@@ -117,7 +117,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('master-obat.update', $masterObat->id) }}" method="POST">
+                    <form action="{{ route('master-obat.update', $masterObat->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -144,13 +144,16 @@
                             </div>
                         </div>
 
-                        {{-- 3. Kode Kemkes --}}
-                        <div class="mb-4 row align-items-center">
-                            <label for="kode_kemkes" class="col-sm-3 col-form-label form-label">
-                                Kode Kemkes
+                        {{-- 3. Batch Obat (Obat) / Kode Kemkes (Logistik) --}}
+                        <div class="mb-4 row align-items-center" id="wrapperBatchOrKemkes">
+                            <label for="kode_kemkes" class="col-sm-3 col-form-label form-label" id="labelBatchOrKemkes">
+                                {{ old('kategori', $masterObat->kategori) === 'Logistik' ? 'Kode Kemkes' : 'Batch Obat' }}
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control @error('kode_kemkes') is-invalid @enderror" id="kode_kemkes" name="kode_kemkes" value="{{ old('kode_kemkes', $masterObat->kode_kemkes) }}" placeholder="Contoh: KRD, KN, KM">
+                                <input type="text" class="form-control @error('kode_kemkes') is-invalid @enderror" id="kode_kemkes" name="kode_kemkes" value="{{ old('kode_kemkes', $masterObat->kode_kemkes) }}" placeholder="{{ old('kategori', $masterObat->kategori) === 'Logistik' ? 'Contoh: KRD, KN, KM (Opsional untuk pelaporan Kemkes)' : 'Contoh: BATCH-001, B1234' }}">
+                                <small class="text-muted" id="helpBatchOrKemkes" style="font-size: 11px;">
+                                    {{ old('kategori', $masterObat->kategori) === 'Logistik' ? 'Kode standarisasi Kementerian Kesehatan / KFA untuk barang logistik & alkes.' : 'Nomor batch untuk identifikasi kelompok produksi obat.' }}
+                                </small>
                             </div>
                         </div>
 
@@ -173,6 +176,69 @@
                                         </button>
                                     @endif
                                 </div>
+                            </div>
+                        </div>
+
+                        {{-- 5. Spesifikasi Kemasan & Regulasi Farmasi --}}
+                        <div class="card bg-light border-0 mb-4 p-3 rounded-3" style="background-color: #f8fafc; border: 1px dashed #cbd5e1 !important;">
+                            <h6 class="fw-bold mb-3" style="color: #115566;">
+                                <i class="las la-pills me-1"></i> Spesifikasi Kemasan & Regulasi Distribusi Farmasi
+                            </h6>
+
+                            <input type="hidden" name="status" value="{{ old('status', $masterObat->status ?? 'published') }}">
+                            <input type="hidden" name="harga" value="{{ old('harga', $masterObat->harga ?? 0) }}">
+
+                            <div class="row mb-3">
+                                <div class="col-md-6 mb-2 mb-md-0">
+                                    <label for="satuan" class="form-label">Satuan Kemasan Distribusi</label>
+                                    <input type="text" class="form-control @error('satuan') is-invalid @enderror" id="satuan" name="satuan" value="{{ old('satuan', $masterObat->satuan ?? 'Pcs') }}" placeholder="Contoh: Strip, Botol, Tablet, Box, Ampul, Vial">
+                                    @error('satuan') <span class="text-danger small">{{ $message }}</span> @enderror
+                                </div>
+                                <div class="col-md-6" id="wrapperGolongan">
+                                    <label for="golongan_obat" class="form-label">Golongan Obat & Regulasi Resep <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="golongan_obat" name="golongan_obat" onchange="handleGolonganChange(this.value)">
+                                        <option value="Obat Bebas" {{ old('golongan_obat', $masterObat->requires_prescription ? 'Obat Keras' : 'Obat Bebas') == 'Obat Bebas' ? 'selected' : '' }}>
+                                            Obat Bebas (Tanpa Resep Dokter)
+                                        </option>
+                                        <option value="Obat Bebas Terbatas" {{ old('golongan_obat') == 'Obat Bebas Terbatas' ? 'selected' : '' }}>
+                                            Obat Bebas Terbatas (Tanpa Resep Dokter)
+                                        </option>
+                                        <option value="Obat Keras" {{ old('golongan_obat', $masterObat->requires_prescription ? 'Obat Keras' : '') == 'Obat Keras' ? 'selected' : '' }}>
+                                            Obat Keras (Wajib Resep Dokter)
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 p-2 px-3 rounded-2 border" id="prescriptionAlertBox" style="background-color: #f8fafc; border-color: #cbd5e1 !important;">
+                                <div class="form-check d-flex align-items-center gap-2">
+                                    <input type="checkbox" class="form-check-input mt-0" id="requires_prescription" name="requires_prescription" value="1" {{ old('requires_prescription', $masterObat->requires_prescription) ? 'checked' : '' }}>
+                                    <label class="form-check-label small fw-bold text-dark mb-0" for="requires_prescription" id="prescriptionLabel">
+                                        <i class="las la-file-prescription fs-16 align-middle me-1"></i> Wajib menyertakan Resep Dokter yang Sah
+                                    </label>
+                                </div>
+                                <div class="small text-muted mt-1 ps-4" id="prescriptionHelpText" style="font-size: 11px;">
+                                    Centang jika obat ini memerlukan instruksi atau resep dokter sebelum penyerahan.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="gambar" class="form-label">Foto / Gambar Obat</label>
+                                @if($masterObat->gambar)
+                                    <div class="mb-2 d-flex align-items-center gap-2">
+                                        <img src="{{ $masterObat->thumbnail_url }}" alt="Preview" style="height: 55px; width: 55px; object-fit: contain; border: 1px solid #e2e8f0; border-radius: 6px; padding: 2px; background: #fff;">
+                                        <small class="text-muted">Gambar saat ini. Unggah file baru untuk mengganti.</small>
+                                    </div>
+                                @endif
+                                <input type="file" class="form-control @error('gambar') is-invalid @enderror" id="gambar" name="gambar" accept="image/jpeg,image/png,image/jpg,image/webp">
+                                <small class="text-muted" style="font-size: 11px;">Format JPG, PNG, WEBP. Maks 2MB.</small>
+                                @error('gambar') <div class="text-danger small">{{ $message }}</div> @enderror
+                            </div>
+
+                            <div class="mb-0">
+                                <label for="deskripsi" class="form-label">Deskripsi / Indikasi Farmasi</label>
+                                <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" rows="3" placeholder="Informasi singkat indikasi, petunjuk, atau catatan obat...">{{ old('deskripsi', $masterObat->deskripsi) }}</textarea>
+                                @error('deskripsi') <div class="text-danger small">{{ $message }}</div> @enderror
                             </div>
                         </div>
 
@@ -199,10 +265,39 @@
 
 @push('scripts')
 <script>
+    function handleGolonganChange(val) {
+        const check = document.getElementById('requires_prescription');
+        const alertBox = document.getElementById('prescriptionAlertBox');
+        const helpText = document.getElementById('prescriptionHelpText');
+        const label = document.getElementById('prescriptionLabel');
+
+        if (!check || !alertBox || !helpText) return;
+
+        if (val === 'Obat Keras') {
+            check.checked = true;
+            alertBox.style.backgroundColor = '#fee2e2';
+            alertBox.style.borderColor = '#fecaca';
+            if (label) {
+                label.className = 'form-check-label small fw-bold text-danger mb-0';
+            }
+            helpText.innerHTML = '<strong class="text-danger"><i class="las la-exclamation-circle"></i> Sesuai standar regulasi farmasi Dinkes: Golongan Obat Keras mutlak mewajibkan resep dokter.</strong>';
+        } else {
+            check.checked = false;
+            alertBox.style.backgroundColor = '#f8fafc';
+            alertBox.style.borderColor = '#cbd5e1';
+            if (label) {
+                label.className = 'form-check-label small fw-bold text-dark mb-0';
+            }
+            helpText.innerHTML = '<span class="text-success"><i class="las la-check-circle"></i> Obat golongan bebas dapat diserahkan langsung tanpa resep dokter.</span>';
+        }
+    }
+
     function selectJenis(jenis) {
         const inputKategori = document.getElementById('inputKategori');
         const btnObat = document.getElementById('btnPilihObat');
         const btnLogistik = document.getElementById('btnPilihLogistik');
+        const wrapperGolongan = document.getElementById('wrapperGolongan');
+        const alertBox = document.getElementById('prescriptionAlertBox');
 
         if (inputKategori) {
             inputKategori.value = jenis;
@@ -223,6 +318,40 @@
                 btnLogistik.classList.remove('active-logistik');
             }
         }
+
+        if (wrapperGolongan && alertBox) {
+            if (jenis === 'Logistik') {
+                wrapperGolongan.style.display = 'none';
+                alertBox.style.display = 'none';
+            } else {
+                wrapperGolongan.style.display = 'block';
+                alertBox.style.display = 'block';
+            }
+        }
+
+        const labelBatchOrKemkes = document.getElementById('labelBatchOrKemkes');
+        const inputKodeKemkes = document.getElementById('kode_kemkes');
+        const helpBatchOrKemkes = document.getElementById('helpBatchOrKemkes');
+
+        if (jenis === 'Logistik') {
+            if (labelBatchOrKemkes) labelBatchOrKemkes.textContent = 'Kode Kemkes';
+            if (inputKodeKemkes) inputKodeKemkes.placeholder = 'Contoh: KRD, KN, KM (Opsional untuk pelaporan Kemkes)';
+            if (helpBatchOrKemkes) helpBatchOrKemkes.textContent = 'Kode standarisasi Kementerian Kesehatan / KFA untuk barang logistik & alkes.';
+        } else {
+            if (labelBatchOrKemkes) labelBatchOrKemkes.textContent = 'Batch Obat';
+            if (inputKodeKemkes) inputKodeKemkes.placeholder = 'Contoh: BATCH-001, B1234';
+            if (helpBatchOrKemkes) helpBatchOrKemkes.textContent = 'Nomor batch untuk identifikasi kelompok produksi obat.';
+        }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const golSelect = document.getElementById('golongan_obat');
+        if (golSelect) {
+            handleGolonganChange(golSelect.value);
+        }
+        const inputKategori = document.getElementById('inputKategori');
+        const initialJenis = inputKategori ? (inputKategori.value || '{{ $masterObat->kategori }}') : '{{ $masterObat->kategori }}';
+        selectJenis(initialJenis);
+    });
 </script>
 @endpush

@@ -8,9 +8,11 @@ use App\Models\MasterObat;
 use App\Models\Opd;
 use App\Models\Pemasok;
 use App\Models\Pengangkut;
+use App\Models\Permohonan;
 use App\Models\Program;
 use App\Models\StokObat;
 use App\Models\Transaksi;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,24 +23,69 @@ class TransaksiController extends Controller
 
     public function indexPemasukan(Request $request)
     {
-        $query = Transaksi::with(['gudangTujuan', 'pemasok', 'user'])
-            ->withCount('detailTransaksis')
-            ->where('jenis_transaksi', 'pemasukan')
-            ->latest();
+        /** @var User $user */
+        $user = Auth::user();
+        $isOpd = $user && $user->isAdminOpd();
 
-        if ($request->filled('gudang_id')) {
-            $query->where('gudang_tujuan_id', $request->gudang_id);
+        $query = Transaksi::latest();
+
+        if ($isOpd) {
+            // Untuk Admin OPD: Menampilkan seluruh obat masuk ke OPD dari SBBK Pusat (realisasi permohonan) dan penerimaan langsung
+            $query->with(['gudangAsal', 'user', 'permohonan'])
+                ->withCount('detailTransaksis')
+                ->where('instansi_id', $user->opd_id)
+                ->where(function ($q) {
+                    $q->where('jenis_transaksi', 'pengeluaran') // SBBK dari Gudang Pusat yang ditujukan ke OPD ini
+                        ->orWhere('jenis_transaksi', 'pemasukan');
+                });
+
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('nomor_surat', 'like', "%{$search}%")
+                        ->orWhere('catatan', 'like', "%{$search}%")
+                        ->orWhereHas('permohonan', function ($pq) use ($search) {
+                            $pq->where('nomor_permohonan', 'like', "%{$search}%");
+                        });
+                });
+            }
+        } else {
+            // Untuk Super Admin: Menampilkan pemasukan obat dari pemasok luar ke gudang pusat
+            $query->with(['gudangTujuan', 'pemasok', 'user'])
+                ->withCount('detailTransaksis')
+                ->where('jenis_transaksi', 'pemasukan');
+
+            if ($request->filled('gudang_id')) {
+                $query->where('gudang_tujuan_id', $request->gudang_id);
+            }
+
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('nomor_surat', 'like', "%{$search}%")
+                        ->orWhere('catatan', 'like', "%{$search}%")
+                        ->orWhereHas('pemasok', function ($pq) use ($search) {
+                            $pq->where('nama_pemasok', 'like', "%{$search}%");
+                        });
+                });
+            }
         }
 
         $transaksis = $query->paginate(15)->withQueryString();
         $gudangs = Gudang::all();
         $selectedGudang = $request->gudang_id;
 
-        return view('transaksi.pemasukan.index', compact('transaksis', 'gudangs', 'selectedGudang'));
+        return view('transaksi.pemasukan.index', compact('transaksis', 'gudangs', 'selectedGudang', 'isOpd'));
     }
 
     public function createPemasukan()
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user && ! $user->isSuperAdmin()) {
+            abort(403, 'Pengelolaan pemasukan stok obat dari pemasok hanya dapat diakses oleh Super Admin Gudang Pusat.');
+        }
+
         $masterObats = MasterObat::orderBy('nama_obat')->get();
         $gudangs = Gudang::all();
         $pemasoks = Pemasok::orderBy('nama_pemasok')->get();
@@ -48,6 +95,12 @@ class TransaksiController extends Controller
 
     public function storePemasukan(Request $request)
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user && ! $user->isSuperAdmin()) {
+            abort(403, 'Pengelolaan pemasukan stok obat dari pemasok hanya dapat diakses oleh Super Admin Gudang Pusat.');
+        }
+
         $request->validate([
             'tanggal' => 'required|date',
             'nomor_surat' => 'required|string',
@@ -96,9 +149,17 @@ class TransaksiController extends Controller
 
     public function showPemasukan(Transaksi $transaksi)
     {
-        $transaksi->load(['gudangTujuan', 'pemasok', 'user', 'detailTransaksis.masterObat']);
+        /** @var User $user */
+        $user = Auth::user();
+        $isOpd = $user && $user->isAdminOpd();
 
-        return view('transaksi.pemasukan.show', compact('transaksi'));
+        if ($isOpd && $transaksi->instansi_id != $user->opd_id && $transaksi->user_id != $user->id) {
+            abort(403, 'Anda tidak memiliki hak untuk melihat data pemasukan ini.');
+        }
+
+        $transaksi->load(['gudangAsal', 'gudangTujuan', 'pemasok', 'user', 'instansi', 'permohonan.opd', 'detailTransaksis.masterObat']);
+
+        return view('transaksi.pemasukan.show', compact('transaksi', 'isOpd'));
     }
 
     public function destroyPemasukan(Transaksi $transaksi)
@@ -242,38 +303,260 @@ class TransaksiController extends Controller
 
     // ===================== PENGELUARAN =====================
 
-    public function createPengeluaran()
+    public function indexPengeluaran(Request $request)
     {
-        $masterObats = MasterObat::all();
-        $gudangs = Gudang::all();
-        $programs = Program::all();
-        $pengangkuts = Pengangkut::all();
-        $instansis = Opd::all(); // Menggunakan Model Opd untuk tabel opds
+        /** @var User $user */
+        $user = Auth::user();
 
-        return view('transaksi.pengeluaran.create', compact('masterObats', 'gudangs', 'programs', 'pengangkuts', 'instansis'));
+        $query = Transaksi::with(['gudangAsal', 'program', 'pengangkut', 'instansi', 'user'])
+            ->withCount('detailTransaksis')
+            ->where('jenis_transaksi', 'pengeluaran')
+            ->latest();
+
+        // Jika user adalah Admin OPD, hanya tampilkan dokumen SBBK yang ditujukan ke instansinya
+        if ($user && $user->isAdminOpd()) {
+            $userOpdId = $user->opd_id;
+            if (! $userOpdId && $user->opd) {
+                $opdObj = Opd::where('nama_opd', $user->opd)->first();
+                $userOpdId = $opdObj?->id;
+            }
+            $query->where('instansi_id', $userOpdId ?? 0);
+        }
+
+        if ($request->filled('gudang_id')) {
+            $query->where('gudang_asal_id', $request->gudang_id);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nomor_surat', 'like', "%{$search}%")
+                    ->orWhere('catatan', 'like', "%{$search}%")
+                    ->orWhereHas('instansi', function ($iq) use ($search) {
+                        $iq->where('nama_opd', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('program', function ($pq) use ($search) {
+                        $pq->where('nama', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $transaksis = $query->paginate(15)->withQueryString();
+        $gudangs = Gudang::all();
+        $selectedGudang = $request->gudang_id;
+        $isOpd = $user && $user->isAdminOpd();
+
+        return view('transaksi.pengeluaran.index', compact('transaksis', 'gudangs', 'selectedGudang', 'isOpd'));
+    }
+
+    public function getStokByGudang(Gudang $gudang)
+    {
+        $stocks = StokObat::with('masterObat')
+            ->where('gudang_id', $gudang->id)
+            ->where('jumlah', '>', 0)
+            ->orderBy('exp_date', 'asc')
+            ->get()
+            ->map(function ($stok) {
+                $obat = $stok->masterObat;
+
+                return [
+                    'stok_id' => $stok->id,
+                    'master_obat_id' => $stok->master_obat_id,
+                    'nama_obat' => $obat->nama_obat ?? $stok->nama_obat_logistik ?? '-',
+                    'kode_obat' => $obat->kode_obat ?? $stok->kode_obat_logistik ?? '-',
+                    'kategori' => $obat->kategori ?? $stok->kategori ?? 'Obat',
+                    'kode_kemkes' => $obat->kode_kemkes ?? null,
+                    'no_batch' => $stok->no_batch,
+                    'exp_date' => $stok->exp_date ? $stok->exp_date->format('Y-m-d') : null,
+                    'exp_date_formatted' => $stok->exp_date ? $stok->exp_date->format('d/m/Y') : '-',
+                    'jumlah' => (int) $stok->jumlah,
+                    'satuan' => $stok->satuan ?: ($obat->satuan ?? 'Pcs'),
+                    'harga_satuan' => (float) ($stok->harga_satuan > 0 ? $stok->harga_satuan : ($obat->harga ?? 0)),
+                ];
+            });
+
+        return response()->json([
+            'gudang' => [
+                'id' => $gudang->id,
+                'nama' => $gudang->nama_gudang,
+            ],
+            'stocks' => $stocks,
+        ]);
+    }
+
+    public function createPengeluaran(Request $request)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $isOpd = $user && $user->isAdminOpd();
+
+        $masterObats = MasterObat::where('status', '!=', 'inactive')->orderBy('nama_obat')->get();
+        if ($masterObats->isEmpty()) {
+            $masterObats = MasterObat::orderBy('nama_obat')->get();
+        }
+
+        if ($isOpd) {
+            // Admin OPD: Form pengeluaran obat pelayanan fasilitas (ke pasien, poli, IGD, atau pustu)
+            $nomorSuratOtomatis = 'OUT-OPD-'.date('Ymd').'-'.strtoupper(substr(uniqid(), -4));
+
+            return view('transaksi.pengeluaran.create_opd', compact('masterObats', 'nomorSuratOtomatis'));
+        }
+
+        // Super Admin: Form SBBK Gudang Pusat
+        $gudangs = Gudang::all();
+        $programs = Program::orderBy('nama')->get();
+        $pengangkuts = Pengangkut::orderBy('nama')->get();
+        $instansis = Opd::orderBy('nama_opd')->get();
+
+        // Ambil daftar permohonan yang siap direalisasikan (disetujui atau menunggu)
+        $permohonanList = Permohonan::with(['opd', 'detailPermohonans.masterObat'])
+            ->whereIn('status', ['disetujui', 'diproses', 'menunggu'])
+            ->doesntHave('transaksi')
+            ->latest('tanggal_permohonan')
+            ->get();
+
+        $selectedPermohonan = null;
+        if ($request->filled('permohonan_id')) {
+            $selectedPermohonan = Permohonan::with(['opd', 'detailPermohonans.masterObat'])->find($request->permohonan_id);
+        }
+
+        return view('transaksi.pengeluaran.create', compact(
+            'masterObats',
+            'gudangs',
+            'programs',
+            'pengangkuts',
+            'instansis',
+            'permohonanList',
+            'selectedPermohonan'
+        ));
     }
 
     public function storePengeluaran(Request $request)
     {
+        /** @var User $user */
+        $user = Auth::user();
+
+        // 1. Logika Pengeluaran Obat untuk Admin OPD (Penyaluran ke Pasien / Unit Pelayanan / Pustu)
+        if ($user && $user->isAdminOpd()) {
+            $request->validate([
+                'tanggal' => 'required|date',
+                'nomor_surat' => 'required|string|max:255',
+                'tujuan_pengeluaran' => 'required|string|max:255',
+                'catatan' => 'nullable|string',
+                'items' => 'required|array|min:1',
+                'items.*.master_obat_id' => 'required|exists:master_obats,id',
+                'items.*.jumlah' => 'required|integer|min:1',
+            ], [
+                'tujuan_pengeluaran.required' => 'Tujuan/Penerima pengeluaran wajib diisi (contoh: Poli Umum, IGD, Pustu, Pasien).',
+                'items.required' => 'Minimal satu item obat harus ditambahkan.',
+                'items.*.master_obat_id.required' => 'Pilih obat yang akan dikeluarkan.',
+                'items.*.jumlah.required' => 'Jumlah obat wajib diisi.',
+                'items.*.jumlah.min' => 'Jumlah obat minimal 1.',
+            ]);
+
+            DB::beginTransaction();
+            try {
+                $transaksi = Transaksi::create([
+                    'nomor_surat' => $request->nomor_surat,
+                    'tanggal' => $request->tanggal,
+                    'jenis_transaksi' => 'pengeluaran',
+                    'gudang_asal_id' => null,
+                    'gudang_tujuan_id' => null,
+                    'instansi_id' => $user->opd_id,
+                    'user_id' => $user->id,
+                    'catatan' => 'Penerima / Keperluan: '.$request->tujuan_pengeluaran.($request->catatan ? ' - '.$request->catatan : ''),
+                ]);
+
+                foreach ($request->items as $item) {
+                    DetailTransaksi::create([
+                        'transaksi_id' => $transaksi->id,
+                        'master_obat_id' => $item['master_obat_id'],
+                        'no_batch' => ! empty($item['no_batch']) ? trim($item['no_batch']) : '-',
+                        'exp_date' => ! empty($item['exp_date']) ? $item['exp_date'] : null,
+                        'jumlah' => $item['jumlah'],
+                        'harga_satuan' => 0,
+                    ]);
+                }
+
+                DB::commit();
+
+                return redirect()->route('pengeluaran.index')->with('success', 'Pengeluaran obat pelayanan OPD berhasil disimpan!');
+            } catch (\Exception $e) {
+                DB::rollBack();
+
+                return redirect()->back()->withInput()->with('error', 'Gagal memproses pengeluaran: '.$e->getMessage());
+            }
+        }
+
+        // 2. Logika SBBK Resmi Gudang Pusat untuk Super Admin
+
         $request->validate([
             'tanggal' => 'required|date',
-            'nomor_surat' => 'required|string',
+            'nomor_surat' => 'required|string|max:255',
+            'permohonan_id' => 'nullable|exists:permohonans,id',
             'gudang_id' => 'required|exists:gudangs,id',
             'program_id' => 'required|exists:programs,id',
             'pengangkut_id' => 'required|exists:pengangkuts,id',
             'instansi_id' => 'required|exists:opds,id',
-            'pajak_invoice' => 'required|string',
-            'biaya_kirim' => 'nullable|numeric',
+            'pajak_invoice' => 'required|in:NO TAX,VAT,GST',
+            'biaya_kirim' => 'nullable|numeric|min:0',
             'catatan' => 'nullable|string',
             'master_obat_id' => 'required|array|min:1',
             'master_obat_id.*' => 'required|exists:master_obats,id',
-            'no_batch' => 'nullable|array',
-            'no_batch.*' => 'nullable|string',
+            'no_batch' => 'required|array|min:1',
+            'no_batch.*' => 'required|string',
             'jumlah' => 'required|array|min:1',
             'jumlah.*' => 'required|integer|min:1',
             'harga_satuan' => 'required|array|min:1',
             'harga_satuan.*' => 'required|numeric|min:0',
+        ], [
+            'master_obat_id.required' => 'Minimal satu item harus ditambahkan.',
+            'master_obat_id.*.required' => 'Item obat/logistik wajib dipilih.',
+            'no_batch.*.required' => 'Nomor batch wajib diisi untuk setiap item.',
+            'jumlah.*.required' => 'Jumlah barang keluar wajib diisi.',
+            'jumlah.*.min' => 'Jumlah barang keluar minimal 1.',
+            'harga_satuan.*.required' => 'Harga satuan wajib diisi.',
+            'harga_satuan.*.min' => 'Harga satuan minimal 0.',
         ]);
+
+        // Verifikasi ketersediaan stok di gudang dan batch sebelum transaksi
+        $groupedRequests = [];
+        foreach ($request->master_obat_id as $index => $obatId) {
+            $batch = trim($request->no_batch[$index] ?? '');
+            $qty = (int) ($request->jumlah[$index] ?? 0);
+
+            $stok = StokObat::where('gudang_id', $request->gudang_id)
+                ->where('master_obat_id', $obatId)
+                ->where('no_batch', $batch)
+                ->first();
+
+            $obat = MasterObat::find($obatId);
+            $namaObat = $obat ? $obat->nama_obat : "ID {$obatId}";
+
+            if (! $stok) {
+                return redirect()->back()->withInput()->with('error', "Stok untuk '{$namaObat}' dengan Batch '{$batch}' tidak ditemukan di gudang ini.");
+            }
+
+            $key = $obatId.'__'.$batch;
+            if (! isset($groupedRequests[$key])) {
+                $groupedRequests[$key] = [
+                    'nama_obat' => $namaObat,
+                    'batch' => $batch,
+                    'sisa_stok' => (int) $stok->jumlah,
+                    'requested_total' => 0,
+                    'exp_date' => $stok->exp_date,
+                    'stok_model' => $stok,
+                ];
+            }
+            $groupedRequests[$key]['requested_total'] += $qty;
+        }
+
+        // Cek apakah total permintaan melebihi sisa stok fisik
+        foreach ($groupedRequests as $group) {
+            if ($group['requested_total'] > $group['sisa_stok']) {
+                return redirect()->back()->withInput()->with('error', "Stok tidak mencukupi untuk '{$group['nama_obat']}' (Batch: {$group['batch']}). Stok fisik tersedia: {$group['sisa_stok']}, total dikeluarkan pada form ini: {$group['requested_total']}.");
+            }
+        }
 
         DB::beginTransaction();
         try {
@@ -281,6 +564,7 @@ class TransaksiController extends Controller
                 'nomor_surat' => $request->nomor_surat,
                 'tanggal' => $request->tanggal,
                 'jenis_transaksi' => 'pengeluaran',
+                'permohonan_id' => $request->permohonan_id,
                 'gudang_asal_id' => $request->gudang_id,
                 'gudang_tujuan_id' => null,
                 'program_id' => $request->program_id,
@@ -293,35 +577,95 @@ class TransaksiController extends Controller
             ]);
 
             foreach ($request->master_obat_id as $index => $obatId) {
-                $noBatch = ! empty($request->no_batch[$index]) ? $request->no_batch[$index] : null;
-                $stokTersedia = null;
-
-                if (! $noBatch) {
-                    $stokTersedia = StokObat::where('master_obat_id', $obatId)
-                        ->where('gudang_id', $request->gudang_id)
-                        ->where('jumlah', '>', 0)
-                        ->orderBy('exp_date', 'asc')
-                        ->first();
-                    $noBatch = $stokTersedia ? $stokTersedia->no_batch : '-';
-                }
+                $batch = trim($request->no_batch[$index]);
+                $key = $obatId.'__'.$batch;
+                $expDate = $groupedRequests[$key]['exp_date'] ?? null;
 
                 DetailTransaksi::create([
                     'transaksi_id' => $transaksi->id,
                     'master_obat_id' => $obatId,
-                    'no_batch' => $noBatch,
-                    'exp_date' => $stokTersedia?->exp_date,
+                    'no_batch' => $batch,
+                    'exp_date' => $expDate,
                     'jumlah' => $request->jumlah[$index],
                     'harga_satuan' => $request->harga_satuan[$index],
                 ]);
             }
 
+            // Jika transaksi berasal dari permohonan OPD, perbarui status permohonan menjadi selesai
+            if ($request->filled('permohonan_id')) {
+                Permohonan::where('id', $request->permohonan_id)->update([
+                    'status' => 'selesai',
+                ]);
+            }
+
             DB::commit();
 
-            return redirect()->back()->with('success', 'Pengeluaran berhasil disimpan dan diproses!');
+            return redirect()->route('pengeluaran.show', $transaksi->id)->with('success', 'Transaksi Pengeluaran (SBBK) berhasil disimpan!');
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan transaksi: '.$e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan transaksi pengeluaran: '.$e->getMessage());
+        }
+    }
+
+    public function showPengeluaran(Transaksi $transaksi)
+    {
+        $transaksi->load(['gudangAsal', 'program', 'pengangkut', 'instansi', 'user', 'permohonan', 'detailTransaksis.masterObat']);
+
+        return view('transaksi.pengeluaran.show', compact('transaksi'));
+    }
+
+    public function destroyPengeluaran(Transaksi $transaksi)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user && $user->isAdminOpd()) {
+            if ($transaksi->instansi_id != $user->opd_id || ! is_null($transaksi->gudang_asal_id)) {
+                abort(403, 'Anda tidak memiliki hak untuk menghapus dokumen pengeluaran resmi Gudang Pusat.');
+            }
+        } elseif ($user && ! $user->isSuperAdmin()) {
+            abort(403, 'Penghapusan transaksi pengeluaran hanya dapat dilakukan oleh Super Admin Gudang Pusat atau Admin OPD terkait.');
+        }
+
+        try {
+            $permohonanId = $transaksi->permohonan_id;
+            $transaksi->delete();
+
+            // Kembalikan status permohonan menjadi disetujui jika transaksi pengeluaran dibatalkan/dihapus
+            if ($permohonanId) {
+                Permohonan::where('id', $permohonanId)->update([
+                    'status' => 'disetujui',
+                ]);
+            }
+
+            return redirect()->route('pengeluaran.index')->with('success', 'Data transaksi pengeluaran berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus transaksi pengeluaran: '.$e->getMessage());
+        }
+    }
+
+    public function bulkDeletePengeluaran(Request $request)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user && ! $user->isSuperAdmin()) {
+            abort(403, 'Penghapusan transaksi pengeluaran hanya dapat dilakukan oleh Super Admin Gudang Pusat.');
+        }
+
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'exists:transaksis,id',
+        ]);
+
+        try {
+            $transaksis = Transaksi::whereIn('id', $request->ids)->get();
+            foreach ($transaksis as $trx) {
+                $trx->delete();
+            }
+
+            return redirect()->route('pengeluaran.index')->with('success', count($request->ids).' data transaksi pengeluaran berhasil dihapus. Seluruh stok dikembalikan.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus transaksi: '.$e->getMessage());
         }
     }
 
@@ -329,17 +673,45 @@ class TransaksiController extends Controller
 
     public function indexPemindahan()
     {
-        $transaksis = Transaksi::with(['gudangAsal', 'gudangTujuan', 'detailTransaksis.masterObat', 'user'])
-            ->where('jenis_transaksi', 'pemindahan')
-            ->latest()
-            ->get();
+        /** @var User $user */
+        $user = Auth::user();
+        $isOpd = $user && $user->isAdminOpd();
 
-        return view('transaksi.pemindahan.index', compact('transaksis'));
+        $query = Transaksi::with(['gudangAsal', 'gudangTujuan', 'detailTransaksis.masterObat', 'user'])
+            ->where('jenis_transaksi', 'pemindahan')
+            ->latest();
+
+        if ($isOpd) {
+            $query->where(function ($q) use ($user) {
+                $q->where('instansi_id', $user->opd_id)
+                    ->orWhere('user_id', $user->id);
+            });
+        }
+
+        $transaksis = $query->get();
+
+        return view('transaksi.pemindahan.index', compact('transaksis', 'isOpd'));
     }
 
     public function createPemindahan()
     {
-        $masterObats = MasterObat::orderBy('nama_obat')->get();
+        /** @var User $user */
+        $user = Auth::user();
+        $isOpd = $user && $user->isAdminOpd();
+
+        $masterObats = MasterObat::where('status', '!=', 'inactive')->orderBy('nama_obat')->get();
+        if ($masterObats->isEmpty()) {
+            $masterObats = MasterObat::orderBy('nama_obat')->get();
+        }
+
+        if ($isOpd) {
+            // Admin OPD: Form pemindahan/mutasi internal fasilitas OPD (antar ruangan/kamar obat/pustu)
+            $nomorSuratOtomatis = 'MUT-OPD-'.date('Ymd').'-'.strtoupper(substr(uniqid(), -4));
+
+            return view('transaksi.pemindahan.create_opd', compact('masterObats', 'nomorSuratOtomatis'));
+        }
+
+        // Super Admin: Form pemindahan antar gudang pusat
         $gudangs = Gudang::all();
 
         return view('transaksi.pemindahan.create', compact('masterObats', 'gudangs'));
@@ -347,6 +719,65 @@ class TransaksiController extends Controller
 
     public function storePemindahan(Request $request)
     {
+        /** @var User $user */
+        $user = Auth::user();
+
+        // 1. Mutasi Internal untuk Admin OPD
+        if ($user && $user->isAdminOpd()) {
+            $request->validate([
+                'tanggal' => 'required|date',
+                'nomor_surat' => 'required|string|max:255',
+                'unit_asal' => 'required|string|max:255',
+                'unit_tujuan' => 'required|string|max:255',
+                'catatan' => 'nullable|string',
+                'items' => 'required|array|min:1',
+                'items.*.master_obat_id' => 'required|exists:master_obats,id',
+                'items.*.jumlah' => 'required|integer|min:1',
+            ], [
+                'unit_asal.required' => 'Unit/Kamar obat asal wajib diisi (contoh: Gudang Obat Induk).',
+                'unit_tujuan.required' => 'Unit/Ruangan tujuan wajib diisi (contoh: Apotek Rawat Jalan, IGD, Pustu).',
+                'items.required' => 'Minimal satu item obat harus ditambahkan.',
+                'items.*.master_obat_id.required' => 'Obat wajib dipilih.',
+                'items.*.jumlah.required' => 'Jumlah wajib diisi.',
+                'items.*.jumlah.min' => 'Jumlah minimal 1.',
+            ]);
+
+            DB::beginTransaction();
+            try {
+                $transaksi = Transaksi::create([
+                    'nomor_surat' => $request->nomor_surat,
+                    'tanggal' => $request->tanggal,
+                    'jenis_transaksi' => 'pemindahan',
+                    'gudang_asal_id' => null,
+                    'gudang_tujuan_id' => null,
+                    'instansi_id' => $user->opd_id,
+                    'user_id' => $user->id,
+                    'catatan' => 'Mutasi Internal OPD: Dari '.$request->unit_asal.' ke '.$request->unit_tujuan.($request->catatan ? ' - '.$request->catatan : ''),
+                ]);
+
+                foreach ($request->items as $item) {
+                    DetailTransaksi::create([
+                        'transaksi_id' => $transaksi->id,
+                        'master_obat_id' => $item['master_obat_id'],
+                        'no_batch' => ! empty($item['no_batch']) ? trim($item['no_batch']) : '-',
+                        'exp_date' => ! empty($item['exp_date']) ? $item['exp_date'] : null,
+                        'jumlah' => $item['jumlah'],
+                        'harga_satuan' => 0,
+                    ]);
+                }
+
+                DB::commit();
+
+                return redirect()->route('pemindahan.index')->with('success', 'Mutasi pemindahan obat internal OPD berhasil disimpan!');
+            } catch (\Exception $e) {
+                DB::rollBack();
+
+                return redirect()->back()->withInput()->with('error', 'Gagal memproses pemindahan: '.$e->getMessage());
+            }
+        }
+
+        // 2. Pemindahan Antar Gudang Pusat untuk Super Admin
+
         $request->validate([
             'tanggal' => 'required|date',
             'nomor_surat' => 'required|string',
@@ -366,6 +797,46 @@ class TransaksiController extends Controller
             'items.*.jumlah.min' => 'Jumlah minimal 1.',
         ]);
 
+        // Verifikasi ketersediaan stok fisik di gudang asal sebelum transaksi
+        $groupedRequests = [];
+        foreach ($request->items as $index => $item) {
+            $obatId = $item['master_obat_id'];
+            $batch = trim($item['no_batch'] ?? '');
+            $qty = (int) ($item['jumlah'] ?? 0);
+
+            $stok = StokObat::where('gudang_id', $request->gudang_asal_id)
+                ->where('master_obat_id', $obatId)
+                ->where('no_batch', $batch)
+                ->first();
+
+            $obat = MasterObat::find($obatId);
+            $namaObat = $obat ? $obat->nama_obat : "ID {$obatId}";
+
+            if (! $stok) {
+                return redirect()->back()->withInput()->with('error', "Stok untuk '{$namaObat}' dengan Batch '{$batch}' tidak ditemukan di gudang asal.");
+            }
+
+            $key = $obatId.'__'.$batch;
+            if (! isset($groupedRequests[$key])) {
+                $groupedRequests[$key] = [
+                    'nama_obat' => $namaObat,
+                    'batch' => $batch,
+                    'sisa_stok' => (int) $stok->jumlah,
+                    'requested_total' => 0,
+                    'exp_date' => $stok->exp_date,
+                    'harga_satuan' => $stok->harga_satuan,
+                ];
+            }
+            $groupedRequests[$key]['requested_total'] += $qty;
+        }
+
+        // Cek apakah permintaan pemindahan melebihi sisa stok fisik di gudang asal
+        foreach ($groupedRequests as $group) {
+            if ($group['requested_total'] > $group['sisa_stok']) {
+                return redirect()->back()->withInput()->with('error', "Stok tidak mencukupi di gudang asal untuk '{$group['nama_obat']}' (Batch: {$group['batch']}). Stok fisik tersedia: {$group['sisa_stok']}, total dipindahkan: {$group['requested_total']}.");
+            }
+        }
+
         DB::beginTransaction();
         try {
             $transaksi = Transaksi::create([
@@ -379,17 +850,25 @@ class TransaksiController extends Controller
             ]);
 
             foreach ($request->items as $item) {
+                $obatId = $item['master_obat_id'];
+                $batch = trim($item['no_batch']);
+                $key = $obatId.'__'.$batch;
+                $expDate = $groupedRequests[$key]['exp_date'] ?? null;
+                $hargaSatuan = $groupedRequests[$key]['harga_satuan'] ?? null;
+
                 DetailTransaksi::create([
                     'transaksi_id' => $transaksi->id,
-                    'master_obat_id' => $item['master_obat_id'],
-                    'no_batch' => $item['no_batch'],
+                    'master_obat_id' => $obatId,
+                    'no_batch' => $batch,
+                    'exp_date' => $expDate,
                     'jumlah' => $item['jumlah'],
+                    'harga_satuan' => $hargaSatuan,
                 ]);
             }
 
             DB::commit();
 
-            return redirect()->route('pemindahan.index')->with('success', 'Pemindahan barang berhasil disimpan! Cek Daftar Stok untuk melihat perubahannya.');
+            return redirect()->route('pemindahan.index')->with('success', 'Pemindahan barang berhasil disimpan! Stok gudang telah dimutasi secara otomatis oleh sistem.');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -406,10 +885,20 @@ class TransaksiController extends Controller
 
     public function destroyPemindahan(Transaksi $transaksi)
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user && $user->isAdminOpd()) {
+            if ($transaksi->instansi_id != $user->opd_id && $transaksi->user_id != $user->id) {
+                abort(403, 'Anda tidak memiliki hak untuk menghapus transaksi pemindahan ini.');
+            }
+        } elseif ($user && ! $user->isSuperAdmin()) {
+            abort(403, 'Penghapusan transaksi pemindahan hanya dapat dilakukan oleh Super Admin Gudang Pusat atau Admin OPD terkait.');
+        }
+
         try {
             $transaksi->delete();
 
-            return redirect()->route('pemindahan.index')->with('success', 'Data transaksi pemindahan berhasil dihapus. Stok terkait otomatis dikembalikan.');
+            return redirect()->route('pemindahan.index')->with('success', 'Data transaksi pemindahan berhasil dihapus.');
         } catch (\Exception $eb) {
             return redirect()->back()->with('error', 'Gagal menghapus transaksi: '.$eb->getMessage());
         }

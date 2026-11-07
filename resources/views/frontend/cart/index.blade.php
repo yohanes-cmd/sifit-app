@@ -178,9 +178,11 @@
                                 <tbody>
                                     @foreach($cart as $item)
                                         @php
-                                            $cartThumb = (!empty($item['image']) && file_exists(public_path('storage/' . $item['image'])))
-                                                ? asset('storage/' . $item['image'])
-                                                : asset('assets/images/product-default.svg');
+                                            $cartThumb = (!empty($item['image']) && file_exists(public_path($item['image'])))
+                                                ? asset($item['image'])
+                                                : ((!empty($item['image']) && file_exists(public_path('storage/' . $item['image'])))
+                                                    ? asset('storage/' . $item['image'])
+                                                    : asset('assets/images/product-default.svg'));
                                         @endphp
                                         <tr>
                                             <td>
@@ -287,9 +289,21 @@
                             Data ketersediaan terhubung resmi dengan instalasi farmasi Dinkes Riau.
                         </div>
 
-                        <a href="{{ route('frontend.contact') }}" class="thm-btn" style="width: 100%; text-align: center; display: block; padding: 11px; font-size: 13px; font-weight: 700; text-decoration: none; border-radius: 6px;">
-                            <i class="fa fa-send" style="margin-right: 6px;"></i> Ajukan Permintaan / Konsultasi
-                        </a>
+                        @auth
+                            @if(auth()->user()->isOpd() || auth()->user()->isAdmin())
+                                <a href="{{ route('permohonan.create') }}" class="thm-btn" style="width: 100%; text-align: center; display: block; padding: 11px; font-size: 13px; font-weight: 700; text-decoration: none; border-radius: 6px;">
+                                    <i class="fa fa-file-text-o" style="margin-right: 6px;"></i> Lanjutkan Pengajuan Permohonan OPD
+                                </a>
+                            @else
+                                <a href="{{ route('frontend.contact') }}" class="thm-btn" style="width: 100%; text-align: center; display: block; padding: 11px; font-size: 13px; font-weight: 700; text-decoration: none; border-radius: 6px;">
+                                    <i class="fa fa-send" style="margin-right: 6px;"></i> Ajukan Permintaan / Konsultasi
+                                </a>
+                            @endif
+                        @else
+                            <a href="{{ route('login') }}" class="thm-btn" style="width: 100%; text-align: center; display: block; padding: 11px; font-size: 13px; font-weight: 700; text-decoration: none; border-radius: 6px;">
+                                <i class="fa fa-sign-in" style="margin-right: 6px;"></i> Masuk Akun OPD untuk Mengajukan
+                            </a>
+                        @endauth
                     </div>
                 </div>
             </div>

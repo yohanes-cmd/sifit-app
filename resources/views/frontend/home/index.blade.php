@@ -158,16 +158,16 @@
                 </div>
             </div>
 
-            {{-- PILAR 4: KERANJANG & PERMINTAAN --}}
+            {{-- PILAR 4: PERMOHONAN OBAT OPD --}}
             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="0.45s" style="display: flex; margin-bottom: 25px;">
                 <div class="sifit-service-card">
                     <div class="sifit-service-icon-box">
-                        <i class="fa fa-shopping-basket"></i>
+                        <i class="fa fa-clipboard-list"></i>
                     </div>
-                    <h3>Keranjang Obat</h3>
-                    <p>Layanan pemilihan dan pencatatan daftar obat yang dibutuhkan untuk kemudahan konsultasi.</p>
-                    <a href="{{ route('frontend.cart.index') }}" class="service-link">
-                        Buka Keranjang <i class="fa fa-arrow-right"></i>
+                    <h3>Permohonan Obat OPD</h3>
+                    <p>Layanan resmi permohonan logistik obat bagi OPD dan faskes ke Instalasi Farmasi Provinsi.</p>
+                    <a href="{{ auth()->check() ? route('permohonan.create') : route('login') }}" class="service-link">
+                        Ajukan Permohonan <i class="fa fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
@@ -195,7 +195,7 @@
                         {{-- GAMBAR OBAT --}}
                         <div style="height: 180px; background: #f8fafc; padding: 14px; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #f1f5f9;">
                             @php
-                                $homeProdThumb = ($product->image && file_exists(public_path('storage/'.$product->image))) ? asset('storage/'.$product->image) : asset('assets/images/product-default.svg');
+                                $homeProdThumb = $product->thumbnail_url ?? asset('assets/images/product-default.svg');
                             @endphp
                             <img
                                 src="{{ $homeProdThumb }}"
@@ -230,26 +230,17 @@
 
                             <div style="margin-top: auto; padding-top: 10px; border-top: 1px solid #f1f5f9;">
                                 <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
-                                    <span style="font-size: 16px; font-weight: 800; color: #115566;">
-                                        Rp {{ number_format($product->price, 0, ',', '.') }}
+                                    <span style="font-size: 12px; font-weight: 700; color: #0f766e;">
+                                        <i class="fa fa-cubes"></i> Kemasan: {{ $product->unit ?? 'Satuan' }}
                                     </span>
                                     <span style="font-size: 11.5px; color: #64748b; font-weight: 500;">
-                                        Stok: {{ $product->stock ?? '-' }} {{ $product->unit ?? '' }}
+                                        Stok: {{ $product->stock ?? 0 }} {{ $product->unit ?? '' }}
                                     </span>
                                 </div>
 
-                                <div style="display: flex; gap: 6px;">
-                                    <a href="{{ route('frontend.obat.detail', $product->slug) }}" class="btn-style-two" style="flex: 1; text-align: center; padding: 7px 10px; font-size: 12px; text-decoration: none; border-radius: 6px;">
-                                        Detail
-                                    </a>
-                                    <form action="{{ route('frontend.cart.add', $product->id) }}" method="POST" style="flex: 1.3;">
-                                        @csrf
-                                        <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="btn-add-cart" style="width: 100%; justify-content: center; font-size: 12px; padding: 7px 10px; border-radius: 6px;">
-                                            <i class="fa fa-shopping-basket"></i> + Keranjang
-                                        </button>
-                                    </form>
-                                </div>
+                                <a href="{{ route('frontend.obat.detail', $product->slug) }}" class="btn-style-two" style="width: 100%; text-align: center; padding: 7px 10px; font-size: 12px; text-decoration: none; border-radius: 6px; display: block;">
+                                    <i class="fa fa-info-circle me-1"></i> Rincian Obat
+                                </a>
                             </div>
                         </div>
                     </div>

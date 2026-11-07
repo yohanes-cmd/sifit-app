@@ -124,10 +124,11 @@
                                                 data-kode="{{ $master->kode_obat }}"
                                                 data-nama="{{ $master->nama_obat }}"
                                                 data-kategori="{{ $master->kategori }}"
+                                                data-batch="{{ $master->kode_kemkes }}"
                                                 data-satuan="{{ $master->satuan }}"
                                                 data-harga="{{ $master->harga }}"
                                                 {{ old('master_obat_id', $stokObat->master_obat_id) == $master->id ? 'selected' : '' }}>
-                                            {{ $master->kode_obat }} - {{ $master->nama_obat }} ({{ $master->satuan }})
+                                            {{ $master->kode_obat }} - {{ $master->nama_obat }} ({{ $master->satuan }})@if($master->kode_kemkes) - [{{ $master->kategori == 'Logistik' ? 'Kemkes: ' : 'Batch: ' }}{{ $master->kode_kemkes }}]@endif
                                         </option>
                                     @endforeach
                                 </select>

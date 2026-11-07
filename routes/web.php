@@ -13,6 +13,7 @@ use App\Http\Controllers\OpdController;
 use App\Http\Controllers\PejabatController;
 use App\Http\Controllers\PemasokController;
 use App\Http\Controllers\PengangkutController;
+use App\Http\Controllers\PermohonanController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgramController;
@@ -22,10 +23,9 @@ use App\Http\Controllers\StokObatController;
 use App\Http\Controllers\SubKategoriController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
-use App\Models\Category;
 use App\Models\GaleriAlbum;
+use App\Models\MasterObat;
 use App\Models\News;
-use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 // --- Root Redirect ---
@@ -66,17 +66,17 @@ Route::middleware('auth')->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
 
-    // Manajemen E-Commerce
+    // Manajemen E-Commerce & Katalog
     Route::resource('categories', CategoryController::class);
-    Route::resource('products', ProductController::class);
+    Route::get('/products', fn () => redirect()->route('master-obat.index'))->name('products.index');
 
-    Route::resource('opds', OpdController::class);
     Route::resource('news', NewsController::class);
 
     // --- RUTE STOK OBAT & EXPORT (HARUS DI DALAM MIDDLEWARE AUTH KALAU PERLU AMAN) ---
     // Posisikan rute khusus export & bulk action DI ATAS Route::resource('stok-obat')
     Route::get('/stok-obat/export-excel', [StokObatController::class, 'exportExcel'])->name('stok-obat.export');
     Route::get('/stok-obat/export-csv', [StokObatController::class, 'exportCsv'])->name('stok-obat.export-csv');
+    Route::get('/stok-obat/print', [StokObatController::class, 'print'])->name('stok-obat.print');
     Route::post('/stok-obat/bulk-destroy', [StokObatController::class, 'bulkDestroy'])->name('stok-obat.bulk-destroy');
 
     // Rute resource stok obat (mencakup index, create, store, edit, update, destroy)
@@ -85,10 +85,20 @@ Route::middleware('auth')->group(function () {
     // Rute untuk Master Obat
     Route::get('/master-obat/export-excel', [MasterObatController::class, 'exportExcel'])->name('master-obat.export');
     Route::get('/master-obat/export-csv', [MasterObatController::class, 'exportCsv'])->name('master-obat.export-csv');
+    Route::get('/master-obat/print', [MasterObatController::class, 'print'])->name('master-obat.print');
+    Route::post('/master-obat/{id}/toggle-status', [MasterObatController::class, 'toggleStatus'])->name('master-obat.toggle-status');
     Route::resource('master-obat', MasterObatController::class);
+
+    // --- Rute khusus Permohonan Obat (OPD & Admin) ---
+    Route::get('/permohonan/{permohonan}/print', [PermohonanController::class, 'print'])->name('permohonan.print');
+    Route::post('/permohonan/{permohonan}/verifikasi', [PermohonanController::class, 'verifikasi'])->name('permohonan.verifikasi');
+    Route::resource('permohonan', PermohonanController::class);
 
     // Rute khusus Transaksi Pemasukan
     Route::get('/pemasukan', [TransaksiController::class, 'indexPemasukan'])->name('pemasukan.index');
+    Route::get('/pemasukan/import-csv', [TransaksiController::class, 'showImportCsvPemasukan'])->name('pemasukan.import-csv.form');
+    Route::get('/pemasukan/download-template-csv', [TransaksiController::class, 'downloadTemplateCsvPemasukan'])->name('pemasukan.download-template-csv');
+    Route::post('/pemasukan/import-csv', [TransaksiController::class, 'importCsvPemasukan'])->name('pemasukan.import-csv');
     Route::post('/pemasukan/bulk-delete', [TransaksiController::class, 'bulkDeletePemasukan'])->name('pemasukan.bulk-delete');
     Route::get('/pemasukan/create', [TransaksiController::class, 'createPemasukan'])->name('pemasukan.create');
     Route::post('/pemasukan', [TransaksiController::class, 'storePemasukan'])->name('pemasukan.store');
@@ -96,8 +106,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/pemasukan/{transaksi}', [TransaksiController::class, 'destroyPemasukan'])->name('pemasukan.destroy');
 
     // Rute khusus Transaksi Pengeluaran
+    Route::get('/pengeluaran', [TransaksiController::class, 'indexPengeluaran'])->name('pengeluaran.index');
+    Route::post('/pengeluaran/bulk-delete', [TransaksiController::class, 'bulkDeletePengeluaran'])->name('pengeluaran.bulk-delete');
+    Route::get('/pengeluaran/stok-by-gudang/{gudang}', [TransaksiController::class, 'getStokByGudang'])->name('pengeluaran.stok-by-gudang');
     Route::get('/pengeluaran/create', [TransaksiController::class, 'createPengeluaran'])->name('pengeluaran.create');
     Route::post('/pengeluaran', [TransaksiController::class, 'storePengeluaran'])->name('pengeluaran.store');
+    Route::get('/pengeluaran/{transaksi}', [TransaksiController::class, 'showPengeluaran'])->name('pengeluaran.show');
+    Route::delete('/pengeluaran/{transaksi}', [TransaksiController::class, 'destroyPengeluaran'])->name('pengeluaran.destroy');
 
     // Rute khusus Transaksi Pemindahan
     Route::get('/pemindahan', [TransaksiController::class, 'indexPemindahan'])->name('pemindahan.index');
@@ -136,8 +151,10 @@ Route::get('/home', function () {
         ->take(3)
         ->get();
 
-    $latestProducts = Product::with('category')
-        ->where('status', 'published')
+    $latestProducts = MasterObat::where(function ($q) {
+        $q->where('status', 'published')->orWhereNull('status');
+    })
+        ->withSum('stokObats as total_stok', 'jumlah')
         ->latest()
         ->take(4)
         ->get();
@@ -146,9 +163,11 @@ Route::get('/home', function () {
 })->name('frontend.home');
 
 Route::get('/about', function () {
-    $totalProducts = Product::where('status', 'published')->count();
+    $totalProducts = MasterObat::where(function ($q) {
+        $q->where('status', 'published')->orWhereNull('status');
+    })->count();
     $totalNews = News::where('status', 'publish')->count();
-    $totalCategories = Category::where('type', 'product')->count();
+    $totalCategories = MasterObat::whereNotNull('kategori')->where('kategori', '!=', '')->distinct('kategori')->count('kategori');
     $totalPublishedInfo = $totalProducts + $totalNews;
 
     return view('frontend.about.index', compact(

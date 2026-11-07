@@ -8,6 +8,8 @@ use App\Models\MasterObat;
 use App\Models\StokObat;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -67,7 +69,16 @@ class StokObatController extends Controller
         $masterObats = MasterObat::where('status', '!=', 'inactive')->orderBy('nama_obat')->get();
         $gudangs = Gudang::orderBy('nama_gudang')->get();
 
-        return view('stok-obat.create', compact('masterObats', 'gudangs'));
+        // Hitung perkiraan sequential kode obat untuk pembuatan master baru inline
+        $latest = MasterObat::whereRaw('kode_obat REGEXP "^[0-9]+$"')->orderByRaw('CAST(kode_obat AS UNSIGNED) DESC')->first();
+        if ($latest && is_numeric($latest->kode_obat)) {
+            $nextCode = sprintf('%05d', (int) $latest->kode_obat + 1);
+        } else {
+            $maxId = (int) MasterObat::max('id');
+            $nextCode = sprintf('%05d', $maxId + 1);
+        }
+
+        return view('stok-obat.create', compact('masterObats', 'gudangs', 'nextCode'));
     }
 
     /**
@@ -75,6 +86,125 @@ class StokObatController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $isNewMaster = $request->boolean('is_new_master') || $request->input('mode_master') === 'new';
+
+        if ($isNewMaster) {
+            $request->validate([
+                'new_nama_obat' => 'required|string|max:255',
+                'new_kode_obat' => 'required|string|max:100|unique:master_obats,kode_obat',
+                'new_kode_kemkes' => 'nullable|string|max:100',
+                'new_batch_obat' => 'nullable|string|max:100',
+                'new_kategori' => 'required|in:Obat,Logistik',
+                'new_satuan' => 'nullable|string|max:50',
+                'new_harga' => 'nullable|numeric|min:0',
+                'new_status' => 'nullable|in:published,draft,inactive',
+                'new_gambar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+                'new_deskripsi' => 'nullable|string',
+                'new_golongan_obat' => 'nullable|string',
+
+                'gudang_id' => 'required|exists:gudangs,id',
+                'no_batch' => 'required|string|max:100',
+                'jumlah' => 'required|integer|min:0',
+                'exp_date' => 'nullable|date',
+                'date_expired_kode' => 'nullable|string|max:100',
+                'harga_satuan' => 'nullable|numeric|min:0',
+                'kategori' => 'nullable|string|max:100',
+                'sub_kategori' => 'nullable|string|max:150',
+                'tahun_penerimaan' => 'nullable|string|max:10',
+                'kemasan' => 'nullable|string|max:100',
+                'nama_pabrikan' => 'nullable|string|max:255',
+                'no_faktur' => 'nullable|string|max:100',
+                'tgl_faktur' => 'nullable|date',
+                'no_kontrak' => 'nullable|string|max:100',
+                'tgl_kontrak' => 'nullable|date',
+                'peringatan_jumlah' => 'nullable|integer|min:0',
+                'informasi_lengkap' => 'nullable|string',
+                'keterangan' => 'nullable|string',
+            ], [
+                'new_nama_obat.required' => 'Nama Obat/Logistik Baru wajib diisi.',
+                'new_kode_obat.required' => 'Kode Obat Baru wajib diisi.',
+                'new_kode_obat.unique' => 'Kode Obat ini sudah digunakan pada Master Obat.',
+                'new_kategori.required' => 'Kategori Master (Obat atau Logistik) wajib dipilih.',
+                'gudang_id.required' => 'Lokasi Gudang penyimpanan wajib dipilih.',
+                'no_batch.required' => 'Nomor Batch wajib diisi.',
+                'jumlah.required' => 'Jumlah fisik stok wajib diisi minimal 0.',
+            ]);
+
+            DB::beginTransaction();
+            try {
+                // 1. Upload foto thumbnail master obat jika ada
+                $masterGambarPath = null;
+                if ($request->hasFile('new_gambar')) {
+                    $file = $request->file('new_gambar');
+                    $filename = time().'_'.$file->getClientOriginalName();
+                    $file->move(public_path('uploads/master_obat'), $filename);
+                    $masterGambarPath = 'uploads/master_obat/'.$filename;
+                }
+
+                // Regulasi Resep Dokter untuk Obat Keras
+                $isKeras = $request->input('new_golongan_obat') === 'Obat Keras' || $request->boolean('new_requires_prescription');
+                $kodeKemkesOrBatch = $request->new_batch_obat ?? $request->new_kode_kemkes;
+
+                $master = MasterObat::create([
+                    'kode_obat' => $request->new_kode_obat,
+                    'nama_obat' => $request->new_nama_obat,
+                    'kode_kemkes' => $kodeKemkesOrBatch,
+                    'kategori' => $request->new_kategori ?? 'Obat',
+                    'satuan' => $request->new_satuan ?: 'Pcs',
+                    'harga' => $request->new_harga ?: ($request->harga_satuan ?: 0),
+                    'status' => $request->new_status ?: 'published',
+                    'slug' => Str::slug($request->new_nama_obat).'-'.time(),
+                    'requires_prescription' => $isKeras,
+                    'gambar' => $masterGambarPath,
+                    'deskripsi' => $request->new_deskripsi,
+                ]);
+
+                // 2. Upload gambar stok fisik jika ada (atau fallback ke gambar master)
+                $stokGambarPath = $masterGambarPath;
+                if ($request->hasFile('gambar')) {
+                    $file = $request->file('gambar');
+                    $filename = time().'_'.$file->getClientOriginalName();
+                    $file->move(public_path('uploads/stok_obat'), $filename);
+                    $stokGambarPath = 'uploads/stok_obat/'.$filename;
+                }
+
+                StokObat::create([
+                    'master_obat_id' => $master->id,
+                    'gudang_id' => $request->gudang_id,
+                    'kode_obat_logistik' => $master->kode_obat,
+                    'nama_obat_logistik' => $master->nama_obat,
+                    'kategori' => $request->kategori ?: $master->kategori,
+                    'sub_kategori' => $request->sub_kategori,
+                    'tahun_penerimaan' => $request->tahun_penerimaan,
+                    'exp_date' => $request->exp_date,
+                    'date_expired_kode' => $request->date_expired_kode,
+                    'no_batch' => $request->no_batch,
+                    'satuan' => $request->new_satuan ?: $master->satuan,
+                    'kemasan' => $request->kemasan,
+                    'harga_satuan' => $request->harga_satuan ?: $master->harga,
+                    'jumlah' => $request->jumlah,
+                    'nama_pabrikan' => $request->nama_pabrikan,
+                    'no_faktur' => $request->no_faktur,
+                    'tgl_faktur' => $request->tgl_faktur,
+                    'no_kontrak' => $request->no_kontrak,
+                    'tgl_kontrak' => $request->tgl_kontrak,
+                    'peringatan_jumlah' => $request->input('peringatan_jumlah', 10),
+                    'gambar' => $stokGambarPath,
+                    'informasi_lengkap' => $request->informasi_lengkap,
+                    'keterangan' => $request->keterangan,
+                ]);
+
+                DB::commit();
+
+                return redirect()->route('stok-obat.index')->with('success', "Master Obat '{$master->nama_obat}' dan data stok fisik awal berhasil didaftarkan sekaligus!");
+            } catch (\Exception $e) {
+                DB::rollBack();
+
+                return redirect()->back()->withInput()->with('error', 'Gagal mendaftarkan obat baru: '.$e->getMessage());
+            }
+        }
+
+        // Alur Standar: Menambahkan stok fisik dari Master Obat yang sudah ada
         $validated = $request->validate([
             'master_obat_id' => 'required|exists:master_obats,id',
             'gudang_id' => 'required|exists:gudangs,id',
@@ -138,6 +268,14 @@ class StokObatController extends Controller
         StokObat::create($validated);
 
         return redirect()->route('stok-obat.index')->with('success', 'Data Obat/Logistik berhasil ditambahkan ke daftar stok!');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(int $id): RedirectResponse
+    {
+        return redirect()->route('stok-obat.edit', $id);
     }
 
     /**
@@ -269,7 +407,7 @@ class StokObatController extends Controller
         $query = StokObat::with(['masterObat', 'gudang'])->latest();
 
         $gudangId = $request->get('gudang_id');
-        if (!empty($gudangId)) {
+        if (! empty($gudangId)) {
             $query->where('gudang_id', $gudangId);
             $selectedGudangName = Gudang::find($gudangId)->nama_gudang ?? 'Semua Gudang';
         } else {

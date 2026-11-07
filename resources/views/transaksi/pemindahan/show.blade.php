@@ -80,7 +80,12 @@
                                     <td><span class="badge bg-light text-dark border">{{ $detail->masterObat->kode_obat ?? '-' }}</span></td>
                                     <td class="fw-semibold">{{ $detail->masterObat->nama_obat ?? '-' }}</td>
                                     <td>{{ $detail->masterObat->satuan ?? '-' }}</td>
-                                    <td><code>{{ $detail->no_batch }}</code></td>
+                                    <td>
+                                        <code>{{ $detail->no_batch }}</code>
+                                        @if($detail->masterObat && $detail->masterObat->kategori === 'Logistik' && $detail->masterObat->kode_kemkes)
+                                            <div class="text-muted small" style="font-size: 11px;"><i class="las la-tag me-1"></i>Kemkes: {{ $detail->masterObat->kode_kemkes }}</div>
+                                        @endif
+                                    </td>
                                     <td class="text-end fw-bold text-primary">{{ number_format($detail->jumlah) }}</td>
                                 </tr>
                                 @empty

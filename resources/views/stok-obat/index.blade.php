@@ -225,6 +225,9 @@
                                             <td>
                                                 <code class="text-dark fw-semibold">{{ $stok->display_kode }}</code>
                                                 <div class="text-muted" style="font-size: 11px;">Batch: {{ $stok->no_batch }}</div>
+                                                @if($stok->masterObat && $stok->masterObat->kategori === 'Logistik' && $stok->masterObat->kode_kemkes)
+                                                    <div class="text-muted" style="font-size: 10.5px;"><i class="las la-tag text-info me-1"></i>Kemkes: {{ $stok->masterObat->kode_kemkes }}</div>
+                                                @endif
                                             </td>
 
                                             {{-- 2. Nama Obat/Logistik --}}
@@ -448,6 +451,12 @@
                                     <th class="bg-light">Nomor Batch</th>
                                     <td><strong>{{ $stok->no_batch }}</strong></td>
                                 </tr>
+                                @if($stok->masterObat && $stok->masterObat->kategori === 'Logistik' && $stok->masterObat->kode_kemkes)
+                                <tr>
+                                    <th class="bg-light">Kode Kemkes</th>
+                                    <td><span class="badge bg-secondary-subtle text-dark border px-2 py-1 font-monospace">{{ $stok->masterObat->kode_kemkes }}</span></td>
+                                </tr>
+                                @endif
                                 <tr>
                                     <th class="bg-light">Tanggal Expired / Kode</th>
                                     <td>
@@ -550,7 +559,8 @@
     function confirmDeleteSingle(id) {
         if (confirm('Yakin ingin menghapus data stok obat ini dari sistem?')) {
             const form = document.getElementById('singleDeleteForm');
-            form.action = `/stok-obat/${id}`;
+            const baseUrl = '{{ url('stok-obat') }}';
+            form.action = `${baseUrl}/${id}`;
             form.submit();
         }
     }

@@ -11,4 +11,19 @@ class Opd extends Model
 
     // Mengizinkan semua kolom diisi secara massal
     protected $guarded = [];
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'opd_id');
+    }
+
+    public function permohonans()
+    {
+        return $this->hasMany(Permohonan::class, 'opd_id');
+    }
+
+    public function transaksis()
+    {
+        return $this->hasMany(Transaksi::class, 'instansi_id');
+    }
 }

@@ -129,10 +129,12 @@
 <template id="rowTemplate">
     <tr class="item-row">
         <td>
-            <select class="form-select select-obat" name="items[{INDEX}][master_obat_id]" required>
+            <select class="form-select select-obat" name="items[{INDEX}][master_obat_id]" required onchange="onSelectObat(this)">
                 <option value="">-- Pilih Barang --</option>
                 @foreach($masterObats as $obat)
-                    <option value="{{ $obat->id }}">{{ $obat->nama_obat }} ({{ $obat->kode_obat }}) - {{ $obat->satuan }}</option>
+                    <option value="{{ $obat->id }}" data-kategori="{{ $obat->kategori }}" data-batch="{{ $obat->kode_kemkes }}">
+                        {{ $obat->nama_obat }} ({{ $obat->kode_obat }}) - {{ $obat->satuan }}@if($obat->kode_kemkes) [{{ $obat->kategori == 'Logistik' ? 'Kemkes: ' : 'Batch: ' }}{{ $obat->kode_kemkes }}]@endif
+                    </option>
                 @endforeach
             </select>
         </td>
@@ -158,6 +160,22 @@
 @push('scripts')
 <script>
     let itemIndex = 0;
+
+    function onSelectObat(selectElem) {
+        const row = selectElem.closest('tr');
+        const selectedOption = selectElem.options[selectElem.selectedIndex];
+        if (selectedOption && selectedOption.value) {
+            const kat = selectedOption.getAttribute('data-kategori');
+            const batchOrKemkes = selectedOption.getAttribute('data-batch');
+            const batchInput = row.querySelector('input[name*="[no_batch]"]');
+            if (kat === 'Obat' && batchOrKemkes && batchInput) {
+                if (!batchInput.value || batchInput.dataset.autoSync === 'true') {
+                    batchInput.value = batchOrKemkes;
+                    batchInput.dataset.autoSync = 'true';
+                }
+            }
+        }
+    }
 
     function addItemRow() {
         const template = document.getElementById('rowTemplate').innerHTML;

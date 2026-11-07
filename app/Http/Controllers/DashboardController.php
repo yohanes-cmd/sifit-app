@@ -23,6 +23,10 @@ class DashboardController extends Controller
     {
         /** @var User|null $user */
         $user = auth()->user();
+        if ($user && $user->isOpd()) {
+            return redirect()->route('permohonan.index');
+        }
+
         if ($user && ! $user->isAdmin() && ! $user->isStaff()) {
             return redirect()->route('frontend.home')->with('error', 'Halaman panel admin hanya diperuntukkan bagi petugas.');
         }

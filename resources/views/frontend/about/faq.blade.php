@@ -80,7 +80,7 @@
                         <div class="accord-content">
                             <div class="accord-content-inner">
                                 <p>
-                                    SIFIT menyediakan direktori data obat lengkap (nama, kategori, bentuk sediaan, indikasi, ketentuan resep), data stok ketersediaan farmasi, panduan edukasi DAGUSIBU, berita dan edaran regulasi farmasi daerah, serta fitur permohonan/keranjang obat bagi fasilitas kesehatan yang berwenang.
+                                    SIFIT menyediakan direktori data obat lengkap (nama, kategori, bentuk sediaan, indikasi, ketentuan resep), data stok ketersediaan farmasi, panduan edukasi DAGUSIBU, berita dan edaran regulasi farmasi daerah, serta sistem pengajuan permohonan logistik farmasi bagi fasilitas pelayanan kesehatan dan OPD yang berwenang.
                                 </p>
                             </div>
                         </div>

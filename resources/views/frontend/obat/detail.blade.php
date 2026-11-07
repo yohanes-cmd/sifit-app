@@ -97,9 +97,6 @@
         @if(session('success'))
             <div class="alert alert-success wow fadeInDown" data-wow-delay="0.05s" style="border-radius: 6px; border-left: 4px solid #10b981; margin-bottom: 20px; padding: 10px 16px; font-size: 13px;">
                 <i class="fa fa-check-circle" style="margin-right: 6px;"></i> {{ session('success') }}
-                <a href="{{ route('frontend.cart.index') }}" style="color: #065f46; font-weight: 700; margin-left: 10px; text-decoration: underline;">
-                    Lihat Keranjang <i class="fa fa-arrow-right"></i>
-                </a>
             </div>
         @endif
 
@@ -116,7 +113,7 @@
                 <div class="col-lg-5 col-md-5 col-sm-12">
                     <div class="sifit-img-frame">
                         @php
-                            $pDetailThumb = ($product->image && file_exists(public_path('storage/'.$product->image))) ? asset('storage/'.$product->image) : asset('assets/images/product-default.svg');
+                            $pDetailThumb = $product->thumbnail_url ?? asset('assets/images/product-default.svg');
                         @endphp
                         <img
                             src="{{ $pDetailThumb }}"
@@ -137,7 +134,7 @@
                     </div>
                 </div>
 
-                {{-- DESKRIPSI & AKSI KERANJANG --}}
+                {{-- DESKRIPSI & SPESIFIKASI OBAT --}}
                 <div class="col-lg-7 col-md-7 col-sm-12">
                     <div style="padding-left: 6px;">
                         <span class="sifit-badge-cat" style="margin-bottom: 8px; display: inline-block;">
@@ -149,10 +146,9 @@
                         </h2>
 
                         <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px;">
-                            <span style="font-size: 22px; font-weight: 800; color: #115566;">
-                                Rp {{ number_format($product->price, 0, ',', '.') }}
+                            <span style="display: inline-flex; align-items: center; gap: 6px; background: #f0fdfa; border: 1px solid #ccfbf1; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 700; color: #0f766e;">
+                                <i class="fa fa-cubes"></i> Kemasan Distribusi: {{ $product->unit ?? 'Satuan' }}
                             </span>
-                            <span style="color: #64748b; font-size: 12.5px;">/ {{ $product->unit ?? 'Satuan' }}</span>
                         </div>
 
                         {{-- PERINGATAN RESEP DOKTER --}}
@@ -182,6 +178,12 @@
                                     <td>Golongan / Regulasi</td>
                                     <td>{{ $product->requires_prescription ? 'Obat Keras (Wajib Resep)' : 'Obat Bebas / Bebas Terbatas' }}</td>
                                 </tr>
+                                @if($product->kode_kemkes)
+                                    <tr>
+                                        <td>{{ $product->kategori === 'Logistik' ? 'Kode Kemkes' : 'Batch Obat' }}</td>
+                                        <td><span class="font-monospace fw-bold">{{ $product->kode_kemkes }}</span></td>
+                                    </tr>
+                                @endif
                                 <tr>
                                     <td>Satuan Kemasan</td>
                                     <td>{{ $product->unit ?? '-' }}</td>
@@ -193,30 +195,22 @@
                             </tbody>
                         </table>
 
-                        {{-- FORM TAMBAH KE KERANJANG --}}
-                        <form action="{{ route('frontend.cart.add', $product->id) }}" method="POST" style="margin-top: 18px; padding-top: 16px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                            @csrf
-                            <div style="display: flex; align-items: center; gap: 6px;">
-                                <label style="margin: 0; font-size: 12.5px; font-weight: 600; color: #475569;">Qty:</label>
-                                <input
-                                    type="number"
-                                    name="quantity"
-                                    value="1"
-                                    min="1"
-                                    max="{{ $product->stock ?? 9999 }}"
-                                    class="cart-qty-input"
-                                    style="width: 65px; height: 38px; font-size: 14px;"
-                                >
-                            </div>
-
-                            <button type="submit" class="thm-btn" style="height: 38px; padding: 0 18px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;" {{ ($product->stock ?? 0) <= 0 ? 'disabled' : '' }}>
-                                <i class="fa fa-shopping-basket"></i> Tambah ke Keranjang
-                            </button>
+                        {{-- AKSI PERMOHONAN RESMI OPD --}}
+                        <div style="margin-top: 18px; padding-top: 16px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            @auth
+                                <a href="{{ route('permohonan.create') }}" class="thm-btn" style="height: 38px; padding: 0 18px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
+                                    <i class="fa fa-clipboard-list"></i> Ajukan Permohonan Logistik Obat
+                                </a>
+                            @else
+                                <a href="{{ route('login') }}" class="thm-btn" style="height: 38px; padding: 0 18px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
+                                    <i class="fa fa-sign-in"></i> Masuk untuk Permohonan Resmi OPD
+                                </a>
+                            @endauth
 
                             <a href="{{ route('frontend.obat') }}" class="btn-style-two" style="height: 38px; padding: 0 14px; font-size: 12.5px; display: inline-flex; align-items: center; text-decoration: none;">
-                                <i class="fa fa-arrow-left" style="margin-right: 4px;"></i> Kembali
+                                <i class="fa fa-arrow-left" style="margin-right: 4px;"></i> Kembali ke Data Obat
                             </a>
-                        </form>
+                        </div>
                     </div>
                 </div>
 
@@ -253,7 +247,7 @@
                             <div class="sifit-card-rel" style="width: 100%; display: flex; flex-direction: column;">
                                 <div style="height: 130px; background: #f8fafc; padding: 8px; display: flex; align-items: center; justify-content: center; position: relative;">
                                     @php
-                                        $relThumb = ($related->image && file_exists(public_path('storage/'.$related->image))) ? asset('storage/'.$related->image) : asset('assets/images/product-default.svg');
+                                        $relThumb = $related->thumbnail_url ?? asset('assets/images/product-default.svg');
                                     @endphp
                                     <img
                                         src="{{ $relThumb }}"
@@ -268,8 +262,8 @@
                                             {{ $related->name }}
                                         </a>
                                     </h4>
-                                    <span style="font-size: 13px; font-weight: 800; color: #115566; margin-top: auto;">
-                                        Rp {{ number_format($related->price, 0, ',', '.') }}
+                                    <span style="font-size: 11.5px; font-weight: 600; color: #0f766e; margin-top: auto;">
+                                        <i class="fa fa-cubes"></i> Kemasan: {{ $related->unit ?? 'Satuan' }}
                                     </span>
                                 </div>
                             </div>

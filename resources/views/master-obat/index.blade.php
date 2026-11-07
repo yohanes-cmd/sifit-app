@@ -85,9 +85,11 @@
                     
                     {{-- Judul & Deskripsi --}}
                     <div class="mb-3">
-                        <h5 class="fw-bold mb-1" style="color: #115566;">Master Obat/Logistik</h5>
+                        <h5 class="fw-bold mb-1" style="color: #115566;">
+                            <i class="las la-cubes me-1"></i> Data Master Obat & Logistik Farmasi
+                        </h5>
                         <p class="text-muted small mb-0">
-                            Gunakan tabel dibawah untuk menampilkan dan menyaring hasil. Anda dapat men-download tabel tersebut sebagai csv, excel atau pdf.
+                            Pusat kendali master data farmasi: Pantau master obat/alkes, standarisasi batch obat & kode Kemkes logistik, agregasi stok gudang pusat, serta regulasi permohonan distribusi bagi OPD dan fasilitas pelayanan kesehatan.
                         </p>
                     </div>
 
@@ -136,47 +138,108 @@
                         <table class="table table-bordered table-hover table-striped table-master mb-0">
                             <thead>
                                 <tr>
-                                    <th style="width: 180px;">Kode Obat/Logistik</th>
-                                    <th>Nama Obat/Logistik</th>
-                                    <th style="width: 200px;">Kode Kemkes</th>
-                                    <th class="text-center" style="width: 120px;">Aksi</th>
+                                    <th style="width: 60px;" class="text-center">Foto</th>
+                                    <th style="width: 140px;">Kode & Jenis</th>
+                                    <th>Nama Obat/Logistik & Regulasi</th>
+                                    <th style="width: 150px;">Batch / Kode Kemkes</th>
+                                    <th class="text-center" style="width: 150px;">Stok Tersedia</th>
+                                    <th class="text-center" style="width: 100px;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($masterObats as $item)
                                     <tr>
-                                        {{-- 1. Kode Obat/Logistik --}}
-                                        <td>
-                                            <code class="text-dark fw-bold" style="font-size: 13.5px;">{{ $item->kode_obat }}</code>
-                                            <span class="badge ms-1 bg-{{ $item->kategori == 'Obat' ? 'success' : 'info' }}-subtle text-{{ $item->kategori == 'Obat' ? 'success' : 'info' }} border">
-                                                {{ $item->kategori }}
-                                            </span>
+                                        {{-- 1. Foto / Gambar Obat --}}
+                                        <td class="text-center align-middle">
+                                            <img src="{{ $item->thumbnail_url }}" alt="{{ $item->nama_obat }}" style="width: 44px; height: 44px; object-fit: contain; border-radius: 6px; border: 1px solid #e2e8f0; background: #ffffff; padding: 2px;">
                                         </td>
 
-                                        {{-- 2. Nama Obat/Logistik --}}
+                                        {{-- 2. Kode Obat/Logistik & Jenis --}}
                                         <td>
-                                            <span class="fw-semibold text-dark">{{ $item->nama_obat }}</span>
+                                            <code class="text-dark fw-bold" style="font-size: 13px;">{{ $item->kode_obat }}</code>
+                                            <div>
+                                                <span class="badge ms-0 bg-{{ $item->kategori == 'Obat' ? 'success' : 'info' }}-subtle text-{{ $item->kategori == 'Obat' ? 'success' : 'info' }} border mt-1" style="font-size: 10.5px;">
+                                                    <i class="las {{ $item->kategori == 'Obat' ? 'la-capsules' : 'la-boxes' }} me-1"></i>{{ $item->kategori }}
+                                                </span>
+                                            </div>
+                                        </td>
+
+                                        {{-- 3. Nama Obat/Logistik & Regulasi Farmasi --}}
+                                        <td>
+                                            <span class="fw-bold text-dark d-block" style="font-size: 13.5px;">{{ $item->nama_obat }}</span>
+                                            <div class="d-flex align-items-center gap-1 mt-1 flex-wrap">
+                                                @if($item->kategori == 'Obat')
+                                                    @if($item->requires_prescription)
+                                                        <span class="badge bg-danger-subtle text-danger border border-danger px-2 py-1" style="font-size: 10.5px;" title="Regulasi Farmasi: Wajib resep dokter">
+                                                            <i class="las la-file-prescription me-1"></i> Obat Keras (Wajib Resep)
+                                                        </span>
+                                                    @else
+                                                        <span class="badge bg-success-subtle text-success border border-success px-2 py-1" style="font-size: 10.5px;" title="Dapat diserahkan tanpa resep dokter">
+                                                            <i class="las la-check-circle me-1"></i> Obat Bebas
+                                                        </span>
+                                                    @endif
+                                                @else
+                                                    <span class="badge bg-secondary-subtle text-dark border px-2 py-1" style="font-size: 10.5px;">
+                                                        <i class="las la-boxes me-1"></i> Logistik Medis
+                                                    </span>
+                                                @endif
+                                            </div>
                                             @if($item->deskripsi)
-                                                <div class="text-muted small">{{ Str::limit($item->deskripsi, 50) }}</div>
+                                                <div class="text-muted small mt-1" style="font-size: 11.5px; line-height: 1.35;">{{ Str::limit($item->deskripsi, 60) }}</div>
                                             @endif
                                         </td>
 
-                                        {{-- 3. Kode Kemkes --}}
+                                        {{-- 4. Batch Obat (Obat) / Kode Kemkes (Logistik) --}}
                                         <td>
                                             @if($item->kode_kemkes)
-                                                <span class="badge bg-secondary-subtle text-dark border px-2 py-1">
-                                                    {{ $item->kode_kemkes }}
-                                                </span>
+                                                @if($item->kategori === 'Logistik')
+                                                    <span class="badge bg-secondary-subtle text-dark border px-2 py-1 font-monospace" title="Kode Kemkes Logistik">
+                                                        <i class="las la-tag me-1 text-primary"></i>{{ $item->kode_kemkes }}
+                                                    </span>
+                                                    <div class="text-muted mt-1" style="font-size: 10px;">Kode Kemkes</div>
+                                                @else
+                                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 font-monospace" title="Batch Obat">
+                                                        <i class="las la-barcode me-1 text-primary"></i>{{ $item->kode_kemkes }}
+                                                    </span>
+                                                    <div class="text-muted mt-1" style="font-size: 10px;">Batch Obat</div>
+                                                @endif
                                             @else
-                                                <span class="text-muted">-</span>
+                                                <span class="text-muted small">-</span>
                                             @endif
                                         </td>
 
-                                        {{-- 4. Aksi (Edit & Hapus) --}}
-                                        <td class="text-center">
+                                        {{-- 5. Stok Tersedia (Otomatis dari Daftar Stok Triggers) --}}
+                                        <td class="text-center align-middle">
+                                            @php
+                                                $stok = (int) ($item->total_stok ?? 0);
+                                            @endphp
+                                            <div>
+                                                @if($stok > 10)
+                                                    <span class="badge bg-success-subtle text-success border border-success px-2 py-1 fs-12 fw-bold">
+                                                        <i class="las la-check-circle me-1"></i> {{ number_format($stok, 0, ',', '.') }} {{ $item->satuan ?? 'Pcs' }}
+                                                    </span>
+                                                @elseif($stok > 0)
+                                                    <span class="badge bg-warning-subtle text-warning border border-warning px-2 py-1 fs-12 fw-bold">
+                                                        <i class="las la-exclamation-triangle me-1"></i> {{ number_format($stok, 0, ',', '.') }} {{ $item->satuan ?? 'Pcs' }}
+                                                    </span>
+                                                    <div class="text-warning small mt-1" style="font-size: 10px;">Stok Kritis</div>
+                                                @else
+                                                    <span class="badge bg-danger-subtle text-danger border border-danger px-2 py-1 fs-12 fw-bold">
+                                                        <i class="las la-times-circle me-1"></i> 0 {{ $item->satuan ?? 'Pcs' }}
+                                                    </span>
+                                                    <div class="text-danger small mt-1" style="font-size: 10px;">Stok Kosong</div>
+                                                @endif
+                                            </div>
+                                            <a href="{{ route('stok-obat.index', ['search' => $item->kode_obat]) }}" class="text-muted text-decoration-none mt-1 d-inline-block" style="font-size: 10.5px;" title="Lihat rincian per gudang dan batch">
+                                                <i class="las la-boxes"></i> Rincian Gudang
+                                            </a>
+                                        </td>
+
+                                        {{-- 6. Aksi (Edit & Hapus) --}}
+                                        <td class="text-center align-middle">
                                             <div class="d-inline-flex gap-1 align-items-center">
                                                 {{-- Edit Button (Warning/Kuning) --}}
-                                                <a href="{{ route('master-obat.edit', $item->id) }}" class="btn btn-sm btn-warning text-white p-1 px-2" title="Edit">
+                                                <a href="{{ route('master-obat.edit', $item->id) }}" class="btn btn-sm btn-warning text-white p-1 px-2" title="Edit Data Master Obat">
                                                     <i class="las la-edit fs-16"></i>
                                                 </a>
 
@@ -193,7 +256,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="text-center py-4 text-muted">
+                                        <td colspan="6" class="text-center py-4 text-muted">
                                             <i class="las la-pills fs-36 d-block mb-2 text-secondary"></i>
                                             Belum ada data pada katalog Master Obat/Logistik.
                                         </td>

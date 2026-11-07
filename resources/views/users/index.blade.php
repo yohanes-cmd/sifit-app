@@ -82,12 +82,11 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="opd" class="form-label">OPD <span class="text-danger">*</span></label>
-                        <!-- Tambahkan id="opd" agar terbaca oleh jQuery saat Edit -->
-                        <select name="opd" id="opd" class="form-select" required>
-                            <option value="">-- Pilih Instansi / OPD --</option>
+                        <label for="opd" class="form-label">OPD / Instansi <small class="text-muted">(Pilih OPD jika role Admin OPD / Puskesmas)</small></label>
+                        <select name="opd" id="opd" class="form-select">
+                            <option value="">-- Tanpa OPD (Gudang Pusat / Super Admin) --</option>
                             @foreach($opds as $opd)
-                                <option value="{{ $opd->nama_opd }}">{{ $opd->nama_opd }}</option>
+                                <option value="{{ $opd->id }}">{{ $opd->nama_opd }}</option>
                             @endforeach
                         </select>
                         <span class="text-danger error-text opd_error"></span>
@@ -160,7 +159,7 @@
                     $('#name').val(data.user.name);
                     $('#email').val(data.user.email);
                     $('#role').val(data.role);
-                    $('#opd').val(data.user.opd); // Mengisi nilai dropdown OPD
+                    $('#opd').val(data.user.opd_id ? data.user.opd_id : data.user.opd); // Mengisi nilai dropdown OPD
                     $('#password').val('');
                 });
             });

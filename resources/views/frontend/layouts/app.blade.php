@@ -51,11 +51,6 @@
 
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <div class="top-right sifit-top-right">
-                            @php
-                                $cartSession = session('cart', []);
-                                $totalCartQty = array_sum(array_column($cartSession, 'quantity'));
-                            @endphp
-
                             <ul class="social-links sifit-top-social">
                                 <li><a href="#" title="Facebook"><i class="fa fa-facebook"></i></a></li>
                                 <li><a href="#" title="Instagram"><i class="fa fa-instagram"></i></a></li>
@@ -105,12 +100,9 @@
                                             </li>
 
                                             <li>
-                                                <a href="{{ route('frontend.cart.index') }}" class="sifit-dropdown-item">
-                                                    <i class="fa fa-shopping-basket sifit-item-icon"></i>
-                                                    <span class="sifit-item-label">Keranjang Saya</span>
-                                                    @if($totalCartQty > 0)
-                                                        <span class="sifit-item-badge">{{ $totalCartQty }}</span>
-                                                    @endif
+                                                <a href="{{ route('permohonan.index') }}" class="sifit-dropdown-item">
+                                                    <i class="fa fa-clipboard-list sifit-item-icon"></i>
+                                                    <span class="sifit-item-label">Permohonan Obat</span>
                                                 </a>
                                             </li>
 
@@ -238,14 +230,11 @@
                             </div>
                         </nav>
 
-                        {{-- NAVBAR RIGHT ACTIONS (KERANJANG & PENCARIAN OBAT) --}}
+                        {{-- NAVBAR RIGHT ACTIONS (PERMOHONAN & PENCARIAN OBAT) --}}
                         <div class="sifit-navbar-actions pull-right">
-                            <a href="{{ route('frontend.cart.index') }}" class="sifit-nav-cart-btn" title="Keranjang Permintaan Obat">
-                                <i class="fa fa-shopping-basket"></i>
-                                <span>Keranjang</span>
-                                @if($totalCartQty > 0)
-                                    <span class="sifit-nav-cart-badge">{{ $totalCartQty }}</span>
-                                @endif
+                            <a href="{{ auth()->check() ? route('permohonan.create') : route('frontend.login') }}" class="sifit-nav-cart-btn" title="Ajukan Permohonan Logistik Obat">
+                                <i class="fa fa-clipboard-list"></i>
+                                <span>Permohonan Obat</span>
                             </a>
                             <a href="{{ route('frontend.obat') }}" class="sifit-nav-search-btn" title="Katalog Data Obat">
                                 <i class="fa fa-medkit"></i>
@@ -306,7 +295,7 @@
                                 <li><a href="{{ route('frontend.berita') }}"><i class="fa fa-angle-right"></i> Berita Farmasi</a></li>
                                 <li><a href="{{ route('frontend.obat') }}"><i class="fa fa-angle-right"></i> Data Obat</a></li>
                                 <li><a href="{{ route('frontend.contact') }}"><i class="fa fa-angle-right"></i> Kontak & Pengaduan</a></li>
-                                <li><a href="{{ route('frontend.cart.index') }}"><i class="fa fa-angle-right"></i> Keranjang Obat</a></li>
+                                <li><a href="{{ route('permohonan.create') }}"><i class="fa fa-angle-right"></i> Permohonan Obat OPD</a></li>
                             </ul>
                         </div>
                     </div>

@@ -58,19 +58,22 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
             'role' => 'required',
-            'opd' => 'required|string', // <-- 3. Validasi OPD wajib diisi
+            'opd' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'errors' => $validator->errors()]);
         }
 
-        // 4. Buat user baru dengan menyertakan OPD
+        $opdModel = Opd::where('id', $request->opd)->orWhere('nama_opd', $request->opd)->first();
+
+        // 4. Buat user baru dengan menyertakan OPD dan opd_id
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'opd' => $request->opd,
+            'opd' => $opdModel?->nama_opd ?? $request->opd,
+            'opd_id' => $opdModel?->id,
         ]);
 
         // Assign role menggunakan Spatie
@@ -93,7 +96,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$id,
             'role' => 'required',
-            'opd' => 'required|string',
+            'opd' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -103,7 +106,10 @@ class UserController extends Controller
         $user = User::find($id);
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->opd = $request->opd; // <-- 5. Pastikan OPD ikut diperbarui
+
+        $opdModel = Opd::where('id', $request->opd)->orWhere('nama_opd', $request->opd)->first();
+        $user->opd = $opdModel?->nama_opd ?? $request->opd;
+        $user->opd_id = $opdModel?->id;
 
         // Password opsional diisi saat edit
         if ($request->filled('password')) {
