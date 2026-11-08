@@ -44,8 +44,7 @@ Route::post('/register', [AuthController::class, 'register'])->middleware('throt
 Route::middleware('guest')->group(function () {
     Route::get('/masuk', [AuthController::class, 'showFrontendLoginForm'])->name('frontend.login');
     Route::post('/masuk', [AuthController::class, 'frontendLogin'])->name('frontend.login.post')->middleware('throttle:5,1');
-    Route::get('/daftar', [AuthController::class, 'showFrontendRegisterForm'])->name('frontend.register');
-    Route::post('/daftar', [AuthController::class, 'frontendRegister'])->name('frontend.register.post')->middleware('throttle:3,1');
+    Route::get('/daftar', fn () => redirect()->route('frontend.login'));
 });
 
 Route::middleware('auth')->group(function () {

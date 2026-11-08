@@ -176,50 +176,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Show the frontend registration form.
-     */
-    public function showFrontendRegisterForm(): View
-    {
-        return view('frontend.auth.register');
-    }
-
-    /**
-     * Handle a frontend customer registration with throttle protection.
-     */
-    public function frontendRegister(Request $request): RedirectResponse
-    {
-        $throttleKey = 'frontend_register|'.$request->ip();
-
-        if (RateLimiter::tooManyAttempts($throttleKey, 3)) {
-            $seconds = RateLimiter::availableIn($throttleKey);
-
-            throw ValidationException::withMessages([
-                'email' => "Terlalu banyak percobaan pendaftaran. Silakan coba lagi dalam {$seconds} detik.",
-            ]);
-        }
-
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        $role = Role::firstOrCreate(['name' => 'viewer', 'guard_name' => 'web']);
-        $user->assignRole($role);
-
-        RateLimiter::clear($throttleKey);
-        Auth::login($user);
-
-        return redirect()->route('frontend.home')->with('success', 'Pendaftaran akun berhasil! Selamat datang di SIFIT.');
-    }
-
-    /**
      * Redirect user based on their role after successful authentication.
      */
     protected function redirectBasedOnRole(Request $request): RedirectResponse

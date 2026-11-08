@@ -487,10 +487,6 @@
                         <i class="fa-solid fa-right-to-bracket"></i> Masuk Sekarang
                     </button>
                 </form>
-
-                <div class="form-footer-link">
-                    Belum punya akun? <a href="{{ route('frontend.register') }}">Daftar Akun Baru</a>
-                </div>
             </div>
         </div>
 

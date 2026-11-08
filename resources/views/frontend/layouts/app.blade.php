@@ -67,11 +67,6 @@
                                             <i class="fa fa-sign-in"></i> Masuk
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="{{ route('frontend.register') }}" class="btn-top-register">
-                                            <i class="fa fa-user-plus"></i> Daftar
-                                        </a>
-                                    </li>
                                 @else
                                     <li class="dropdown sifit-user-dropdown">
                                         <a href="#" class="dropdown-toggle user-top-badge" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
