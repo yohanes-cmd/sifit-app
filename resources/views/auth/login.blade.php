@@ -509,10 +509,6 @@
                         <i class="fa-solid fa-right-to-bracket"></i> Masuk ke Dashboard
                     </button>
                 </form>
-
-                <div class="form-footer-link">
-                    Belum memiliki akun petugas? <a href="{{ route('register') }}">Daftar di Sini</a>
-                </div>
             </div>
         </div>
 
