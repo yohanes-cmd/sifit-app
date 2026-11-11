@@ -1,43 +1,11 @@
 @extends('frontend.layouts.app')
-@section('title', 'Galeri - SIFIT Provinsi Riau')
+@section('title', ($type === 'photo' ? 'Galeri Foto' : ($type === 'video' ? 'Galeri Video' : 'Galeri Kegiatan')) . ' - SIFIT Provinsi Riau')
 
 @section('content')
 <style>
     .sifit-gallery-section {
-        padding: 40px 0 60px;
+        padding: 35px 0 60px;
         background: #f8fafc;
-    }
-    .sifit-filter-nav {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-bottom: 35px;
-        flex-wrap: wrap;
-    }
-    .sifit-filter-btn {
-        padding: 8px 22px;
-        border-radius: 30px;
-        font-size: 13.5px;
-        font-weight: 700;
-        border: 1px solid #cbd5e1;
-        background: #ffffff;
-        color: #475569;
-        text-decoration: none;
-        transition: all 0.25s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .sifit-filter-btn:hover {
-        border-color: var(--sifit-primary);
-        color: var(--sifit-primary);
-        transform: translateY(-2px);
-    }
-    .sifit-filter-btn.active {
-        background: var(--sifit-primary);
-        border-color: var(--sifit-primary);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(17, 85, 102, 0.25);
     }
     .sifit-gal-card {
         background: #ffffff;
@@ -178,14 +146,32 @@
     <div class="container">
         <div class="sifit-breadcrumb-wrapper">
             <div class="sifit-breadcrumb-left wow fadeInLeft" data-wow-delay="0.1s">
-                <h1><i class="fa fa-picture-o" style="color: var(--sifit-accent);"></i> Galeri</h1>
-                <p>Dokumentasi foto dan video pelayanan kefarmasian Dinas Kesehatan Provinsi Riau</p>
+                @if($type === 'photo')
+                    <h1><i class="fa fa-camera" style="color: var(--sifit-accent);"></i> Galeri Foto</h1>
+                    <p>Dokumentasi foto rangkaian kegiatan pelayanan kefarmasian Dinas Kesehatan Provinsi Riau</p>
+                @elseif($type === 'video')
+                    <h1><i class="fa fa-video-camera" style="color: var(--sifit-accent);"></i> Galeri Video</h1>
+                    <p>Dokumentasi video liputan kegiatan dan edukasi kefarmasian Dinas Kesehatan Provinsi Riau</p>
+                @else
+                    <h1><i class="fa fa-picture-o" style="color: var(--sifit-accent);"></i> Galeri Kegiatan</h1>
+                    <p>Dokumentasi foto dan video pelayanan kefarmasian Dinas Kesehatan Provinsi Riau</p>
+                @endif
             </div>
             <div class="sifit-breadcrumb-right wow fadeInRight" data-wow-delay="0.1s">
                 <ul class="sifit-breadcrumb-list">
                     <li><a href="{{ route('frontend.home') }}"><i class="fa fa-home"></i> Beranda</a></li>
                     <li><i class="fa fa-angle-right"></i></li>
-                    <li class="active">Galeri</li>
+                    @if($type === 'photo')
+                        <li><a href="{{ route('frontend.galeri') }}">Galeri</a></li>
+                        <li><i class="fa fa-angle-right"></i></li>
+                        <li class="active">Foto</li>
+                    @elseif($type === 'video')
+                        <li><a href="{{ route('frontend.galeri') }}">Galeri</a></li>
+                        <li><i class="fa fa-angle-right"></i></li>
+                        <li class="active">Video</li>
+                    @else
+                        <li class="active">Galeri</li>
+                    @endif
                 </ul>
             </div>
         </div>
@@ -195,19 +181,6 @@
 {{-- KONTEN GALERI --}}
 <section class="sifit-gallery-section">
     <div class="container">
-
-        {{-- FILTER TABS (Diringkas: Semua, Foto, Video) --}}
-        <div class="sifit-filter-nav wow fadeInUp" data-wow-delay="0.1s">
-            <a href="{{ route('frontend.galeri') }}" class="sifit-filter-btn {{ empty($type) ? 'active' : '' }}">
-                <i class="fa fa-th"></i> Semua ({{ $totalAll }})
-            </a>
-            <a href="{{ route('frontend.galeri', ['type' => 'photo']) }}" class="sifit-filter-btn {{ $type === 'photo' ? 'active' : '' }}">
-                <i class="fa fa-camera"></i> Foto ({{ $totalPhoto }})
-            </a>
-            <a href="{{ route('frontend.galeri', ['type' => 'video']) }}" class="sifit-filter-btn {{ $type === 'video' ? 'active' : '' }}">
-                <i class="fa fa-video-camera"></i> Video ({{ $totalVideo }})
-            </a>
-        </div>
 
         <div class="row" style="display: flex; flex-wrap: wrap;">
             @forelse($galleries as $item)
