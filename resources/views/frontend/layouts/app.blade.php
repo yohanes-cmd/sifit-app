@@ -213,8 +213,13 @@
                                         </ul>
                                     </li>
 
-                                    <li class="{{ request()->is('galeri*') ? 'current' : '' }}">
+                                    <li class="dropdown {{ request()->is('galeri*') ? 'current' : '' }}">
                                         <a href="{{ route('frontend.galeri') }}">Galeri</a>
+                                        <ul>
+                                            <li><a href="{{ route('frontend.galeri') }}">Semua Galeri</a></li>
+                                            <li><a href="{{ route('frontend.galeri', ['type' => 'photo']) }}">Galeri Foto</a></li>
+                                            <li><a href="{{ route('frontend.galeri', ['type' => 'video']) }}">Galeri Video</a></li>
+                                        </ul>
                                     </li>
 
                                     <li class="{{ request()->is('kontak') ? 'current' : '' }}">
