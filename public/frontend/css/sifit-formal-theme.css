@@ -661,6 +661,16 @@ body {
     position: relative;
 }
 
+.mainmenu-area .main-menu .navigation > li.current > a,
+.mainmenu-area .main-menu .navigation > li:hover > a {
+    color: var(--sifit-accent, #4db6ac) !important;
+}
+
+.mainmenu-area .main-menu .navigation > li.current > a {
+    background: rgba(0, 0, 0, 0.12) !important;
+    border-bottom: 3px solid var(--sifit-accent, #4db6ac) !important;
+}
+
 .mainmenu-area .main-menu .navigation > li > a:before {
     display: none !important;
 }

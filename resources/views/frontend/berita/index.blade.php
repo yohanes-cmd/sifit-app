@@ -289,6 +289,22 @@
 
                     <div class="sifit-sidebar-divider"></div>
 
+                    {{-- LINK INFORMASI OBAT --}}
+                    <div style="background: linear-gradient(135deg, #0b3a46, #115566); border-radius: 8px; padding: 14px; color: #fff; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                            <div style="width: 32px; height: 32px; border-radius: 6px; background: rgba(77, 182, 172, 0.25); display: flex; align-items: center; justify-content: center; color: #4db6ac;">
+                                <i class="fa fa-medkit"></i>
+                            </div>
+                            <strong style="font-size: 13px; font-weight: 700;">Panduan & Info Obat</strong>
+                        </div>
+                        <p style="font-size: 11.5px; color: #cbd5e1; margin-bottom: 10px; line-height: 1.4;">
+                            Edukasi prinsip DAGUSIBU, cara simpan obat, dan regulasi sediaan kefarmasian.
+                        </p>
+                        <a href="{{ route('frontend.informasi-obat') }}" class="btn btn-sm" style="background: #4db6ac; color: #0b3a46; font-size: 11px; font-weight: 700; width: 100%; text-align: center; border-radius: 5px; text-decoration: none; display: block; padding: 6px 10px;">
+                            <i class="fa fa-book-open mr-1"></i> Buka Panduan Obat
+                        </a>
+                    </div>
+
                     {{-- PPID RESMI --}}
                     <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 6px; padding: 12px; font-size: 11.5px; color: #0f766e; line-height: 1.45;">
                         <div style="display: flex; align-items: flex-start; gap: 8px;">

@@ -204,9 +204,9 @@
                             <span style="background: rgba(77, 182, 172, 0.2); color: #a7f3d0; border: 1px solid rgba(77, 182, 172, 0.4); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 10px;">
                                 <i class="fa fa-shield"></i> Pusat Layanan Resmi
                             </span>
-                            <h3 class="hub-title">Dinas Kesehatan Provinsi Riau</h3>
+                            <h3 class="hub-title">{{ $siteSettings['tentang_instansi'] ?? 'Dinas Kesehatan Provinsi Riau' }}</h3>
                             <p class="hub-desc">
-                                Seksi Kefarmasian & Alat Kesehatan — Layanan Informasi Farmasi Terintegrasi (SIFIT).
+                                {{ $siteSettings['tentang_motto'] ?? 'Seksi Kefarmasian & Alat Kesehatan — Layanan Informasi Farmasi Terintegrasi (SIFIT).' }}
                             </p>
 
                             {{-- Item 1: Alamat --}}
@@ -216,18 +216,18 @@
                                 </div>
                                 <div class="sifit-hub-text">
                                     <strong>Alamat Kantor</strong>
-                                    <span>Jl. Cut Nyak Dien III, Jadirejo, Kec. Sukajadi, Pekanbaru, Riau 28121</span>
+                                    <span>{{ $siteSettings['kontak_alamat'] ?? 'Jl. Cut Nyak Dien No. 03, Pekanbaru, Riau 28121' }}</span>
                                 </div>
                             </div>
 
-                            {{-- Item 2: Telepon & WA --}}
+                            {{-- Item 2: Telepon & Email --}}
                             <div class="sifit-hub-item">
                                 <div class="sifit-hub-icon">
                                     <i class="fa fa-phone"></i>
                                 </div>
                                 <div class="sifit-hub-text">
-                                    <strong>Telepon & Fax</strong>
-                                    <span>(0761) 23547 / (0761) 23548</span>
+                                    <strong>Telepon & Email</strong>
+                                    <span>{{ $siteSettings['kontak_telepon'] ?? '(0761) 23547' }}<br>{{ $siteSettings['kontak_email'] ?? 'dinkes@riau.go.id' }}</span>
                                 </div>
                             </div>
 
@@ -238,12 +238,12 @@
                                 </div>
                                 <div class="sifit-hub-text">
                                     <strong>Jam Operasional</strong>
-                                    <span>Senin - Kamis: 08.00 - 16.00 WIB<br>Jumat: 08.00 - 16.30 WIB</span>
+                                    <span>{{ $siteSettings['kontak_jam_layanan'] ?? 'Senin - Jumat: 08:00 - 16:00 WIB' }}</span>
                                 </div>
                             </div>
 
                             {{-- Tombol WhatsApp --}}
-                            <a href="https://wa.me/6281234567890?text=Halo%20Admin%20SIFIT%20Dinkes%20Riau,%20saya%20ingin%20berkonsultasi" target="_blank" class="sifit-wa-btn">
+                            <a href="https://wa.me/628117500119?text=Halo%20Admin%20SIFIT%20Dinkes%20Riau,%20saya%20ingin%20berkonsultasi" target="_blank" class="sifit-wa-btn">
                                 <i class="fa fa-whatsapp" style="font-size: 16px;"></i> Konsultasi Cepat via WhatsApp
                             </a>
                         </div>
@@ -251,7 +251,7 @@
                         {{-- Peta Lokasi --}}
                         <div class="sifit-hub-map">
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.658826507669!2d101.4429!3d0.5204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31d5ac033486c429%3A0x6a2c262ad0188ef6!2sDinas%20Kesehatan%20Provinsi%20Riau!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
+                                src="{{ $siteSettings['kontak_maps_embed'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.658826507669!2d101.4429!3d0.5204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31d5ac033486c429%3A0x6a2c262ad0188ef6!2sDinas%20Kesehatan%20Provinsi%20Riau!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid' }}"
                                 width="100%"
                                 height="100%"
                                 style="border:0;"

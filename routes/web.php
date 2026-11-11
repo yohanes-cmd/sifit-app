@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BackupController;
-use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\FrontendProfileController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\MasterObatController;
 use App\Http\Controllers\NewsController;
@@ -14,17 +15,18 @@ use App\Http\Controllers\PejabatController;
 use App\Http\Controllers\PemasokController;
 use App\Http\Controllers\PengangkutController;
 use App\Http\Controllers\PermohonanController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SiteSettingController;
 use App\Http\Controllers\StatusKantorController;
 use App\Http\Controllers\StokObatController;
 use App\Http\Controllers\SubKategoriController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
-use App\Models\GaleriAlbum;
-use App\Models\MasterObat;
+use App\Models\Category;
+use App\Models\Faq;
+use App\Models\Gallery;
 use App\Models\News;
 use Illuminate\Support\Facades\Route;
 
@@ -133,7 +135,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/pemasok/import', [PemasokController::class, 'import'])->name('pemasok.import');
     Route::resource('pemasok', PemasokController::class);
 
+    // Manajemen Galeri Dokumentasi (Foto & Video)
+    Route::resource('galleries', GalleryController::class);
+
     // Pengaturan
+    Route::get('/site-settings', [SiteSettingController::class, 'index'])->name('site-settings.index');
+    Route::put('/site-settings', [SiteSettingController::class, 'update'])->name('site-settings.update');
+    Route::resource('faq', FaqController::class);
     Route::resource('pejabat', PejabatController::class);
     Route::resource('program', ProgramController::class);
     Route::resource('subkategori', SubKategoriController::class);
@@ -150,28 +158,20 @@ Route::get('/home', function () {
         ->take(3)
         ->get();
 
-    $latestProducts = MasterObat::where(function ($q) {
-        $q->where('status', 'published')->orWhereNull('status');
-    })
-        ->withSum('stokObats as total_stok', 'jumlah')
-        ->latest()
-        ->take(4)
-        ->get();
+    $latestGalleries = Gallery::active()->take(6)->get();
 
-    return view('frontend.home.index', compact('latestNews', 'latestProducts'));
+    return view('frontend.home.index', compact('latestNews', 'latestGalleries'));
 })->name('frontend.home');
 
 Route::get('/about', function () {
-    $totalProducts = MasterObat::where(function ($q) {
-        $q->where('status', 'published')->orWhereNull('status');
-    })->count();
     $totalNews = News::where('status', 'publish')->count();
-    $totalCategories = MasterObat::whereNotNull('kategori')->where('kategori', '!=', '')->distinct('kategori')->count('kategori');
-    $totalPublishedInfo = $totalProducts + $totalNews;
+    $totalGalleries = Gallery::active()->count();
+    $totalCategories = Category::where('type', 'news')->count();
+    $totalPublishedInfo = $totalNews + $totalGalleries;
 
     return view('frontend.about.index', compact(
-        'totalProducts',
         'totalNews',
+        'totalGalleries',
         'totalCategories',
         'totalPublishedInfo'
     ));
@@ -186,40 +186,45 @@ Route::get('/about/fitur', function () {
 })->name('frontend.about.fitur');
 
 Route::get('/about/faq', function () {
-    return view('frontend.about.faq');
+    $faqs = Faq::active()->get();
+
+    return view('frontend.about.faq', compact('faqs'));
 })->name('frontend.about.faq');
 
-Route::get('/about/galeri', function () {
-    $galeri = GaleriAlbum::latest('id_album')->paginate(12);
+// Galeri Publik
+Route::get('/galeri', [GalleryController::class, 'frontendIndex'])
+    ->name('frontend.galeri');
+Route::get('/galeri/{gallery}', [GalleryController::class, 'frontendShow'])
+    ->name('frontend.galeri.show');
+Route::get('/about/galeri', fn () => redirect()->route('frontend.galeri'))
+    ->name('frontend.about.galeri');
 
-    return view('frontend.about.galeri', compact('galeri'));
-})->name('frontend.about.galeri');
-
+// Berita & Informasi Obat
 Route::get('/berita', [NewsController::class, 'frontendIndex'])
     ->name('frontend.berita');
 
 Route::get('/berita/kategori', [NewsController::class, 'frontendCategory'])
     ->name('frontend.berita.kategori');
 
+Route::get('/berita/informasi-obat', function () {
+    return view('frontend.obat.informasi');
+})->name('frontend.informasi-obat');
+
 Route::get('/berita/{slug}', [NewsController::class, 'frontendShow'])
     ->name('frontend.berita.detail');
 
-Route::get('/obat', [ProductController::class, 'frontendIndex'])
+// Redirect jalur lama obat ke Berita/Informasi Obat
+Route::get('/obat/informasi', fn () => redirect()->route('frontend.informasi-obat'))
+    ->name('frontend.obat.informasi');
+Route::get('/obat', fn () => redirect()->route('frontend.galeri'))
     ->name('frontend.obat');
-
-Route::get('/obat/informasi', function () {
-    return view('frontend.obat.informasi');
-})->name('frontend.obat.informasi');
-
-Route::get('/obat/{slug}', [ProductController::class, 'frontendShow'])
+Route::get('/obat/{slug}', fn () => redirect()->route('frontend.informasi-obat'))
     ->name('frontend.obat.detail');
 
-// Fitur Keranjang Belanja / Permintaan Obat
-Route::get('/keranjang', [CartController::class, 'index'])->name('frontend.cart.index');
-Route::post('/keranjang/tambah/{id}', [CartController::class, 'add'])->name('frontend.cart.add');
-Route::post('/keranjang/update', [CartController::class, 'update'])->name('frontend.cart.update');
-Route::delete('/keranjang/hapus/{id}', [CartController::class, 'remove'])->name('frontend.cart.remove');
-Route::get('/keranjang/kosongkan', [CartController::class, 'clear'])->name('frontend.cart.clear');
+// Keranjang dinonaktifkan (redirect ke Beranda publik)
+Route::any('/keranjang/{any?}', fn () => redirect()->route('frontend.home'))
+    ->where('any', '.*')
+    ->name('frontend.cart.index');
 
 Route::get('/kontak', function () {
     return view('frontend.contact.index');

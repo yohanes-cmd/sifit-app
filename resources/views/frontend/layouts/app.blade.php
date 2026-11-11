@@ -152,7 +152,7 @@
                             </div>
                             <div class="widget-text">
                                 <span class="widget-label">Jam Layanan</span>
-                                <span class="widget-value">Senin - Jumat: 08:00 - 16:00 WIB</span>
+                                <span class="widget-value">{{ $siteSettings['kontak_jam_layanan'] ?? 'Senin - Jumat: 08:00 - 16:00 WIB' }}</span>
                             </div>
                         </div>
 
@@ -165,7 +165,7 @@
                             </div>
                             <div class="widget-text">
                                 <span class="widget-label">Layanan Informasi</span>
-                                <span class="widget-value">0761-23547 / Dinkes Riau</span>
+                                <span class="widget-value">{{ $siteSettings['kontak_telepon'] ?? '0761-23547 / Dinkes Riau' }}</span>
                             </div>
                         </div>
                     </div>
@@ -205,16 +205,16 @@
                                         </ul>
                                     </li>
 
-                                    <li class="{{ request()->is('berita*') ? 'current' : '' }}">
+                                    <li class="dropdown {{ request()->is('berita*') || request()->is('informasi-obat*') ? 'current' : '' }}">
                                         <a href="{{ route('frontend.berita') }}">Berita & Info</a>
+                                        <ul>
+                                            <li><a href="{{ route('frontend.berita') }}">Berita Terkini</a></li>
+                                            <li><a href="{{ route('frontend.informasi-obat') }}">Informasi & Panduan Obat</a></li>
+                                        </ul>
                                     </li>
 
-                                    <li class="dropdown {{ request()->is('obat*') ? 'current' : '' }}">
-                                        <a href="{{ route('frontend.obat') }}">Data Obat</a>
-                                        <ul>
-                                            <li><a href="{{ route('frontend.obat') }}">Katalog Obat</a></li>
-                                            <li><a href="{{ route('frontend.obat.informasi') }}">Informasi Obat</a></li>
-                                        </ul>
+                                    <li class="{{ request()->is('galeri*') ? 'current' : '' }}">
+                                        <a href="{{ route('frontend.galeri') }}">Galeri</a>
                                     </li>
 
                                     <li class="{{ request()->is('kontak') ? 'current' : '' }}">
@@ -224,19 +224,6 @@
                                 </ul>
                             </div>
                         </nav>
-
-                        {{-- NAVBAR RIGHT ACTIONS (PERMOHONAN & PENCARIAN OBAT) --}}
-                        <div class="sifit-navbar-actions pull-right">
-                            <a href="{{ auth()->check() ? route('permohonan.create') : route('frontend.login') }}" class="sifit-nav-cart-btn" title="Ajukan Permohonan Logistik Obat">
-                                <i class="fa fa-clipboard-list"></i>
-                                <span>Permohonan Obat</span>
-                            </a>
-                            <a href="{{ route('frontend.obat') }}" class="sifit-nav-search-btn" title="Katalog Data Obat">
-                                <i class="fa fa-medkit"></i>
-                                <span>Cari Obat</span>
-                            </a>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -287,8 +274,8 @@
                             <ul class="usefull-links">
                                 <li><a href="{{ route('frontend.home') }}"><i class="fa fa-angle-right"></i> Beranda</a></li>
                                 <li><a href="{{ route('frontend.about') }}"><i class="fa fa-angle-right"></i> Profil & Visi Misi</a></li>
-                                <li><a href="{{ route('frontend.berita') }}"><i class="fa fa-angle-right"></i> Berita Farmasi</a></li>
-                                <li><a href="{{ route('frontend.obat') }}"><i class="fa fa-angle-right"></i> Data Obat</a></li>
+                                <li><a href="{{ route('frontend.berita') }}"><i class="fa fa-angle-right"></i> Berita & Informasi</a></li>
+                                <li><a href="{{ route('frontend.galeri') }}"><i class="fa fa-angle-right"></i> Galeri</a></li>
                                 <li><a href="{{ route('frontend.contact') }}"><i class="fa fa-angle-right"></i> Kontak & Pengaduan</a></li>
                                 <li><a href="{{ route('permohonan.create') }}"><i class="fa fa-angle-right"></i> Permohonan Obat OPD</a></li>
                             </ul>
@@ -303,8 +290,9 @@
                                 <span class="border"></span>
                             </div>
                             <ul class="usefull-links">
-                                <li><a href="{{ route('frontend.obat.informasi') }}"><i class="fa fa-angle-right"></i> Panduan Penggunaan Obat</a></li>
+                                <li><a href="{{ route('frontend.informasi-obat') }}"><i class="fa fa-angle-right"></i> Panduan Penggunaan Obat</a></li>
                                 <li><a href="{{ route('frontend.about.faq') }}"><i class="fa fa-angle-right"></i> Tanya Jawab (FAQ)</a></li>
+                                <li><a href="{{ route('frontend.galeri') }}"><i class="fa fa-angle-right"></i> Dokumentasi Kegiatan</a></li>
                                 <li><a href="{{ route('frontend.contact') }}"><i class="fa fa-angle-right"></i> Pengaduan & Kontak</a></li>
                                 <li><a href="{{ route('login') }}"><i class="fa fa-angle-right"></i> Akses Panel Instansi</a></li>
                             </ul>
@@ -324,7 +312,7 @@
                                         <i class="fa fa-building-o"></i>
                                     </div>
                                     <div class="text-holder">
-                                        <h5>Dinas Kesehatan Provinsi Riau</h5>
+                                        <h5>{{ $siteSettings['tentang_instansi'] ?? 'Dinas Kesehatan Provinsi Riau' }}</h5>
                                     </div>
                                 </li>
                                 <li>
@@ -332,7 +320,7 @@
                                         <i class="fa fa-map-marker"></i>
                                     </div>
                                     <div class="text-holder">
-                                        <h5>Jl. Cut Nyak Dien III, Pekanbaru, Riau</h5>
+                                        <h5>{{ $siteSettings['kontak_alamat'] ?? 'Jl. Cut Nyak Dien No. 03, Pekanbaru, Riau' }}</h5>
                                     </div>
                                 </li>
                                 <li>
@@ -340,7 +328,7 @@
                                         <i class="fa fa-envelope-o"></i>
                                     </div>
                                     <div class="text-holder">
-                                        <h5>dinkes@riau.go.id</h5>
+                                        <h5>{{ $siteSettings['kontak_email'] ?? 'dinkes@riau.go.id' }}</h5>
                                     </div>
                                 </li>
                                 <li>
@@ -348,7 +336,7 @@
                                         <i class="fa fa-clock-o"></i>
                                     </div>
                                     <div class="text-holder">
-                                        <h5>Senin - Jumat: 08:00 - 16:00 WIB</h5>
+                                        <h5>{{ $siteSettings['kontak_jam_layanan'] ?? 'Senin - Jumat: 08:00 - 16:00 WIB' }}</h5>
                                     </div>
                                 </li>
                             </ul>

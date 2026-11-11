@@ -46,117 +46,31 @@
         </div>
 
         <div class="row">
-            {{-- KOLOM KIRI: ACCORDION FAQ MODERN --}}
+            {{-- KOLOM KIRI: ACCORDION FAQ MODERN (DINAMIS DATABASE) --}}
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                 <div class="accordion-box">
                     
-                    {{-- FAQ 1 --}}
-                    <div class="accordion accordion-block wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="accord-btn active">
-                            <h4>
-                                <i class="fa fa-question-circle"></i>
-                                <span>Apa itu SIFIT Provinsi Riau?</span>
-                            </h4>
-                            <span class="sifit-faq-indicator"><i class="fa fa-chevron-down"></i></span>
-                        </div>
-                        <div class="accord-content collapsed" style="display: block;">
-                            <div class="accord-content-inner">
-                                <p>
-                                    <strong>SIFIT (Sistem Informasi Farmasi Terintegrasi)</strong> adalah platform digital resmi yang dikelola oleh Dinas Kesehatan Pemerintah Provinsi Riau untuk menyajikan informasi katalog obat, edukasi penggunaan obat yang benar (DAGUSIBU), ketersediaan farmasi daerah, dan berita kesehatan terkini secara transparan dan mudah diakses.
-                                </p>
+                    @forelse($faqs as $index => $item)
+                        <div class="accordion accordion-block wow fadeInUp" data-wow-delay="{{ 0.1 + ($index * 0.05) }}s">
+                            <div class="accord-btn {{ $index === 0 ? 'active' : '' }}">
+                                <h4>
+                                    <i class="fa fa-question-circle"></i>
+                                    <span>{{ $item->question }}</span>
+                                </h4>
+                                <span class="sifit-faq-indicator"><i class="fa fa-chevron-down"></i></span>
+                            </div>
+                            <div class="accord-content {{ $index === 0 ? 'collapsed' : '' }}" style="{{ $index === 0 ? 'display: block;' : '' }}">
+                                <div class="accord-content-inner">
+                                    <p>{!! nl2br(e($item->answer)) !!}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    {{-- FAQ 2 --}}
-                    <div class="accordion accordion-block wow fadeInUp" data-wow-delay="0.15s">
-                        <div class="accord-btn">
-                            <h4>
-                                <i class="fa fa-question-circle"></i>
-                                <span>Informasi apa saja yang tersedia di dalam SIFIT?</span>
-                            </h4>
-                            <span class="sifit-faq-indicator"><i class="fa fa-chevron-down"></i></span>
+                    @empty
+                        <div class="p-4 bg-white rounded border text-center text-muted">
+                            <i class="fa fa-info-circle fa-2x mb-2 text-muted"></i>
+                            <p class="mb-0">Belum ada pertanyaan FAQ yang dipublikasikan.</p>
                         </div>
-                        <div class="accord-content">
-                            <div class="accord-content-inner">
-                                <p>
-                                    SIFIT menyediakan direktori data obat lengkap (nama, kategori, bentuk sediaan, indikasi, ketentuan resep), data stok ketersediaan farmasi, panduan edukasi DAGUSIBU, berita dan edaran regulasi farmasi daerah, serta sistem pengajuan permohonan logistik farmasi bagi fasilitas pelayanan kesehatan dan OPD yang berwenang.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- FAQ 3 --}}
-                    <div class="accordion accordion-block wow fadeInUp" data-wow-delay="0.2s">
-                        <div class="accord-btn">
-                            <h4>
-                                <i class="fa fa-question-circle"></i>
-                                <span>Bagaimana cara mencari data obat tertentu?</span>
-                            </h4>
-                            <span class="sifit-faq-indicator"><i class="fa fa-chevron-down"></i></span>
-                        </div>
-                        <div class="accord-content">
-                            <div class="accord-content-inner">
-                                <p>
-                                    Anda dapat menggunakan kotak pencarian di halaman Beranda atau membuka menu <a href="{{ route('frontend.obat') }}" style="color: var(--sifit-primary); font-weight: 700; text-decoration: underline;">Data Obat</a>, lalu ketik nama obat, zat aktif, atau pilih kategori yang diinginkan pada panel filter sebelah kiri.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- FAQ 4 --}}
-                    <div class="accordion accordion-block wow fadeInUp" data-wow-delay="0.25s">
-                        <div class="accord-btn">
-                            <h4>
-                                <i class="fa fa-question-circle"></i>
-                                <span>Apakah data obat dapat difilter berdasarkan kategori?</span>
-                            </h4>
-                            <span class="sifit-faq-indicator"><i class="fa fa-chevron-down"></i></span>
-                        </div>
-                        <div class="accord-content">
-                            <div class="accord-content-inner">
-                                <p>
-                                    Ya. Data obat telah dikelompokkan secara terstruktur berdasarkan kategori (seperti Analgesik, Antibiotik, Vitamin, dsb.) serta ketentuan resep dokter, sehingga memudahkan pengguna untuk menelusuri jenis obat yang sesuai.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- FAQ 5 --}}
-                    <div class="accordion accordion-block wow fadeInUp" data-wow-delay="0.3s">
-                        <div class="accord-btn">
-                            <h4>
-                                <i class="fa fa-question-circle"></i>
-                                <span>Apakah masyarakat umum dapat mengakses informasi SIFIT?</span>
-                            </h4>
-                            <span class="sifit-faq-indicator"><i class="fa fa-chevron-down"></i></span>
-                        </div>
-                        <div class="accord-content">
-                            <div class="accord-content-inner">
-                                <p>
-                                    Ya. Seluruh masyarakat dapat mengakses informasi katalog obat, panduan DAGUSIBU, dan warta farmasi secara terbuka dan gratis tanpa perlu registrasi login.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- FAQ 6 --}}
-                    <div class="accordion accordion-block wow fadeInUp" data-wow-delay="0.35s">
-                        <div class="accord-btn">
-                            <h4>
-                                <i class="fa fa-question-circle"></i>
-                                <span>Apakah obat yang memerlukan resep dokter bisa dipesan bebas?</span>
-                            </h4>
-                            <span class="sifit-faq-indicator"><i class="fa fa-chevron-down"></i></span>
-                        </div>
-                        <div class="accord-content">
-                            <div class="accord-content-inner">
-                                <p>
-                                    Tidak. Obat dengan tanda <em>Resep Dokter</em> (Obat Keras/Psikotropika) wajib menyertakan dokumen resep medis resmi dan divalidasi oleh apoteker/tenaga kefarmasian sesuai peraturan perundang-undangan kesehatan yang berlaku.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    @endforelse
 
                 </div>
             </div>
@@ -171,7 +85,7 @@
                             <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="Logo SIFIT" style="height: 38px; object-fit: contain;">
                             <div>
                                 <h3 style="margin: 0; font-size: 15.5px; font-weight: 800; color: var(--sifit-primary);">Pusat Layanan SIFIT</h3>
-                                <span style="font-size: 11.5px; color: #64748b; font-weight: 600;">Dinas Kesehatan Provinsi Riau</span>
+                                <span style="font-size: 11.5px; color: #64748b; font-weight: 600;">{{ $siteSettings['tentang_instansi'] ?? 'Dinas Kesehatan Provinsi Riau' }}</span>
                             </div>
                         </div>
 
@@ -182,15 +96,15 @@
                         <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px;">
                             <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: #334155; background: #f8fafc; padding: 7px 12px; border-radius: 6px;">
                                 <i class="fa fa-clock-o" style="color: var(--sifit-primary); font-size: 13px;"></i>
-                                <span>Senin - Jumat: 08.00 - 16.00 WIB</span>
+                                <span>{{ $siteSettings['kontak_jam_layanan'] ?? 'Senin - Jumat: 08:00 - 16:00 WIB' }}</span>
                             </div>
                             <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: #334155; background: #f8fafc; padding: 7px 12px; border-radius: 6px;">
                                 <i class="fa fa-phone" style="color: var(--sifit-primary); font-size: 13px;"></i>
-                                <span>(0761) 23547 / Dinkes Riau</span>
+                                <span>{{ $siteSettings['kontak_telepon'] ?? '0761-23547 / Dinkes Riau' }}</span>
                             </div>
                             <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: #334155; background: #f8fafc; padding: 7px 12px; border-radius: 6px;">
                                 <i class="fa fa-map-marker" style="color: var(--sifit-primary); font-size: 13px;"></i>
-                                <span>Jl. Cut Nyak Dien III, Pekanbaru</span>
+                                <span>{{ $siteSettings['kontak_alamat'] ?? 'Jl. Cut Nyak Dien No. 03, Pekanbaru' }}</span>
                             </div>
                         </div>
 
@@ -206,13 +120,13 @@
                         </h4>
                         <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px;">
                             <li>
-                                <a href="{{ route('frontend.obat') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #f8fafc; border-radius: 6px; color: #334155; font-size: 12.5px; font-weight: 600; text-decoration: none; transition: all 0.2s ease;">
-                                    <span><i class="fa fa-medkit" style="color: var(--sifit-primary); margin-right: 8px;"></i> Katalog Obat Lengkap</span>
+                                <a href="{{ route('frontend.galeri') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #f8fafc; border-radius: 6px; color: #334155; font-size: 12.5px; font-weight: 600; text-decoration: none; transition: all 0.2s ease;">
+                                    <span><i class="fa fa-picture-o" style="color: var(--sifit-primary); margin-right: 8px;"></i> Galeri Foto & Video</span>
                                     <i class="fa fa-chevron-right" style="font-size: 10px; color: #94a3b8;"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('frontend.obat.informasi') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #f8fafc; border-radius: 6px; color: #334155; font-size: 12.5px; font-weight: 600; text-decoration: none; transition: all 0.2s ease;">
+                                <a href="{{ route('frontend.informasi-obat') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #f8fafc; border-radius: 6px; color: #334155; font-size: 12.5px; font-weight: 600; text-decoration: none; transition: all 0.2s ease;">
                                     <span><i class="fa fa-book" style="color: var(--sifit-primary); margin-right: 8px;"></i> Panduan Penggunaan Obat</span>
                                     <i class="fa fa-chevron-right" style="font-size: 10px; color: #94a3b8;"></i>
                                 </a>

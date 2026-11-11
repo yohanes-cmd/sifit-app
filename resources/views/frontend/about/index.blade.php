@@ -37,13 +37,13 @@
                         <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="Logo SIFIT" class="emblem-sifit" style="height: 64px;">
                     </div>
                     <div class="card-body-text">
-                        <span class="badge-label"><i class="fa fa-shield"></i> Portal Resmi Pelayanan Publik</span>
+                        <span class="badge-label"><i class="fa fa-shield"></i> {{ $siteSettings['tentang_tagline'] ?? 'Portal Resmi Pelayanan Publik' }}</span>
                         <h3>SIFIT Provinsi Riau</h3>
-                        <p class="instansi">Dinas Kesehatan Pemerintah Provinsi Riau</p>
+                        <p class="instansi">{{ $siteSettings['tentang_instansi'] ?? 'Dinas Kesehatan Pemerintah Provinsi Riau' }}</p>
                         <div class="card-features">
                             <div class="feat-item">
                                 <i class="fa fa-check-circle"></i>
-                                <span>Informasi Obat Terstandarisasi</span>
+                                <span>Informasi Farmasi Terstandarisasi</span>
                             </div>
                             <div class="feat-item">
                                 <i class="fa fa-check-circle"></i>
@@ -51,12 +51,12 @@
                             </div>
                             <div class="feat-item">
                                 <i class="fa fa-check-circle"></i>
-                                <span>Transparansi Ketersediaan Farmasi Daerah</span>
+                                <span>Dokumentasi & Galeri Kegiatan Daerah</span>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer-info">
-                        <span class="motto">"Mewujudkan Pelayanan Kesehatan Berdaya Saing & Terpercaya"</span>
+                        <span class="motto">"{{ $siteSettings['tentang_motto'] ?? 'Mewujudkan Pelayanan Kesehatan Berdaya Saing, Transparan & Terpercaya' }}"</span>
                     </div>
                 </div>
             </div>
@@ -66,18 +66,18 @@
                 <div style="padding-left: 10px;">
                     <span class="sifit-section-tag">Profil Instansi</span>
                     <h2 style="font-size: 24px; font-weight: 800; color: #1e293b; margin: 6px 0 12px; line-height: 1.3;">
-                        Selamat Datang di Portal Resmi SIFIT
+                        {{ $siteSettings['tentang_judul'] ?? 'Selamat Datang di Portal Resmi SIFIT' }}
                     </h2>
-                    <p style="font-size: 14px; color: #64748b; line-height: 1.65; margin-bottom: 18px;">
-                        <strong>SIFIT (Sistem Informasi Farmasi Terintegrasi)</strong> adalah platform digital resmi yang dikembangkan oleh Seksi Kefarmasian & Alat Kesehatan Dinas Kesehatan Pemerintah Provinsi Riau.
-                    </p>
-                    <p style="font-size: 13.5px; color: #64748b; line-height: 1.65; margin-bottom: 20px;">
-                        Platform ini dihadirkan untuk memberikan kemudahan bagi masyarakat, tenaga kesehatan, serta fasilitas pelayanan kesehatan dalam memperoleh informasi resmi ketersediaan obat, edukasi penggunaan obat yang aman (DAGUSIBU), serta transparansi kebijakan logistik farmasi pemerintah daerah.
-                    </p>
+                    <div style="font-size: 14px; color: #64748b; line-height: 1.7; margin-bottom: 20px;">
+                        {!! nl2br(e($siteSettings['tentang_deskripsi'] ?? 'SIFIT (Sistem Informasi Farmasi Terintegrasi) adalah platform digital resmi yang dikembangkan oleh Seksi Kefarmasian & Alat Kesehatan Dinas Kesehatan Pemerintah Provinsi Riau.')) !!}
+                    </div>
 
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <a href="{{ route('frontend.obat') }}" class="thm-btn" style="padding: 9px 20px; font-size: 12.5px; border-radius: 6px;">
-                            <i class="fa fa-medkit"></i> Lihat Katalog Obat
+                        <a href="{{ route('frontend.galeri') }}" class="thm-btn" style="padding: 9px 20px; font-size: 12.5px; border-radius: 6px;">
+                            <i class="fa fa-picture-o"></i> Lihat Galeri Kegiatan
+                        </a>
+                        <a href="{{ route('frontend.berita') }}" class="btn-style-two" style="padding: 9px 18px; font-size: 12.5px; text-decoration: none; border-radius: 6px;">
+                            <i class="fa fa-newspaper-o"></i> Baca Berita Terkini
                         </a>
                         <a href="{{ route('frontend.contact') }}" class="btn-style-two" style="padding: 9px 18px; font-size: 12.5px; text-decoration: none; border-radius: 6px;">
                             <i class="fa fa-phone"></i> Hubungi Pengelola
@@ -114,7 +114,7 @@
                     </div>
                     <div style="background: #f8fafc; border-left: 4px solid var(--sifit-accent); padding: 16px; border-radius: 0 8px 8px 0;">
                         <p style="margin: 0; font-size: 14px; line-height: 1.7; color: #334155; font-weight: 600;">
-                            "Menjadi sistem informasi farmasi yang terintegrasi, mudah diakses, dan mampu mendukung penyampaian informasi obat serta informasi kefarmasian kepada masyarakat secara akurat, transparan, dan terpercaya di Provinsi Riau."
+                            "{{ $siteSettings['visi_sifit'] ?? 'Menjadi sistem informasi farmasi yang terintegrasi, mudah diakses, dan mampu mendukung penyampaian informasi obat serta informasi kefarmasian kepada masyarakat secara akurat, transparan, dan terpercaya di Provinsi Riau.' }}"
                         </p>
                     </div>
                 </div>
@@ -130,22 +130,17 @@
                         <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--sifit-primary);">Misi Pelayanan</h3>
                     </div>
                     <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
-                        <li style="display: flex; align-items: flex-start; gap: 10px; background: #f8fafc; padding: 9px 12px; border-radius: 6px; border: 1px solid #eef2f6;">
-                            <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 15px; margin-top: 2px;"></i>
-                            <span style="font-size: 13px; color: #334155; line-height: 1.45;">Menyediakan informasi obat yang tersusun jelas, terverifikasi, dan mudah diakses publik.</span>
-                        </li>
-                        <li style="display: flex; align-items: flex-start; gap: 10px; background: #f8fafc; padding: 9px 12px; border-radius: 6px; border: 1px solid #eef2f6;">
-                            <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 15px; margin-top: 2px;"></i>
-                            <span style="font-size: 13px; color: #334155; line-height: 1.45;">Mempermudah pencarian ketersediaan, indikasi, dan petunjuk pemakaian obat secara digital.</span>
-                        </li>
-                        <li style="display: flex; align-items: flex-start; gap: 10px; background: #f8fafc; padding: 9px 12px; border-radius: 6px; border: 1px solid #eef2f6;">
-                            <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 15px; margin-top: 2px;"></i>
-                            <span style="font-size: 13px; color: #334155; line-height: 1.45;">Menyajikan warta resmi, regulasi terkini, dan edukasi kefarmasian yang kredibel.</span>
-                        </li>
-                        <li style="display: flex; align-items: flex-start; gap: 10px; background: #f8fafc; padding: 9px 12px; border-radius: 6px; border: 1px solid #eef2f6;">
-                            <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 15px; margin-top: 2px;"></i>
-                            <span style="font-size: 13px; color: #334155; line-height: 1.45;">Mendukung tata kelola logistik farmasi pemerintah daerah yang transparan dan akuntabel.</span>
-                        </li>
+                        @php
+                            $misiList = preg_split('/\r\n|\r|\n/', $siteSettings['misi_sifit'] ?? '');
+                        @endphp
+                        @foreach($misiList as $misi)
+                            @if(trim($misi))
+                                <li style="display: flex; align-items: flex-start; gap: 10px; background: #f8fafc; padding: 9px 12px; border-radius: 6px; border: 1px solid #eef2f6;">
+                                    <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 15px; margin-top: 2px;"></i>
+                                    <span style="font-size: 13px; color: #334155; line-height: 1.45;">{{ trim($misi) }}</span>
+                                </li>
+                            @endif
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -171,8 +166,8 @@
                     <div class="sifit-service-icon-box" style="margin-bottom: 12px; width: 44px; height: 44px; font-size: 18px;">
                         <i class="fa fa-medkit"></i>
                     </div>
-                    <h3 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px;">Katalog Obat Terverifikasi</h3>
-                    <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin: 0;">Data obat lengkap meliputi kategori, stok, ketentuan resep, dan satuan resmi.</p>
+                    <h3 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px;">{{ $siteSettings['tujuan_1_judul'] ?? 'Katalog & Transparansi Farmasi' }}</h3>
+                    <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin: 0;">{{ $siteSettings['tujuan_1_isi'] ?? 'Data obat lengkap meliputi kategori, stok, ketentuan resep, dan satuan resmi.' }}</p>
                 </div>
             </div>
 
@@ -181,8 +176,8 @@
                     <div class="sifit-service-icon-box" style="margin-bottom: 12px; width: 44px; height: 44px; font-size: 18px;">
                         <i class="fa fa-book"></i>
                     </div>
-                    <h3 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px;">Edukasi DAGUSIBU</h3>
-                    <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin: 0;">Sosialisasi resmi mengenai tata cara Dapatkan, Gunakan, Simpan, dan Buang obat secara tepat.</p>
+                    <h3 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px;">{{ $siteSettings['tujuan_2_judul'] ?? 'Edukasi DAGUSIBU' }}</h3>
+                    <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin: 0;">{{ $siteSettings['tujuan_2_isi'] ?? 'Sosialisasi resmi mengenai tata cara Dapatkan, Gunakan, Simpan, dan Buang obat secara tepat.' }}</p>
                 </div>
             </div>
 
@@ -191,8 +186,8 @@
                     <div class="sifit-service-icon-box" style="margin-bottom: 12px; width: 44px; height: 44px; font-size: 18px;">
                         <i class="fa fa-shield"></i>
                     </div>
-                    <h3 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px;">Transparansi & Akuntabilitas</h3>
-                    <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin: 0;">Mendukung keterbukaan informasi publik kefarmasian Dinas Kesehatan Provinsi Riau.</p>
+                    <h3 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 6px;">{{ $siteSettings['tujuan_3_judul'] ?? 'Transparansi & Akuntabilitas' }}</h3>
+                    <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin: 0;">{{ $siteSettings['tujuan_3_isi'] ?? 'Mendukung keterbukaan informasi publik kefarmasian Dinas Kesehatan Provinsi Riau.' }}</p>
                 </div>
             </div>
         </div>

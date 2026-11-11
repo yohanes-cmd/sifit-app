@@ -140,6 +140,13 @@
                         </div>
                     </li>
 
+                    <!-- Menu Galeri Foto & Video -->
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('galleries*') ? 'active' : '' }}" href="{{ route('galleries.index') }}">
+                            <i class="las la-photo-video menu-icon"></i>
+                            <span>Galeri Foto & Video</span>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('master-obat.*') ? 'active' : '' }}" href="{{ route('master-obat.index') }}">
                             <i class="las la-pills menu-icon"></i>
@@ -236,8 +243,14 @@
                             <i class="las la-cog menu-icon"></i>
                             <span>Pengaturan</span>
                         </a>
-                        <div class="collapse {{ request()->is('pejabat*') || request()->is('program*') || request()->is('categories*') || request()->is('subkategori*') || request()->is('gudang*') || request()->is('pengangkut*') || request()->is('backup*') || request()->is('status-kantor*') ? 'show' : '' }}" id="sidebarPengaturan">
+                        <div class="collapse {{ request()->is('site-settings*') || request()->is('faq*') || request()->is('pejabat*') || request()->is('program*') || request()->is('categories*') || request()->is('subkategori*') || request()->is('gudang*') || request()->is('pengangkut*') || request()->is('backup*') || request()->is('status-kantor*') ? 'show' : '' }}" id="sidebarPengaturan">
                             <ul class="nav flex-column sub-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->routeIs('site-settings.*') ? 'active' : '' }}" href="{{ route('site-settings.index') }}">Konten SIFIT & Kontak</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->routeIs('faq.*') ? 'active' : '' }}" href="{{ route('faq.index') }}">FAQ / Tanya Jawab</a>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link {{ request()->routeIs('pejabat.*') ? 'active' : '' }}" href="{{ route('pejabat.index') }}">Setting Pejabat</a>
                                 </li>

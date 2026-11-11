@@ -22,21 +22,21 @@
                     </h1>
 
                     <p class="sifit-hero-desc">
-                        Layanan publik terpadu untuk ketersediaan obat, transparansi data kefarmasian, dan panduan kesehatan resmi bagi masyarakat dan fasilitas kesehatan Provinsi Riau.
+                        {{ $siteSettings['beranda_hero_ringkasan'] ?? 'Portal resmi keterbukaan informasi kefarmasian, edukasi penggunaan obat yang aman (prinsip DAGUSIBU), berita kesehatan, dan dokumentasi penyaluran perbekalan farmasi Dinas Kesehatan Provinsi Riau.' }}
                     </p>
 
-                    {{-- SEARCH BOX DALAM HERO --}}
+                    {{-- SEARCH BOX DALAM HERO (PENCARIAN BERITA & INFORMASI) --}}
                     <div class="sifit-hero-search-wrapper">
-                        <form action="{{ route('frontend.obat') }}" method="GET" class="sifit-hero-search-box">
+                        <form action="{{ route('frontend.berita') }}" method="GET" class="sifit-hero-search-box">
                             <span class="search-icon"><i class="fa fa-search"></i></span>
                             <input
                                 type="text"
                                 name="search"
-                                placeholder="Cari nama obat (cth: Paracetamol, Amoxicillin, Vitamin C)..."
+                                placeholder="Cari informasi publik, berita, atau panduan kefarmasian..."
                                 autocomplete="off"
                             >
                             <button type="submit" class="sifit-hero-search-btn">
-                                <span>Cari Obat</span>
+                                <span>Cari Informasi</span>
                                 <i class="fa fa-arrow-right"></i>
                             </button>
                         </form>
@@ -44,11 +44,11 @@
 
                     {{-- TAG PENCARIAN POPULER --}}
                     <div class="sifit-hero-tags">
-                        <span><i class="fa fa-fire"></i> Kategori Cepat:</span>
-                        <a href="{{ route('frontend.obat', ['search' => 'Paracetamol']) }}" class="sifit-hero-tag">Paracetamol</a>
-                        <a href="{{ route('frontend.obat', ['search' => 'Antibiotik']) }}" class="sifit-hero-tag">Antibiotik</a>
-                        <a href="{{ route('frontend.obat', ['search' => 'Vitamin']) }}" class="sifit-hero-tag">Vitamin</a>
-                        <a href="{{ route('frontend.obat', ['search' => 'Antasida']) }}" class="sifit-hero-tag">Antasida</a>
+                        <span><i class="fa fa-fire"></i> Info Populer:</span>
+                        <a href="{{ route('frontend.informasi-obat') }}" class="sifit-hero-tag">Panduan DAGUSIBU</a>
+                        <a href="{{ route('frontend.galeri') }}" class="sifit-hero-tag">Galeri Kegiatan</a>
+                        <a href="{{ route('frontend.about.faq') }}" class="sifit-hero-tag">Tanya Jawab (FAQ)</a>
+                        <a href="{{ route('frontend.contact') }}" class="sifit-hero-tag">Kontak Pengaduan</a>
                     </div>
                 </div>
             </div>
@@ -61,40 +61,40 @@
                             <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="Logo SIFIT" class="sifit-hero-card-logo">
                         </div>
                         <div class="sifit-hero-card-title">
-                            <h3>SIFIT RIAU HEALTH HUB</h3>
-                            <span>Instalasi Farmasi & Informasi Obat</span>
+                            <h3>SIFIT RIAU PORTAL</h3>
+                            <span>{{ $siteSettings['tentang_instansi'] ?? 'Dinas Kesehatan Pemerintah Provinsi Riau' }}</span>
                         </div>
                     </div>
 
                     {{-- STATISTIK SINGKAT --}}
                     <div class="sifit-hero-stats-row">
                         <div class="sifit-hero-stat-pill">
-                            <span class="sifit-hero-stat-num">{{ $latestProducts->count() }}+</span>
-                            <span class="sifit-hero-stat-label">Obat Terdata</span>
-                        </div>
-                        <div class="sifit-hero-stat-pill">
                             <span class="sifit-hero-stat-num">{{ $latestNews->count() }}+</span>
                             <span class="sifit-hero-stat-label">Berita Terkini</span>
                         </div>
                         <div class="sifit-hero-stat-pill">
+                            <span class="sifit-hero-stat-num">{{ $latestGalleries->count() }}+</span>
+                            <span class="sifit-hero-stat-label">Galeri Media</span>
+                        </div>
+                        <div class="sifit-hero-stat-pill">
                             <span class="sifit-hero-stat-num">24/7</span>
-                            <span class="sifit-hero-stat-label">Akses Terpadu</span>
+                            <span class="sifit-hero-stat-label">Informasi Publik</span>
                         </div>
                     </div>
 
                     {{-- TOMBOL TINDAKAN CEPAT --}}
                     <div class="sifit-hero-card-actions">
-                        <a href="{{ route('frontend.obat') }}" class="sifit-btn-hero-primary">
-                            <i class="fa fa-medkit"></i> Jelajahi Direktori & Katalog Obat
+                        <a href="{{ route('frontend.berita') }}" class="sifit-btn-hero-primary">
+                            <i class="fa fa-newspaper-o"></i> Baca Berita & Informasi Terkini
                         </a>
-                        <a href="{{ route('frontend.obat.informasi') }}" class="sifit-btn-hero-outline">
-                            <i class="fa fa-book"></i> Panduan Penggunaan Obat
+                        <a href="{{ route('frontend.galeri') }}" class="sifit-btn-hero-outline">
+                            <i class="fa fa-picture-o"></i> Lihat Galeri Kegiatan
                         </a>
                     </div>
 
                     <div class="sifit-hero-card-footer">
                         <i class="fa fa-check-circle"></i>
-                        <span>Terverifikasi resmi Dinas Kesehatan Pemerintah Provinsi Riau</span>
+                        <span>{{ $siteSettings['tentang_motto'] ?? 'Mewujudkan Pelayanan Kesehatan Berdaya Saing, Transparan & Terpercaya' }}</span>
                     </div>
                 </div>
             </div>
@@ -116,16 +116,16 @@
         </div>
 
         <div class="row" style="display: flex; flex-wrap: wrap;">
-            {{-- PILAR 1: KATALOG OBAT --}}
+            {{-- PILAR 1: INFORMASI OBAT --}}
             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="0.15s" style="display: flex; margin-bottom: 25px;">
                 <div class="sifit-service-card">
                     <div class="sifit-service-icon-box">
                         <i class="fa fa-medkit"></i>
                     </div>
-                    <h3>Direktori Obat</h3>
-                    <p>Katalog data obat terpublikasi, mencakup kategori, ketentuan resep, stok, dan satuan resmi.</p>
-                    <a href="{{ route('frontend.obat') }}" class="service-link">
-                        Lihat Katalog <i class="fa fa-arrow-right"></i>
+                    <h3>Informasi & Panduan Obat</h3>
+                    <p>Petunjuk resmi tata kelola obat, ketentuan resep, dan regulasi kefarmasian terstandarisasi.</p>
+                    <a href="{{ route('frontend.informasi-obat') }}" class="service-link">
+                        Baca Informasi <i class="fa fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
@@ -136,10 +136,10 @@
                     <div class="sifit-service-icon-box">
                         <i class="fa fa-book"></i>
                     </div>
-                    <h3>Panduan Penggunaan Obat</h3>
+                    <h3>Panduan DAGUSIBU</h3>
                     <p>Edukasi tata cara mendapatkan, menggunakan, menyimpan, dan membuang obat secara aman.</p>
-                    <a href="{{ route('frontend.obat.informasi') }}" class="service-link">
-                        Baca Panduan <i class="fa fa-arrow-right"></i>
+                    <a href="{{ route('frontend.informasi-obat') }}" class="service-link">
+                        Pelajari DAGUSIBU <i class="fa fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
@@ -151,23 +151,23 @@
                         <i class="fa fa-newspaper-o"></i>
                     </div>
                     <h3>Berita & Informasi</h3>
-                    <p>Publikasi berita terkini, kebijakan, edaran resmi, dan kegiatan kefarmasian di Riau.</p>
+                    <p>Publikasi warta terkini, kebijakan kesehatan, edaran resmi, dan kegiatan dinas di Riau.</p>
                     <a href="{{ route('frontend.berita') }}" class="service-link">
                         Lihat Berita <i class="fa fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
 
-            {{-- PILAR 4: PERMOHONAN OBAT OPD --}}
+            {{-- PILAR 4: GALERI KEGIATAN --}}
             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="0.45s" style="display: flex; margin-bottom: 25px;">
                 <div class="sifit-service-card">
                     <div class="sifit-service-icon-box">
-                        <i class="fa fa-clipboard-list"></i>
+                        <i class="fa fa-picture-o"></i>
                     </div>
-                    <h3>Permohonan Obat OPD</h3>
-                    <p>Layanan resmi permohonan logistik obat bagi OPD dan faskes ke Instalasi Farmasi Provinsi.</p>
-                    <a href="{{ auth()->check() ? route('permohonan.create') : route('login') }}" class="service-link">
-                        Ajukan Permohonan <i class="fa fa-arrow-right"></i>
+                    <h3>Galeri Kegiatan</h3>
+                    <p>Dokumentasi visual kegiatan kefarmasian, monitoring obat, dan pelayanan publik daerah.</p>
+                    <a href="{{ route('frontend.galeri') }}" class="service-link">
+                        Buka Galeri <i class="fa fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
@@ -176,70 +176,68 @@
 </section>
 
 {{-- ==========================================================================
-     3. DATA OBAT TERBARU (KATALOG UNGGULAN)
+     3. GALERI DOKUMENTASI & PUBLIKASI (TERBARU)
      ========================================================================== --}}
 <section style="padding: 55px 0 50px; background: #f8fafc; border-top: 1px solid var(--sifit-border); border-bottom: 1px solid var(--sifit-border);">
     <div class="container">
         <div class="sifit-section-header wow fadeInUp" data-wow-duration="0.8s" data-wow-delay="0.1s">
-            <span class="sifit-section-tag">Katalog Obat</span>
-            <h2 class="sifit-section-title">Ketersediaan & Data Obat Terbaru</h2>
-            <p class="sifit-section-subtitle">Daftar obat resmi yang tercatat di sistem informasi farmasi Dinas Kesehatan Provinsi Riau.</p>
+            <span class="sifit-section-tag">Galeri Kegiatan</span>
+            <h2 class="sifit-section-title">Dokumentasi & Galeri Kegiatan Terbaru</h2>
+            <p class="sifit-section-subtitle">Dokumentasi foto dan video rangkaian pelayanan kefarmasian Dinas Kesehatan Pemerintah Provinsi Riau.</p>
             <div class="sifit-section-divider"></div>
         </div>
 
         <div class="row" style="display: flex; flex-wrap: wrap;">
-            @forelse($latestProducts as $index => $product)
-                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="{{ 0.1 + ($index * 0.1) }}s" style="display: flex; margin-bottom: 25px;">
-                    <div class="sifit-card" style="width: 100%; display: flex; flex-direction: column; background: #ffffff; border: 1px solid var(--sifit-border); border-radius: 12px; overflow: hidden;">
+            @forelse($latestGalleries as $index => $item)
+                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 wow fadeInUp" data-wow-delay="{{ 0.1 + ($index * 0.1) }}s" style="display: flex; margin-bottom: 25px;">
+                    <div class="sifit-card" style="width: 100%; display: flex; flex-direction: column; background: #ffffff; border: 1px solid var(--sifit-border); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 14px rgba(17,85,102,0.04);">
                         
-                        {{-- GAMBAR OBAT --}}
-                        <div style="height: 180px; background: #f8fafc; padding: 14px; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #f1f5f9;">
-                            @php
-                                $homeProdThumb = $product->thumbnail_url ?? asset('assets/images/product-default.svg');
-                            @endphp
-                            <img
-                                src="{{ $homeProdThumb }}"
-                                alt="{{ $product->name }}"
-                                onerror="this.onerror=null;this.src='{{ asset('assets/images/product-default.svg') }}';"
-                                style="max-width: 100%; max-height: 100%; object-fit: contain;"
-                            >
-                            <div style="position: absolute; top: 10px; left: 10px;">
-                                @if($product->requires_prescription)
-                                    <span class="sifit-badge-prescription" title="Wajib menyertakan resep dokter">
-                                        <i class="fa fa-file-text-o"></i> Resep Dokter
-                                    </span>
-                                @else
-                                    <span class="sifit-badge-otc" title="Obat bebas / dapat dibeli langsung">
-                                        <i class="fa fa-check"></i> Bebas
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
+                        {{-- FRAME MEDIA --}}
+                        <a href="{{ route('frontend.galeri.show', $item) }}" style="height: 200px; position: relative; overflow: hidden; background: #0f172a; display: block; text-decoration: none;">
+                            @if($item->type === 'photo')
+                                <span style="position: absolute; top: 12px; left: 12px; background: rgba(17, 85, 102, 0.9); color: #ffffff; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 2;">
+                                    <i class="fa fa-camera"></i> Foto
+                                </span>
+                                <img
+                                    src="{{ $item->media_url }}"
+                                    alt="{{ $item->title }}"
+                                    onerror="this.onerror=null;this.src='{{ asset('assets/images/news-default.svg') }}';"
+                                    style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;"
+                                >
+                            @else
+                                <span style="position: absolute; top: 12px; left: 12px; background: rgba(220, 38, 38, 0.9); color: #ffffff; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 2;">
+                                    <i class="fa fa-video-camera"></i> Video
+                                </span>
+                                <img
+                                    src="{{ $item->media_url }}"
+                                    alt="{{ $item->title }}"
+                                    onerror="this.onerror=null;this.src='{{ asset('assets/images/news-default.svg') }}';"
+                                    style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;"
+                                >
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 46px; height: 46px; border-radius: 50%; background: rgba(220, 38, 38, 0.9); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 4px 14px rgba(0,0,0,0.3); pointer-events: none;">
+                                    <i class="fa fa-play" style="margin-left: 2px;"></i>
+                                </div>
+                            @endif
+                        </a>
 
-                        {{-- KONTEN INFORMASI OBAT --}}
-                        <div style="padding: 16px; flex: 1; display: flex; flex-direction: column;">
-                            <span class="sifit-badge-cat" style="align-self: flex-start; margin-bottom: 8px;">
-                                {{ $product->category ? $product->category->name : 'Farmasi Umum' }}
-                            </span>
-
-                            <h3 style="font-size: 15px; font-weight: 700; margin: 0 0 8px; line-height: 1.4; min-height: 42px;">
-                                <a href="{{ route('frontend.obat.detail', $product->slug) }}" style="color: #1e293b; text-decoration: none;">
-                                    {{ $product->name }}
+                        {{-- KONTEN INFORMASI --}}
+                        <div style="padding: 16px 18px 18px; flex: 1; display: flex; flex-direction: column;">
+                            <h3 style="font-size: 15px; font-weight: 700; margin: 0 0 8px; line-height: 1.45; color: #1e293b;">
+                                <a href="{{ route('frontend.galeri.show', $item) }}" style="color: inherit; text-decoration: none;">
+                                    {{ $item->title }}
                                 </a>
                             </h3>
 
-                            <div style="margin-top: auto; padding-top: 10px; border-top: 1px solid #f1f5f9;">
-                                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
-                                    <span style="font-size: 12px; font-weight: 700; color: #0f766e;">
-                                        <i class="fa fa-cubes"></i> Kemasan: {{ $product->unit ?? 'Satuan' }}
-                                    </span>
-                                    <span style="font-size: 11.5px; color: #64748b; font-weight: 500;">
-                                        Stok: {{ $product->stock ?? 0 }} {{ $product->unit ?? '' }}
-                                    </span>
-                                </div>
+                            @if($item->description)
+                                <p style="color: #64748b; font-size: 12.5px; line-height: 1.55; margin: 0 0 12px;">
+                                    {{ Str::limit($item->description, 100) }}
+                                </p>
+                            @endif
 
-                                <a href="{{ route('frontend.obat.detail', $product->slug) }}" class="btn-style-two" style="width: 100%; text-align: center; padding: 7px 10px; font-size: 12px; text-decoration: none; border-radius: 6px; display: block;">
-                                    <i class="fa fa-info-circle me-1"></i> Rincian Obat
+                            <div style="margin-top: auto; padding-top: 10px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: #94a3b8;">
+                                <span><i class="fa fa-calendar-o"></i> {{ $item->created_at ? $item->created_at->translatedFormat('d M Y') : 'Baru' }}</span>
+                                <a href="{{ route('frontend.galeri.show', $item) }}" style="color: var(--sifit-primary); font-weight: 700; text-decoration: none;">
+                                    Lihat Detail <i class="fa fa-angle-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -248,17 +246,17 @@
             @empty
                 <div class="col-md-12 text-center" style="padding: 40px 0;">
                     <div style="max-width: 450px; margin: 0 auto; padding: 30px; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0;">
-                        <i class="fa fa-info-circle" style="font-size: 36px; color: #94a3b8; margin-bottom: 12px;"></i>
-                        <h4 style="font-size: 16px; font-weight: 700; color: #1e293b;">Belum Ada Data Obat</h4>
-                        <p style="color: #64748b; font-size: 13px; margin: 0;">Data obat yang dipublikasikan akan muncul secara otomatis di katalog ini.</p>
+                        <i class="fa fa-picture-o" style="font-size: 36px; color: #94a3b8; margin-bottom: 12px;"></i>
+                        <h4 style="font-size: 16px; font-weight: 700; color: #1e293b;">Belum Ada Dokumentasi Galeri</h4>
+                        <p style="color: #64748b; font-size: 13px; margin: 0;">Dokumentasi foto dan video kegiatan yang dipublikasikan akan tampil di sini.</p>
                     </div>
                 </div>
             @endforelse
         </div>
 
         <div class="text-center wow fadeInUp" data-wow-delay="0.3s" style="margin-top: 20px;">
-            <a href="{{ route('frontend.obat') }}" class="thm-btn" style="padding: 12px 30px; font-size: 14px; font-weight: 700;">
-                <i class="fa fa-th-list"></i> Lihat Semua Katalog Obat
+            <a href="{{ route('frontend.galeri') }}" class="thm-btn" style="padding: 12px 30px; font-size: 14px; font-weight: 700;">
+                <i class="fa fa-th-large"></i> Lihat Seluruh Galeri (Foto & Video)
             </a>
         </div>
     </div>
@@ -319,7 +317,7 @@
         </div>
 
         <div class="text-center wow fadeInUp" data-wow-delay="0.3s" style="margin-top: 15px;">
-            <a href="{{ route('frontend.obat.informasi') }}" class="btn-style-two" style="padding: 10px 24px; font-size: 13px; font-weight: 700; text-decoration: none;">
+            <a href="{{ route('frontend.informasi-obat') }}" class="btn-style-two" style="padding: 10px 24px; font-size: 13px; font-weight: 700; text-decoration: none;">
                 <i class="fa fa-book"></i> Baca Panduan Lengkap Penggunaan Obat
             </a>
         </div>

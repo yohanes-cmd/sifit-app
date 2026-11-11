@@ -109,9 +109,9 @@
                 <ul class="sifit-breadcrumb-list">
                     <li><a href="{{ route('frontend.home') }}"><i class="fa fa-home"></i> Beranda</a></li>
                     <li><i class="fa fa-angle-right"></i></li>
-                    <li><a href="{{ route('frontend.obat') }}">Data Obat</a></li>
+                    <li><a href="{{ route('frontend.berita') }}">Berita & Info</a></li>
                     <li><i class="fa fa-angle-right"></i></li>
-                    <li class="active">Informasi Obat</li>
+                    <li class="active">Informasi & Panduan Obat</li>
                 </ul>
             </div>
         </div>
@@ -278,34 +278,39 @@
             <div class="col-lg-6 col-md-6 col-sm-12 wow fadeInLeft" data-wow-delay="0.1s" style="margin-bottom: 16px;">
                 <div class="sifit-guide-card">
                     <h3 style="font-size: 16px; font-weight: 800; color: var(--sifit-primary); margin: 0 0 8px; display: flex; align-items: center; gap: 8px;">
-                        <i class="fa fa-search" style="color: var(--sifit-accent);"></i> Cara Mencari Informasi Obat
+                        <i class="fa fa-info-circle" style="color: var(--sifit-accent);"></i> Akses Layanan & Informasi
                     </h3>
                     <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin-bottom: 14px;">
-                        Ikuti langkah mudah berikut untuk menemukan informasi obat yang Anda perlukan:
+                        Untuk informasi sediaan farmasi, kegiatan kefarmasian, dan layanan publik lainnya:
                     </p>
 
                     <ul class="sifit-step-list">
                         <li>
                             <i class="fa fa-check-circle"></i>
-                            <span>Buka halaman <strong>Data Obat</strong> melalui menu navigasi utama.</span>
+                            <span>Akses <strong>Warta & Berita Resmi</strong> untuk rilis dan regulasi terbaru.</span>
                         </li>
                         <li>
                             <i class="fa fa-check-circle"></i>
-                            <span>Ketikkan nama obat, merk dagang, atau zat aktif pada kolom pencarian.</span>
+                            <span>Kunjungi <strong>Galeri Kegiatan</strong> untuk dokumentasi distribusi obat.</span>
                         </li>
                         <li>
                             <i class="fa fa-check-circle"></i>
-                            <span>Gunakan filter kategori di sebelah kiri untuk mempersempit daftar.</span>
+                            <span>Gunakan <strong>Kontak Resmi</strong> jika memerlukan bantuan atau konsultasi farmasi.</span>
                         </li>
                         <li>
                             <i class="fa fa-check-circle"></i>
-                            <span>Klik kartu obat untuk melihat keterangan lengkap dan aturan pemakaian.</span>
+                            <span>Konsultasikan penggunaan obat khusus dengan tenaga kefarmasian di faskes terdekat.</span>
                         </li>
                     </ul>
 
-                    <a href="{{ route('frontend.obat') }}" class="thm-btn" style="padding: 8px 18px; font-size: 12.5px; border-radius: 4px; text-decoration: none;">
-                        <i class="fa fa-arrow-right" style="margin-right: 4px;"></i> Telusuri Katalog Obat Sekarang
-                    </a>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <a href="{{ route('frontend.berita') }}" class="thm-btn" style="padding: 8px 16px; font-size: 12px; border-radius: 4px; text-decoration: none;">
+                            <i class="fa fa-newspaper-o" style="margin-right: 4px;"></i> Warta & Berita
+                        </a>
+                        <a href="{{ route('frontend.galeri') }}" class="thm-btn" style="padding: 8px 16px; font-size: 12px; border-radius: 4px; text-decoration: none; background: #0b3a46;">
+                            <i class="fa fa-image" style="margin-right: 4px;"></i> Galeri Kegiatan
+                        </a>
+                    </div>
                 </div>
             </div>
 

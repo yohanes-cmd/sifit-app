@@ -45,9 +45,9 @@
                         <img src="{{ asset('assets/images/logo-sifit.png') }}" alt="Logo SIFIT" class="emblem-sifit" style="height: 60px;">
                     </div>
                     <div class="card-body-text">
-                        <span class="badge-label"><i class="fa fa-shield"></i> Portal Resmi Pemerintah</span>
+                        <span class="badge-label"><i class="fa fa-shield"></i> {{ $siteSettings['tentang_tagline'] ?? 'Portal Resmi Pemerintah' }}</span>
                         <h3>SIFIT Provinsi Riau</h3>
-                        <p class="instansi">Dinas Kesehatan Provinsi Riau</p>
+                        <p class="instansi">{{ $siteSettings['tentang_instansi'] ?? 'Dinas Kesehatan Pemerintah Provinsi Riau' }}</p>
                         <div class="card-features">
                             <div class="feat-item">
                                 <i class="fa fa-check-circle"></i>
@@ -59,12 +59,12 @@
                             </div>
                             <div class="feat-item">
                                 <i class="fa fa-check-circle"></i>
-                                <span>Pelayanan Kesehatan Terintegrasi</span>
+                                <span>Dokumentasi Pelayanan Terintegrasi</span>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer-info">
-                        <span class="motto">"Mewujudkan Pelayanan Farmasi Riau yang Cepat, Akurat, dan Terpercaya"</span>
+                        <span class="motto">"{{ $siteSettings['tentang_motto'] ?? 'Mewujudkan Pelayanan Kesehatan Berdaya Saing, Transparan & Terpercaya' }}"</span>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                         </div>
                         <div style="background: #ffffff; border-left: 4px solid var(--sifit-accent); padding: 14px 18px; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
                             <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #334155; font-weight: 500;">
-                                Menjadi sistem informasi farmasi yang terintegrasi, mudah diakses, dan mampu mendukung penyampaian informasi obat serta informasi kefarmasian kepada masyarakat secara akurat dan transparan.
+                                "{{ $siteSettings['visi_sifit'] ?? 'Menjadi sistem informasi farmasi yang terintegrasi, mudah diakses, dan mampu mendukung penyampaian informasi obat serta informasi kefarmasian kepada masyarakat secara akurat dan transparan.' }}"
                             </p>
                         </div>
                     </div>
@@ -92,22 +92,17 @@
                             <h3 style="margin: 0; font-size: 19px; font-weight: 800; color: var(--sifit-primary);">Misi</h3>
                         </div>
                         <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
-                            <li style="display: flex; align-items: flex-start; gap: 12px; background: #ffffff; padding: 10px 14px; border-radius: 8px; border: 1px solid #eef2f6;">
-                                <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 16px; margin-top: 2px;"></i>
-                                <span style="font-size: 13.5px; color: #334155; line-height: 1.5;">Menyediakan informasi obat yang tersusun secara jelas, terverifikasi, dan mudah diakses oleh seluruh lapisan masyarakat.</span>
-                            </li>
-                            <li style="display: flex; align-items: flex-start; gap: 12px; background: #ffffff; padding: 10px 14px; border-radius: 8px; border: 1px solid #eef2f6;">
-                                <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 16px; margin-top: 2px;"></i>
-                                <span style="font-size: 13.5px; color: #334155; line-height: 1.5;">Mempermudah masyarakat dalam mencari informasi ketersediaan, dosis, dan petunjuk obat melalui sistem digital terintegrasi.</span>
-                            </li>
-                            <li style="display: flex; align-items: flex-start; gap: 12px; background: #ffffff; padding: 10px 14px; border-radius: 8px; border: 1px solid #eef2f6;">
-                                <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 16px; margin-top: 2px;"></i>
-                                <span style="font-size: 13.5px; color: #334155; line-height: 1.5;">Menyajikan berita resmi, regulasi terkini, dan edukasi kefarmasian yang kredibel dari Dinas Kesehatan.</span>
-                            </li>
-                            <li style="display: flex; align-items: flex-start; gap: 12px; background: #ffffff; padding: 10px 14px; border-radius: 8px; border: 1px solid #eef2f6;">
-                                <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 16px; margin-top: 2px;"></i>
-                                <span style="font-size: 13.5px; color: #334155; line-height: 1.5;">Mendukung tata kelola dan efisiensi manajemen data logistik farmasi pemerintah daerah yang akuntabel.</span>
-                            </li>
+                            @php
+                                $misiList = preg_split('/\r\n|\r|\n/', $siteSettings['misi_sifit'] ?? '');
+                            @endphp
+                            @foreach($misiList as $misi)
+                                @if(trim($misi))
+                                    <li style="display: flex; align-items: flex-start; gap: 12px; background: #ffffff; padding: 10px 14px; border-radius: 8px; border: 1px solid #eef2f6;">
+                                        <i class="fa fa-check-circle" style="color: var(--sifit-accent); font-size: 16px; margin-top: 2px;"></i>
+                                        <span style="font-size: 13.5px; color: #334155; line-height: 1.5;">{{ trim($misi) }}</span>
+                                    </li>
+                                @endif
+                            @endforeach
                         </ul>
                     </div>
                 </div>
@@ -134,30 +129,30 @@
                         <i class="fa fa-medkit" style="font-size: 32px; color: var(--sifit-primary);"></i>
                     </div>
                     <div class="text-holder">
-                        <h3>Informasi Obat Lengkap</h3>
-                        <p>Mempermudah pengguna memperoleh katalog data obat, komposisi, indikasi, dan petunjuk pemakaian resmi.</p>
+                        <h3>{{ $siteSettings['tujuan_1_judul'] ?? 'Informasi Obat Lengkap' }}</h3>
+                        <p>{{ $siteSettings['tujuan_1_isi'] ?? 'Mempermudah pengguna memperoleh katalog data obat, komposisi, indikasi, dan petunjuk pemakaian resmi.' }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="single-item wow fadeInUp" data-wow-delay="0.3s">
                     <div class="iocn-holder">
-                        <i class="fa fa-mobile-phone" style="font-size: 36px; color: var(--sifit-primary);"></i>
+                        <i class="fa fa-book" style="font-size: 32px; color: var(--sifit-primary);"></i>
                     </div>
                     <div class="text-holder">
-                        <h3>Akses Digital Mudah</h3>
-                        <p>Menyediakan platform layanan publik yang responsif, cepat, dan ramah pengguna di berbagai perangkat.</p>
+                        <h3>{{ $siteSettings['tujuan_2_judul'] ?? 'Edukasi DAGUSIBU' }}</h3>
+                        <p>{{ $siteSettings['tujuan_2_isi'] ?? 'Sosialisasi resmi mengenai tata cara Dapatkan, Gunakan, Simpan, dan Buang obat secara tepat.' }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="single-item wow fadeInUp" data-wow-delay="0.4s">
                     <div class="iocn-holder">
-                        <i class="fa fa-cubes" style="font-size: 30px; color: var(--sifit-primary);"></i>
+                        <i class="fa fa-shield" style="font-size: 30px; color: var(--sifit-primary);"></i>
                     </div>
                     <div class="text-holder">
-                        <h3>Informasi Terintegrasi</h3>
-                        <p>Menyatukan basis data farmasi, edukasi kesehatan DAGUSIBU, dan berita resmi dalam satu gerbang.</p>
+                        <h3>{{ $siteSettings['tujuan_3_judul'] ?? 'Transparansi & Akuntabilitas' }}</h3>
+                        <p>{{ $siteSettings['tujuan_3_isi'] ?? 'Mendukung keterbukaan informasi publik kefarmasian Dinas Kesehatan Provinsi Riau.' }}</p>
                     </div>
                 </div>
             </div>
