@@ -40,6 +40,9 @@ class GalleryController extends Controller
             'media_file' => 'nullable|file|mimes:jpeg,png,jpg,webp,mp4,mov,avi|max:20480',
             'youtube_url' => 'nullable|url|max:255',
             'status' => 'required|in:published,draft,scheduled',
+            'publish_date' => 'nullable|date',
+            'publish_hour' => 'nullable|string|max:2',
+            'publish_minute' => 'nullable|string|max:2',
             'published_at' => 'nullable|date',
         ]);
 
@@ -49,10 +52,21 @@ class GalleryController extends Controller
         }
 
         $status = $request->status;
-        $publishedAt = $request->published_at ? Carbon::parse($request->published_at) : null;
+        $publishedAt = null;
 
-        if ($status === 'published' && ! $publishedAt) {
-            $publishedAt = now();
+        if ($request->filled('publish_date')) {
+            $date = $request->publish_date;
+            $hour = str_pad($request->input('publish_hour', '08'), 2, '0', STR_PAD_LEFT);
+            $minute = str_pad($request->input('publish_minute', '00'), 2, '0', STR_PAD_LEFT);
+            $publishedAt = Carbon::parse("{$date} {$hour}:{$minute}:00");
+        } elseif ($request->filled('published_at')) {
+            $publishedAt = Carbon::parse($request->published_at);
+        }
+
+        if ($status === 'published') {
+            if (! $publishedAt || $publishedAt->isFuture()) {
+                $publishedAt = now();
+            }
         } elseif ($status === 'scheduled' && ! $publishedAt) {
             $publishedAt = now()->addHour();
         }
@@ -94,6 +108,9 @@ class GalleryController extends Controller
             'media_file' => 'nullable|file|mimes:jpeg,png,jpg,webp,mp4,mov,avi|max:20480',
             'youtube_url' => 'nullable|url|max:255',
             'status' => 'required|in:published,draft,scheduled',
+            'publish_date' => 'nullable|date',
+            'publish_hour' => 'nullable|string|max:2',
+            'publish_minute' => 'nullable|string|max:2',
             'published_at' => 'nullable|date',
         ]);
 
@@ -106,10 +123,21 @@ class GalleryController extends Controller
         }
 
         $status = $request->status;
-        $publishedAt = $request->published_at ? Carbon::parse($request->published_at) : null;
+        $publishedAt = null;
 
-        if ($status === 'published' && ! $publishedAt) {
-            $publishedAt = now();
+        if ($request->filled('publish_date')) {
+            $date = $request->publish_date;
+            $hour = str_pad($request->input('publish_hour', '08'), 2, '0', STR_PAD_LEFT);
+            $minute = str_pad($request->input('publish_minute', '00'), 2, '0', STR_PAD_LEFT);
+            $publishedAt = Carbon::parse("{$date} {$hour}:{$minute}:00");
+        } elseif ($request->filled('published_at')) {
+            $publishedAt = Carbon::parse($request->published_at);
+        }
+
+        if ($status === 'published') {
+            if (! $publishedAt || $publishedAt->isFuture()) {
+                $publishedAt = now();
+            }
         } elseif ($status === 'scheduled' && ! $publishedAt) {
             $publishedAt = now()->addHour();
         }

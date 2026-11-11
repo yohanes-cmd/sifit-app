@@ -66,27 +66,82 @@
 
                         {{-- WAKTU PUBLIKASI / JADWAL TAYANG --}}
                         <div class="mb-3 p-3 rounded border bg-light" id="schedule_wrapper">
-                            <div class="row align-items-center">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold text-dark mb-1" id="schedule_label">
-                                        <i class="las la-clock text-primary"></i> Waktu Publikasi / Jadwal Tayang
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+                                <label class="form-label fw-bold text-dark mb-0" id="schedule_label">
+                                    <i class="las la-clock text-primary"></i> Waktu Publikasi / Jadwal Tayang
+                                </label>
+                                <small class="text-muted" id="schedule_help">
+                                    Pilih tanggal dan jam (format 24 jam). Jika status <strong>Terjadwal</strong>, dokumentasi otomatis terpublikasi saat waktu tiba.
+                                </small>
+                            </div>
+
+                            @php
+                                $defaultDate = $gallery->published_at ? $gallery->published_at->format('Y-m-d') : now()->format('Y-m-d');
+                                $defaultHour = $gallery->published_at ? $gallery->published_at->format('H') : now()->format('H');
+                                $defaultMinute = $gallery->published_at ? $gallery->published_at->format('i') : now()->format('i');
+
+                                $selectedDate = old('publish_date', $defaultDate);
+                                $selectedHour = old('publish_hour', $defaultHour);
+                                $selectedMinute = old('publish_minute', $defaultMinute);
+                            @endphp
+
+                            <div class="row g-2 align-items-end">
+                                <div class="col-md-5">
+                                    <label class="form-label small fw-semibold text-secondary mb-1">
+                                        <i class="las la-calendar text-primary"></i> Tanggal
                                     </label>
                                     <input
-                                        type="datetime-local"
-                                        name="published_at"
-                                        id="published_at"
-                                        class="form-control @error('published_at') is-invalid @enderror"
-                                        value="{{ old('published_at', $gallery->published_at ? $gallery->published_at->format('Y-m-d\TH:i') : now()->format('Y-m-d\TH:i')) }}"
+                                        type="date"
+                                        name="publish_date"
+                                        id="publish_date"
+                                        class="form-control @error('publish_date') is-invalid @enderror"
+                                        value="{{ $selectedDate }}"
+                                        onchange="updateSchedulePreview()"
                                     >
-                                    @error('published_at')
+                                    @error('publish_date')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6 mt-2 mt-md-0">
-                                    <small class="text-muted d-block" id="schedule_help">
-                                        Pilih tanggal dan jam. Jika status <strong>Terjadwal</strong>, dokumentasi akan <em>otomatis terpublikasi ke publik</em> saat waktu yang ditentukan telah tiba.
-                                    </small>
+
+                                <div class="col-6 col-md-3">
+                                    <label class="form-label small fw-semibold text-secondary mb-1">
+                                        <i class="las la-clock text-primary"></i> Jam (24 Jam)
+                                    </label>
+                                    <select name="publish_hour" id="publish_hour" class="form-select @error('publish_hour') is-invalid @enderror" onchange="updateSchedulePreview()">
+                                        @for ($h = 0; $h < 24; $h++)
+                                            @php $hh = sprintf('%02d', $h); @endphp
+                                            <option value="{{ $hh }}" {{ (string)$selectedHour === $hh ? 'selected' : '' }}>
+                                                Jam {{ $hh }}:00 WIB
+                                            </option>
+                                        @endfor
+                                    </select>
+                                    @error('publish_hour')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
+                                <div class="col-6 col-md-4">
+                                    <label class="form-label small fw-semibold text-secondary mb-1">
+                                        <i class="las la-stopwatch text-primary"></i> Menit
+                                    </label>
+                                    <select name="publish_minute" id="publish_minute" class="form-select @error('publish_minute') is-invalid @enderror" onchange="updateSchedulePreview()">
+                                        @for ($m = 0; $m < 60; $m++)
+                                            @php $mm = sprintf('%02d', $m); @endphp
+                                            <option value="{{ $mm }}" {{ (string)$selectedMinute === $mm ? 'selected' : '' }}>
+                                                :{{ $mm }} Menit
+                                            </option>
+                                        @endfor
+                                    </select>
+                                    @error('publish_minute')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="mt-2 pt-2 border-top text-muted small d-flex align-items-center">
+                                <i class="las la-info-circle text-info me-1 fs-6"></i>
+                                <span>Waktu dipilih:&nbsp;</span>
+                                <strong class="text-dark" id="schedule_preview_text">-</strong>
                             </div>
                         </div>
 
@@ -204,9 +259,40 @@
         }
     }
 
+    function updateSchedulePreview() {
+        const dateInput = document.getElementById('publish_date');
+        const hourInput = document.getElementById('publish_hour');
+        const minuteInput = document.getElementById('publish_minute');
+        const previewEl = document.getElementById('schedule_preview_text');
+
+        if (!dateInput || !previewEl) return;
+
+        const dateVal = dateInput.value;
+        const hourVal = hourInput ? hourInput.value : '00';
+        const minuteVal = minuteInput ? minuteInput.value : '00';
+
+        if (dateVal) {
+            const parts = dateVal.split('-');
+            if (parts.length === 3) {
+                const year = parts[0];
+                const month = parseInt(parts[1], 10) - 1;
+                const day = parseInt(parts[2], 10);
+                const monthNames = [
+                    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                ];
+                const monthName = monthNames[month] || parts[1];
+                previewEl.textContent = `${day} ${monthName} ${year} pukul ${hourVal}:${minuteVal} WIB`;
+                return;
+            }
+        }
+        previewEl.textContent = `${dateVal || '-'} pukul ${hourVal}:${minuteVal} WIB`;
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         toggleMediaInputs();
         toggleScheduleInput();
+        updateSchedulePreview();
     });
 </script>
 @endsection
