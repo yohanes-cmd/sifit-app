@@ -61,14 +61,22 @@
                         </div>
 
                         {{-- WAKTU PUBLIKASI / JADWAL TAYANG --}}
-                        <div class="mb-3 p-3 rounded border bg-light" id="schedule_wrapper">
-                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
-                                <label class="form-label fw-bold text-dark mb-0" id="schedule_label">
-                                    <i class="las la-clock text-primary"></i> Waktu Publikasi / Jadwal Tayang
-                                </label>
-                                <small class="text-muted" id="schedule_help">
-                                    Pilih tanggal dan ketik jam tayang (format 24 jam). Jika status <strong>Terjadwal</strong>, dokumentasi otomatis terpublikasi saat waktu tiba.
-                                </small>
+                        <div class="mb-4 p-3 rounded-3 border bg-white shadow-sm" id="schedule_wrapper">
+                            <div class="d-flex align-items-center justify-content-between pb-2 mb-3 border-bottom flex-wrap gap-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="p-2 rounded bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
+                                        <i class="las la-clock fs-5"></i>
+                                    </span>
+                                    <div>
+                                        <label class="form-label fw-bold text-dark mb-0 fs-6" id="schedule_label">Waktu Publikasi</label>
+                                        <div class="text-muted small" id="schedule_help">Tentukan tanggal dan jam dokumentasi dapat diakses oleh publik.</div>
+                                    </div>
+                                </div>
+                                <div id="schedule_badge_wrap">
+                                    <span class="badge bg-success px-2 py-1">
+                                        <i class="las la-globe me-1"></i> Langsung Tayang
+                                    </span>
+                                </div>
                             </div>
 
                             @php
@@ -76,11 +84,9 @@
                                 $selectedTime = old('publish_time', now()->format('H:i'));
                             @endphp
 
-                            <div class="row g-2 align-items-end">
-                                <div class="col-md-6">
-                                    <label class="form-label small fw-semibold text-secondary mb-1">
-                                        <i class="las la-calendar text-primary"></i> Tanggal
-                                    </label>
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-5">
+                                    <label class="form-label small fw-semibold text-secondary mb-1">Tanggal Publikasi</label>
                                     <input
                                         type="date"
                                         name="publish_date"
@@ -94,42 +100,46 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <label class="form-label small fw-semibold text-secondary mb-0">
-                                            <i class="las la-clock text-primary"></i> Jam (Ketik Manual 24 Jam)
-                                        </label>
-                                        <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none small text-primary" onclick="setCurrentTime()">
-                                            <i class="las la-history"></i> Jam Sekarang
-                                        </button>
-                                    </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-semibold text-secondary mb-1">Jam (24 Jam WIB)</label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-white text-muted"><i class="las la-clock"></i></span>
                                         <input
                                             type="text"
                                             name="publish_time"
                                             id="publish_time"
-                                            class="form-control @error('publish_time') is-invalid @enderror"
-                                            placeholder="Contoh: 14:30"
+                                            class="form-control text-center fw-bold @error('publish_time') is-invalid @enderror"
+                                            placeholder="14:30"
                                             value="{{ $selectedTime }}"
                                             maxlength="5"
                                             oninput="updateSchedulePreview()"
                                         >
-                                        <span class="input-group-text bg-light text-muted fw-semibold">WIB</span>
+                                        <span class="input-group-text bg-light text-muted small fw-semibold">WIB</span>
                                     </div>
                                     @error('publish_time')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                    <small class="text-muted d-block mt-1">
-                                        Ketik bebas format 24 jam (misal: <code>08:00</code>, <code>14:30</code>, <code>19:45</code>).
-                                    </small>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-1"
+                                        onclick="setCurrentTime()"
+                                        title="Gunakan tanggal dan jam saat ini"
+                                        style="height: 38px;"
+                                    >
+                                        <i class="las la-history text-primary"></i>
+                                        <span class="small fw-semibold">Jam Sekarang</span>
+                                    </button>
                                 </div>
                             </div>
 
-                            <div class="mt-2 pt-2 border-top text-muted small d-flex align-items-center">
-                                <i class="las la-info-circle text-info me-1 fs-6"></i>
-                                <span>Waktu dipilih:&nbsp;</span>
-                                <strong class="text-dark" id="schedule_preview_text">-</strong>
+                            <div class="mt-3 p-2 px-3 rounded bg-light border d-flex align-items-center justify-content-between flex-wrap gap-2 small">
+                                <span class="text-secondary">
+                                    <i class="las la-calendar-check text-primary me-1 fs-6"></i>
+                                    Waktu Tayang: <strong class="text-dark" id="schedule_preview_text">-</strong>
+                                </span>
+                                <span class="text-muted fst-italic">Ketik contoh: <code>08:00</code> atau <code>14:30</code></span>
                             </div>
                         </div>
 
@@ -197,19 +207,29 @@
         const wrapper = document.getElementById('schedule_wrapper');
         const label = document.getElementById('schedule_label');
         const help = document.getElementById('schedule_help');
+        const badgeWrap = document.getElementById('schedule_badge_wrap');
 
         if (status === 'scheduled') {
-            wrapper.className = 'mb-3 p-3 rounded border border-warning bg-warning bg-opacity-10';
-            label.innerHTML = '<i class="las la-calendar-check text-warning fs-5"></i> Jadwal Tayang Otomatis <span class="text-danger">*</span>';
-            help.innerHTML = '<span class="badge bg-warning text-dark me-1">Terjadwal</span> Dokumentasi akan <strong>otomatis tayang di publik</strong> tepat saat waktu di samping tiba.';
+            wrapper.className = 'mb-4 p-3 rounded-3 border border-warning bg-warning bg-opacity-10 shadow-sm';
+            label.textContent = 'Jadwal Tayang Otomatis';
+            help.textContent = 'Dokumentasi akan otomatis tayang di publik tepat saat waktu yang ditentukan tiba.';
+            if (badgeWrap) {
+                badgeWrap.innerHTML = '<span class="badge bg-warning text-dark px-2 py-1"><i class="las la-clock me-1"></i> Terjadwal Otomatis</span>';
+            }
         } else if (status === 'draft') {
-            wrapper.className = 'mb-3 p-3 rounded border bg-light opacity-75';
-            label.innerHTML = '<i class="las la-file-alt text-secondary"></i> Waktu Penyimpanan Draf';
-            help.innerHTML = '<span class="badge bg-secondary me-1">Draf</span> Dokumen tersimpan sebagai arsip internal dan belum terlihat oleh pengunjung website publik.';
+            wrapper.className = 'mb-4 p-3 rounded-3 border bg-light opacity-75 shadow-sm';
+            label.textContent = 'Waktu Penyimpanan Draf';
+            help.textContent = 'Dokumen tersimpan sebagai arsip internal dan belum terlihat oleh publik.';
+            if (badgeWrap) {
+                badgeWrap.innerHTML = '<span class="badge bg-secondary px-2 py-1"><i class="las la-file-alt me-1"></i> Draf Internal</span>';
+            }
         } else {
-            wrapper.className = 'mb-3 p-3 rounded border bg-light';
-            label.innerHTML = '<i class="las la-globe text-success"></i> Waktu Publikasi';
-            help.innerHTML = '<span class="badge bg-success me-1">Publik</span> Dokumentasi langsung dapat dilihat oleh publik saat ini.';
+            wrapper.className = 'mb-4 p-3 rounded-3 border bg-white shadow-sm';
+            label.textContent = 'Waktu Publikasi';
+            help.textContent = 'Dokumentasi langsung dapat dilihat oleh publik saat ini.';
+            if (badgeWrap) {
+                badgeWrap.innerHTML = '<span class="badge bg-success px-2 py-1"><i class="las la-globe me-1"></i> Langsung Tayang</span>';
+            }
         }
     }
 
@@ -238,6 +258,12 @@
         const dateVal = dateInput.value;
         let timeVal = timeInput ? timeInput.value.trim().replace('.', ':') : '';
         if (!timeVal) timeVal = '08:00';
+
+        if (/^\d{1,2}$/.test(timeVal)) {
+            timeVal = timeVal.padStart(2, '0') + ':00';
+        } else if (/^\d{1,2}:\d{1}$/.test(timeVal)) {
+            timeVal = timeVal + '0';
+        }
 
         if (dateVal) {
             const parts = dateVal.split('-');
