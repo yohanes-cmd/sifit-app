@@ -21,15 +21,15 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-8 col-12">
+        <div class="col-lg-9 col-12">
             <div class="card shadow-sm border-0">
-                <div class="card-body">
+                <div class="card-body p-4">
                     <form action="{{ route('galleries.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Judul Dokumentasi Kegiatan <span class="text-danger">*</span></label>
-                            <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" value="{{ old('title') }}" placeholder="Contoh: Sosialisasi Pedoman DAGUSIBU di Puskesmas" required>
+                            <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" value="{{ old('title') }}" placeholder="Contoh: Monitoring dan Evaluasi Cold Chain Instalasi Farmasi" required>
                             @error('title')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -47,12 +47,41 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6 mb-3 d-flex align-items-center">
-                                <div class="form-check mt-3">
-                                    <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
-                                    <label class="form-check-label fw-semibold" for="is_active">
-                                        Tayangkan di Halaman Publik
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Status Publikasi <span class="text-danger">*</span></label>
+                                <select name="status" id="gallery_status" class="form-select @error('status') is-invalid @enderror" required onchange="toggleScheduleInput()">
+                                    <option value="published" {{ old('status', 'published') == 'published' ? 'selected' : '' }}>🟢 Publik (Langsung Tayang)</option>
+                                    <option value="scheduled" {{ old('status') == 'scheduled' ? 'selected' : '' }}>🟡 Terjadwal (Tayang Otomatis Sesuai Waktu)</option>
+                                    <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>⚪ Draf (Simpan Saja, Belum Tayang)</option>
+                                </select>
+                                @error('status')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        {{-- WAKTU PUBLIKASI / JADWAL TAYANG --}}
+                        <div class="mb-3 p-3 rounded border bg-light" id="schedule_wrapper">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-dark mb-1" id="schedule_label">
+                                        <i class="las la-clock text-primary"></i> Waktu Publikasi / Jadwal Tayang
                                     </label>
+                                    <input
+                                        type="datetime-local"
+                                        name="published_at"
+                                        id="published_at"
+                                        class="form-control @error('published_at') is-invalid @enderror"
+                                        value="{{ old('published_at', now()->format('Y-m-d\TH:i')) }}"
+                                    >
+                                    @error('published_at')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 mt-2 mt-md-0">
+                                    <small class="text-muted d-block" id="schedule_help">
+                                        Pilih tanggal dan jam. Jika status <strong>Terjadwal</strong>, dokumentasi akan <em>otomatis terpublikasi ke publik</em> saat waktu yang ditentukan telah tiba.
+                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -78,16 +107,16 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Keterangan / Deskripsi Singkat</label>
-                            <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="4" placeholder="Jelaskan mengenai agenda kegiatan, tanggal pelaksanaan, atau pesan edukasi...">{{ old('description') }}</textarea>
+                            <label class="form-label fw-bold">Keterangan / Narasi Dokumentasi</label>
+                            <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="5" placeholder="Jelaskan mengenai agenda kegiatan, tanggal pelaksanaan, lokasi, atau pesan edukasi kefarmasian...">{{ old('description') }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="d-flex justify-content-end gap-2 mt-4">
+                        <div class="d-flex justify-content-end gap-2 mt-4 pt-2 border-top">
                             <a href="{{ route('galleries.index') }}" class="btn btn-secondary">Batal</a>
-                            <button type="submit" class="btn btn-primary px-4">
+                            <button type="submit" class="btn btn-primary px-4 fw-bold">
                                 <i class="las la-save me-1"></i> Simpan Dokumentasi
                             </button>
                         </div>
@@ -115,6 +144,31 @@
             fileHint.innerHTML = 'Format: JPG, JPEG, PNG, WebP. Maksimal 10 MB.';
         }
     }
-    document.addEventListener('DOMContentLoaded', toggleMediaInputs);
+
+    function toggleScheduleInput() {
+        const status = document.getElementById('gallery_status').value;
+        const wrapper = document.getElementById('schedule_wrapper');
+        const label = document.getElementById('schedule_label');
+        const help = document.getElementById('schedule_help');
+
+        if (status === 'scheduled') {
+            wrapper.className = 'mb-3 p-3 rounded border border-warning bg-warning bg-opacity-10';
+            label.innerHTML = '<i class="las la-calendar-check text-warning fs-5"></i> Jadwal Tayang Otomatis <span class="text-danger">*</span>';
+            help.innerHTML = '<span class="badge bg-warning text-dark me-1">Terjadwal</span> Dokumentasi akan <strong>otomatis tayang di publik</strong> tepat saat waktu di samping tiba.';
+        } else if (status === 'draft') {
+            wrapper.className = 'mb-3 p-3 rounded border bg-light opacity-75';
+            label.innerHTML = '<i class="las la-file-alt text-secondary"></i> Waktu Penyimpanan Draf';
+            help.innerHTML = '<span class="badge bg-secondary me-1">Draf</span> Dokumen tersimpan sebagai arsip internal dan belum terlihat oleh pengunjung website publik.';
+        } else {
+            wrapper.className = 'mb-3 p-3 rounded border bg-light';
+            label.innerHTML = '<i class="las la-globe text-success"></i> Waktu Publikasi';
+            help.innerHTML = '<span class="badge bg-success me-1">Publik</span> Dokumentasi langsung dapat dilihat oleh publik saat ini.';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleMediaInputs();
+        toggleScheduleInput();
+    });
 </script>
 @endsection

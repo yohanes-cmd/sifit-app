@@ -21,9 +21,9 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-8 col-12">
+        <div class="col-lg-9 col-12">
             <div class="card shadow-sm border-0">
-                <div class="card-body">
+                <div class="card-body p-4">
                     <form action="{{ route('galleries.update', $gallery->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -48,31 +48,85 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6 mb-3 d-flex align-items-center">
-                                <div class="form-check mt-3">
-                                    <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $gallery->is_active) ? 'checked' : '' }}>
-                                    <label class="form-check-label fw-semibold" for="is_active">
-                                        Tayangkan di Halaman Publik
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Status Publikasi <span class="text-danger">*</span></label>
+                                @php
+                                    $currentStatus = old('status', $gallery->status ?? ($gallery->is_active ? 'published' : 'draft'));
+                                @endphp
+                                <select name="status" id="gallery_status" class="form-select @error('status') is-invalid @enderror" required onchange="toggleScheduleInput()">
+                                    <option value="published" {{ $currentStatus == 'published' ? 'selected' : '' }}>🟢 Publik (Langsung Tayang)</option>
+                                    <option value="scheduled" {{ $currentStatus == 'scheduled' ? 'selected' : '' }}>🟡 Terjadwal (Tayang Otomatis Sesuai Waktu)</option>
+                                    <option value="draft" {{ $currentStatus == 'draft' ? 'selected' : '' }}>⚪ Draf (Simpan Saja, Belum Tayang)</option>
+                                </select>
+                                @error('status')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        {{-- WAKTU PUBLIKASI / JADWAL TAYANG --}}
+                        <div class="mb-3 p-3 rounded border bg-light" id="schedule_wrapper">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-dark mb-1" id="schedule_label">
+                                        <i class="las la-clock text-primary"></i> Waktu Publikasi / Jadwal Tayang
                                     </label>
+                                    <input
+                                        type="datetime-local"
+                                        name="published_at"
+                                        id="published_at"
+                                        class="form-control @error('published_at') is-invalid @enderror"
+                                        value="{{ old('published_at', $gallery->published_at ? $gallery->published_at->format('Y-m-d\TH:i') : now()->format('Y-m-d\TH:i')) }}"
+                                    >
+                                    @error('published_at')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 mt-2 mt-md-0">
+                                    <small class="text-muted d-block" id="schedule_help">
+                                        Pilih tanggal dan jam. Jika status <strong>Terjadwal</strong>, dokumentasi akan <em>otomatis terpublikasi ke publik</em> saat waktu yang ditentukan telah tiba.
+                                    </small>
                                 </div>
                             </div>
                         </div>
 
                         {{-- PREVIEW MEDIA SEKARANG --}}
                         <div class="mb-3 p-3 bg-light rounded border">
-                            <label class="form-label fw-semibold text-muted mb-2 d-block">Media Saat Ini:</label>
-                            @if($gallery->type === 'photo')
-                                <img src="{{ $gallery->media_url }}" alt="{{ $gallery->title }}" class="rounded border" style="max-height: 140px; object-fit: cover;">
-                            @else
-                                @if($gallery->youtube_embed_url)
-                                    <div style="max-width: 320px;">
-                                        <iframe src="{{ $gallery->youtube_embed_url }}" style="width: 100%; height: 180px; border-radius: 8px; border: 0;" allowfullscreen></iframe>
-                                    </div>
-                                @elseif($gallery->file_path)
-                                    <video controls style="max-width: 320px; border-radius: 8px;">
-                                        <source src="{{ asset('storage/' . $gallery->file_path) }}">
-                                    </video>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label fw-bold text-dark mb-0">Media Saat Ini:</label>
+                                @if($gallery->type === 'video' && $gallery->youtube_url)
+                                    <a href="{{ $gallery->youtube_url }}" target="_blank" class="small text-danger text-decoration-none fw-bold">
+                                        <i class="lab la-youtube"></i> Buka di YouTube <i class="las la-external-link-alt"></i>
+                                    </a>
                                 @endif
+                            </div>
+
+                            @if($gallery->type === 'photo')
+                                <img src="{{ $gallery->media_url }}" alt="{{ $gallery->title }}" class="rounded border" style="max-height: 160px; object-fit: cover;">
+                            @else
+                                <div class="row align-items-center">
+                                    <div class="col-md-5 mb-2 mb-md-0">
+                                        @if($gallery->youtube_embed_url)
+                                            <div class="ratio ratio-16x9 rounded overflow-hidden border">
+                                                <iframe src="{{ $gallery->youtube_embed_url }}" title="{{ $gallery->title }}" allowfullscreen></iframe>
+                                            </div>
+                                        @elseif($gallery->file_path)
+                                            <video controls style="width: 100%; max-height: 160px; border-radius: 8px;">
+                                                <source src="{{ asset('storage/' . $gallery->file_path) }}">
+                                            </video>
+                                        @else
+                                            <img src="{{ $gallery->media_url }}" alt="{{ $gallery->title }}" class="rounded border img-fluid">
+                                        @endif
+                                    </div>
+                                    <div class="col-md-7">
+                                        <small class="text-muted d-block mb-1">
+                                            <strong>Tautan Video Saat Ini:</strong> {{ $gallery->youtube_url ?? 'Berkas video lokal' }}
+                                        </small>
+                                        <small class="text-muted d-block">
+                                            Anda dapat memperbarui tautan YouTube di bawah dengan URL video yang aktif (misal video resmi Dinas Kesehatan atau Kemenkes RI).
+                                        </small>
+                                    </div>
+                                </div>
                             @endif
                         </div>
 
@@ -90,23 +144,23 @@
                         <div class="mb-3" id="youtube_input_wrapper" style="display: none;">
                             <label class="form-label fw-bold text-danger"><i class="lab la-youtube"></i> Tautan Video YouTube</label>
                             <input type="url" name="youtube_url" class="form-control @error('youtube_url') is-invalid @enderror" value="{{ old('youtube_url', $gallery->youtube_url) }}" placeholder="https://www.youtube.com/watch?v=...">
-                            <small class="text-muted">Masukkan tautan YouTube jika video bersumber dari YouTube.</small>
+                            <small class="text-muted">Masukkan tautan video YouTube (misal: <code>https://www.youtube.com/watch?v=...</code>).</small>
                             @error('youtube_url')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Keterangan / Deskripsi Singkat</label>
-                            <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="4">{{ old('description', $gallery->description) }}</textarea>
+                            <label class="form-label fw-bold">Keterangan / Narasi Dokumentasi</label>
+                            <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="5">{{ old('description', $gallery->description) }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="d-flex justify-content-end gap-2 mt-4">
+                        <div class="d-flex justify-content-end gap-2 mt-4 pt-2 border-top">
                             <a href="{{ route('galleries.index') }}" class="btn btn-secondary">Batal</a>
-                            <button type="submit" class="btn btn-primary px-4">
+                            <button type="submit" class="btn btn-primary px-4 fw-bold">
                                 <i class="las la-save me-1"></i> Simpan Perubahan
                             </button>
                         </div>
@@ -128,6 +182,31 @@
             ytWrap.style.display = 'none';
         }
     }
-    document.addEventListener('DOMContentLoaded', toggleMediaInputs);
+
+    function toggleScheduleInput() {
+        const status = document.getElementById('gallery_status').value;
+        const wrapper = document.getElementById('schedule_wrapper');
+        const label = document.getElementById('schedule_label');
+        const help = document.getElementById('schedule_help');
+
+        if (status === 'scheduled') {
+            wrapper.className = 'mb-3 p-3 rounded border border-warning bg-warning bg-opacity-10';
+            label.innerHTML = '<i class="las la-calendar-check text-warning fs-5"></i> Jadwal Tayang Otomatis <span class="text-danger">*</span>';
+            help.innerHTML = '<span class="badge bg-warning text-dark me-1">Terjadwal</span> Dokumentasi akan <strong>otomatis tayang di publik</strong> tepat saat waktu di samping tiba.';
+        } else if (status === 'draft') {
+            wrapper.className = 'mb-3 p-3 rounded border bg-light opacity-75';
+            label.innerHTML = '<i class="las la-file-alt text-secondary"></i> Waktu Penyimpanan Draf';
+            help.innerHTML = '<span class="badge bg-secondary me-1">Draf</span> Dokumen tersimpan sebagai arsip internal dan belum terlihat oleh pengunjung website publik.';
+        } else {
+            wrapper.className = 'mb-3 p-3 rounded border bg-light';
+            label.innerHTML = '<i class="las la-globe text-success"></i> Waktu Publikasi';
+            help.innerHTML = '<span class="badge bg-success me-1">Publik</span> Dokumentasi langsung dapat dilihat oleh publik saat ini.';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleMediaInputs();
+        toggleScheduleInput();
+    });
 </script>
 @endsection

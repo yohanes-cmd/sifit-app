@@ -19,10 +19,13 @@ class Gallery extends Model
         'youtube_url',
         'description',
         'is_active',
+        'status',
+        'published_at',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'published_at' => 'datetime',
     ];
 
     public function user()
@@ -30,9 +33,61 @@ class Gallery extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Scope for live galleries visible on public frontend.
+     * Scheduled items will automatically appear once published_at <= now().
+     */
     public function scopeActive($query)
     {
-        return $query->where('is_active', true)->latest();
+        return $query->where('is_active', true)
+            ->where(function ($q) {
+                $q->where('status', 'published')
+                    ->orWhere(function ($sub) {
+                        $sub->where('status', 'scheduled')
+                            ->where('published_at', '<=', now());
+                    });
+            })
+            ->where(function ($q) {
+                $q->whereNull('published_at')
+                    ->orWhere('published_at', '<=', now());
+            })
+            ->orderByRaw('COALESCE(published_at, created_at) DESC');
+    }
+
+    /**
+     * Determine if this gallery item is currently live on frontend.
+     */
+    public function getIsLiveAttribute(): bool
+    {
+        if (! $this->is_active || $this->status === 'draft') {
+            return false;
+        }
+
+        if ($this->status === 'scheduled') {
+            return $this->published_at && $this->published_at->isPast();
+        }
+
+        if ($this->published_at && $this->published_at->isFuture()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get computed status label ('published', 'scheduled', 'draft').
+     */
+    public function getStatusStateAttribute(): string
+    {
+        if (! $this->is_active || $this->status === 'draft') {
+            return 'draft';
+        }
+
+        if ($this->published_at && $this->published_at->isFuture()) {
+            return 'scheduled';
+        }
+
+        return 'published';
     }
 
     /**

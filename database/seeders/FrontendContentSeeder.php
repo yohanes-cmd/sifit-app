@@ -194,6 +194,8 @@ class FrontendContentSeeder extends Seeder
                     'file_path' => $sample['file_path'],
                     'youtube_url' => $sample['youtube_url'],
                     'description' => $sample['description'],
+                    'status' => 'published',
+                    'published_at' => now(),
                     'is_active' => true,
                 ]
             );

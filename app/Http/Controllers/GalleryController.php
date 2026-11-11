@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gallery;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -38,13 +39,25 @@ class GalleryController extends Controller
             'description' => 'nullable|string',
             'media_file' => 'nullable|file|mimes:jpeg,png,jpg,webp,mp4,mov,avi|max:20480',
             'youtube_url' => 'nullable|url|max:255',
-            'is_active' => 'nullable|boolean',
+            'status' => 'required|in:published,draft,scheduled',
+            'published_at' => 'nullable|date',
         ]);
 
         $filePath = null;
         if ($request->hasFile('media_file')) {
             $filePath = $request->file('media_file')->store('galleries', 'public');
         }
+
+        $status = $request->status;
+        $publishedAt = $request->published_at ? Carbon::parse($request->published_at) : null;
+
+        if ($status === 'published' && ! $publishedAt) {
+            $publishedAt = now();
+        } elseif ($status === 'scheduled' && ! $publishedAt) {
+            $publishedAt = now()->addHour();
+        }
+
+        $isActive = ($status !== 'draft');
 
         Gallery::create([
             'user_id' => Auth::id() ?? 1,
@@ -53,7 +66,9 @@ class GalleryController extends Controller
             'description' => $request->description,
             'file_path' => $filePath,
             'youtube_url' => $request->youtube_url,
-            'is_active' => $request->has('is_active'),
+            'status' => $status,
+            'published_at' => $publishedAt,
+            'is_active' => $isActive,
         ]);
 
         return redirect()->route('galleries.index')->with('success', 'Dokumentasi galeri berhasil ditambahkan!');
@@ -78,7 +93,8 @@ class GalleryController extends Controller
             'description' => 'nullable|string',
             'media_file' => 'nullable|file|mimes:jpeg,png,jpg,webp,mp4,mov,avi|max:20480',
             'youtube_url' => 'nullable|url|max:255',
-            'is_active' => 'nullable|boolean',
+            'status' => 'required|in:published,draft,scheduled',
+            'published_at' => 'nullable|date',
         ]);
 
         $filePath = $gallery->file_path;
@@ -89,13 +105,26 @@ class GalleryController extends Controller
             $filePath = $request->file('media_file')->store('galleries', 'public');
         }
 
+        $status = $request->status;
+        $publishedAt = $request->published_at ? Carbon::parse($request->published_at) : null;
+
+        if ($status === 'published' && ! $publishedAt) {
+            $publishedAt = now();
+        } elseif ($status === 'scheduled' && ! $publishedAt) {
+            $publishedAt = now()->addHour();
+        }
+
+        $isActive = ($status !== 'draft');
+
         $gallery->update([
             'title' => $request->title,
             'type' => $request->type,
             'description' => $request->description,
             'file_path' => $filePath,
             'youtube_url' => $request->youtube_url,
-            'is_active' => $request->has('is_active'),
+            'status' => $status,
+            'published_at' => $publishedAt,
+            'is_active' => $isActive,
         ]);
 
         return redirect()->route('galleries.index')->with('success', 'Dokumentasi galeri berhasil diperbarui!');
@@ -142,7 +171,7 @@ class GalleryController extends Controller
      */
     public function frontendShow(Gallery $gallery)
     {
-        abort_unless($gallery->is_active, 404);
+        abort_unless($gallery->is_live, 404);
 
         $gallery->load('user');
 
