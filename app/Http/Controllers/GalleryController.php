@@ -41,6 +41,7 @@ class GalleryController extends Controller
             'youtube_url' => 'nullable|url|max:255',
             'status' => 'required|in:published,draft,scheduled',
             'publish_date' => 'nullable|date',
+            'publish_time' => 'nullable|string|max:8',
             'publish_hour' => 'nullable|string|max:2',
             'publish_minute' => 'nullable|string|max:2',
             'published_at' => 'nullable|date',
@@ -56,8 +57,25 @@ class GalleryController extends Controller
 
         if ($request->filled('publish_date')) {
             $date = $request->publish_date;
-            $hour = str_pad($request->input('publish_hour', '08'), 2, '0', STR_PAD_LEFT);
-            $minute = str_pad($request->input('publish_minute', '00'), 2, '0', STR_PAD_LEFT);
+            $hour = '08';
+            $minute = '00';
+
+            if ($request->filled('publish_time')) {
+                $timeStr = trim(str_replace('.', ':', $request->publish_time));
+                if (preg_match('/^(\d{1,2}):(\d{1,2})$/', $timeStr, $matches)) {
+                    $hour = str_pad($matches[1], 2, '0', STR_PAD_LEFT);
+                    $minute = str_pad($matches[2], 2, '0', STR_PAD_LEFT);
+                } elseif (preg_match('/^(\d{2})(\d{2})$/', $timeStr, $matches)) {
+                    $hour = $matches[1];
+                    $minute = $matches[2];
+                } elseif (preg_match('/^(\d{1,2})$/', $timeStr, $matches)) {
+                    $hour = str_pad($matches[1], 2, '0', STR_PAD_LEFT);
+                }
+            } elseif ($request->filled('publish_hour')) {
+                $hour = str_pad($request->input('publish_hour', '08'), 2, '0', STR_PAD_LEFT);
+                $minute = str_pad($request->input('publish_minute', '00'), 2, '0', STR_PAD_LEFT);
+            }
+
             $publishedAt = Carbon::parse("{$date} {$hour}:{$minute}:00");
         } elseif ($request->filled('published_at')) {
             $publishedAt = Carbon::parse($request->published_at);
@@ -109,6 +127,7 @@ class GalleryController extends Controller
             'youtube_url' => 'nullable|url|max:255',
             'status' => 'required|in:published,draft,scheduled',
             'publish_date' => 'nullable|date',
+            'publish_time' => 'nullable|string|max:8',
             'publish_hour' => 'nullable|string|max:2',
             'publish_minute' => 'nullable|string|max:2',
             'published_at' => 'nullable|date',
@@ -127,8 +146,25 @@ class GalleryController extends Controller
 
         if ($request->filled('publish_date')) {
             $date = $request->publish_date;
-            $hour = str_pad($request->input('publish_hour', '08'), 2, '0', STR_PAD_LEFT);
-            $minute = str_pad($request->input('publish_minute', '00'), 2, '0', STR_PAD_LEFT);
+            $hour = '08';
+            $minute = '00';
+
+            if ($request->filled('publish_time')) {
+                $timeStr = trim(str_replace('.', ':', $request->publish_time));
+                if (preg_match('/^(\d{1,2}):(\d{1,2})$/', $timeStr, $matches)) {
+                    $hour = str_pad($matches[1], 2, '0', STR_PAD_LEFT);
+                    $minute = str_pad($matches[2], 2, '0', STR_PAD_LEFT);
+                } elseif (preg_match('/^(\d{2})(\d{2})$/', $timeStr, $matches)) {
+                    $hour = $matches[1];
+                    $minute = $matches[2];
+                } elseif (preg_match('/^(\d{1,2})$/', $timeStr, $matches)) {
+                    $hour = str_pad($matches[1], 2, '0', STR_PAD_LEFT);
+                }
+            } elseif ($request->filled('publish_hour')) {
+                $hour = str_pad($request->input('publish_hour', '08'), 2, '0', STR_PAD_LEFT);
+                $minute = str_pad($request->input('publish_minute', '00'), 2, '0', STR_PAD_LEFT);
+            }
+
             $publishedAt = Carbon::parse("{$date} {$hour}:{$minute}:00");
         } elseif ($request->filled('published_at')) {
             $publishedAt = Carbon::parse($request->published_at);

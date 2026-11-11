@@ -67,18 +67,17 @@
                                     <i class="las la-clock text-primary"></i> Waktu Publikasi / Jadwal Tayang
                                 </label>
                                 <small class="text-muted" id="schedule_help">
-                                    Pilih tanggal dan jam (format 24 jam). Jika status <strong>Terjadwal</strong>, dokumentasi otomatis terpublikasi saat waktu tiba.
+                                    Pilih tanggal dan ketik jam tayang (format 24 jam). Jika status <strong>Terjadwal</strong>, dokumentasi otomatis terpublikasi saat waktu tiba.
                                 </small>
                             </div>
 
                             @php
                                 $selectedDate = old('publish_date', now()->format('Y-m-d'));
-                                $selectedHour = old('publish_hour', now()->format('H'));
-                                $selectedMinute = old('publish_minute', now()->format('i'));
+                                $selectedTime = old('publish_time', now()->format('H:i'));
                             @endphp
 
                             <div class="row g-2 align-items-end">
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <label class="form-label small fw-semibold text-secondary mb-1">
                                         <i class="las la-calendar text-primary"></i> Tanggal
                                     </label>
@@ -95,38 +94,35 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-6 col-md-3">
-                                    <label class="form-label small fw-semibold text-secondary mb-1">
-                                        <i class="las la-clock text-primary"></i> Jam (24 Jam)
-                                    </label>
-                                    <select name="publish_hour" id="publish_hour" class="form-select @error('publish_hour') is-invalid @enderror" onchange="updateSchedulePreview()">
-                                        @for ($h = 0; $h < 24; $h++)
-                                            @php $hh = sprintf('%02d', $h); @endphp
-                                            <option value="{{ $hh }}" {{ (string)$selectedHour === $hh ? 'selected' : '' }}>
-                                                Jam {{ $hh }}:00 WIB
-                                            </option>
-                                        @endfor
-                                    </select>
-                                    @error('publish_hour')
+                                <div class="col-md-6">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <label class="form-label small fw-semibold text-secondary mb-0">
+                                            <i class="las la-clock text-primary"></i> Jam (Ketik Manual 24 Jam)
+                                        </label>
+                                        <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none small text-primary" onclick="setCurrentTime()">
+                                            <i class="las la-history"></i> Jam Sekarang
+                                        </button>
+                                    </div>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white text-muted"><i class="las la-clock"></i></span>
+                                        <input
+                                            type="text"
+                                            name="publish_time"
+                                            id="publish_time"
+                                            class="form-control @error('publish_time') is-invalid @enderror"
+                                            placeholder="Contoh: 14:30"
+                                            value="{{ $selectedTime }}"
+                                            maxlength="5"
+                                            oninput="updateSchedulePreview()"
+                                        >
+                                        <span class="input-group-text bg-light text-muted fw-semibold">WIB</span>
+                                    </div>
+                                    @error('publish_time')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                </div>
-
-                                <div class="col-6 col-md-4">
-                                    <label class="form-label small fw-semibold text-secondary mb-1">
-                                        <i class="las la-stopwatch text-primary"></i> Menit
-                                    </label>
-                                    <select name="publish_minute" id="publish_minute" class="form-select @error('publish_minute') is-invalid @enderror" onchange="updateSchedulePreview()">
-                                        @for ($m = 0; $m < 60; $m++)
-                                            @php $mm = sprintf('%02d', $m); @endphp
-                                            <option value="{{ $mm }}" {{ (string)$selectedMinute === $mm ? 'selected' : '' }}>
-                                                :{{ $mm }} Menit
-                                            </option>
-                                        @endfor
-                                    </select>
-                                    @error('publish_minute')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <small class="text-muted d-block mt-1">
+                                        Ketik bebas format 24 jam (misal: <code>08:00</code>, <code>14:30</code>, <code>19:45</code>).
+                                    </small>
                                 </div>
                             </div>
 
@@ -217,17 +213,31 @@
         }
     }
 
+    function setCurrentTime() {
+        const now = new Date();
+        const pad = (n) => String(n).padStart(2, '0');
+        const dateInput = document.getElementById('publish_date');
+        const timeInput = document.getElementById('publish_time');
+
+        if (dateInput) {
+            dateInput.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+        }
+        if (timeInput) {
+            timeInput.value = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+        }
+        updateSchedulePreview();
+    }
+
     function updateSchedulePreview() {
         const dateInput = document.getElementById('publish_date');
-        const hourInput = document.getElementById('publish_hour');
-        const minuteInput = document.getElementById('publish_minute');
+        const timeInput = document.getElementById('publish_time');
         const previewEl = document.getElementById('schedule_preview_text');
 
         if (!dateInput || !previewEl) return;
 
         const dateVal = dateInput.value;
-        const hourVal = hourInput ? hourInput.value : '00';
-        const minuteVal = minuteInput ? minuteInput.value : '00';
+        let timeVal = timeInput ? timeInput.value.trim().replace('.', ':') : '';
+        if (!timeVal) timeVal = '08:00';
 
         if (dateVal) {
             const parts = dateVal.split('-');
@@ -240,11 +250,11 @@
                     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
                 ];
                 const monthName = monthNames[month] || parts[1];
-                previewEl.textContent = `${day} ${monthName} ${year} pukul ${hourVal}:${minuteVal} WIB`;
+                previewEl.textContent = `${day} ${monthName} ${year} pukul ${timeVal} WIB`;
                 return;
             }
         }
-        previewEl.textContent = `${dateVal || '-'} pukul ${hourVal}:${minuteVal} WIB`;
+        previewEl.textContent = `${dateVal || '-'} pukul ${timeVal} WIB`;
     }
 
     document.addEventListener('DOMContentLoaded', function() {
